@@ -13,7 +13,6 @@
         <div class="d-flex">
             <?php if (isset($_SESSION['usuario'])): ?>
                 <span class="text-light me-3">Hola, <?= $_SESSION['usuario']['nombre'] ?></span>
-                <a class="btn btn-outline-light btn-sm" href="index.php?controller=Auth&action=logout">Salir</a>
             <?php endif; ?>
         </div>
     </header>
