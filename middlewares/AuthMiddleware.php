@@ -7,4 +7,5 @@ class AuthMiddleware {
             exit();
         }
     }
+    
 }

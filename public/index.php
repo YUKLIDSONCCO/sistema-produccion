@@ -7,3 +7,4 @@ require_once __DIR__ . '/../core/Session.php';
 
 $router = new Router();
 $router->handleRequest();
+

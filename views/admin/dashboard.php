@@ -1,66 +1,117 @@
-<?php 
-if (session_status() === PHP_SESSION_NONE) session_start(); 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración</title>
 
-// Seguridad: si no hay usuario logueado, redirigir al login
-if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'Administrador') {
-    header("Location: index.php?controller=Auth&action=login");
-    exit;
-}
-?>
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="/sistema-produccion/public/css/style_admin.css">
 
-<?php include __DIR__ . '/../templates/header.php'; ?>
-<?php include __DIR__ . '/../templates/sidebar.php'; ?>
+    <!-- Íconos reemplazados con CSS puro -->
+    <style>
+        /* Simples íconos con pseudo-elementos en lugar de Unicons */
+        .icon::before {
+            display: inline-block;
+            font-weight: bold;
+            font-size: 18px;
+            margin-right: 6px;
+        }
+        .uil-estate::before { content: "🏠"; }
+        .uil-users-alt::before { content: "👥"; }
+        .uil-setting::before { content: "⚙️"; }
+        .uil-analytics::before { content: "📊"; }
+        .uil-signout::before { content: "🚪"; }
+        .uil-moon::before { content: "🌙"; }
+        .uil-bars::before { content: "☰"; }
+        .uil-search::before { content: "🔍"; }
+        .uil-tachometer-fast-alt::before { content: "📈"; }
+    </style>
+</head>
+<body>
+    <?php 
+    if (session_status() === PHP_SESSION_NONE) session_start(); 
+    if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'Administrador') {
+        header("Location: index.php?controller=Auth&action=login");
+        exit;
+    }
+    ?>
 
-<div class="container-fluid mt-4">
-    <!-- Encabezado con nombre y botón de logout -->
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
-        <h1 class="h3 mb-3 mb-md-0">
-            👋 Bienvenido Administrador: 
-            <span class="text-primary"><?= htmlspecialchars($_SESSION['usuario']['nombre']); ?></span>
-        </h1>
-        <a href="index.php?controller=Auth&action=logout" class="btn btn-danger btn-sm">
-            Cerrar sesión
-        </a>
-    </div>
+    <nav>
+        <div class="logo-name">
+            <div class="logo-image">
+                <img src="/sistema-produccion/public/img/coraqua.png" alt="Logo del Sistema">
+            </div>
+            <span class="logo_name">Sistema Producción</span>
+        </div>
 
-    <!-- Tarjetas de acceso rápido -->
-    <div class="row g-4">
-        <div class="col-12 col-sm-6 col-lg-4">
-            <div class="card shadow-sm h-100 border-0">
-                <div class="card-body">
-                    <h5 class="card-title">👥 Gestión de Usuarios</h5>
-                    <p class="card-text">Crear, editar y asignar roles a los usuarios del sistema.</p>
-                    <a href="index.php?controller=Usuarios&action=index" class="btn btn-primary btn-sm w-100">
-                        Ir al módulo
-                    </a>
+        <div class="menu-items">
+            <ul class="nav-links">
+                <li><a href="#"><i class="icon uil-estate"></i><span class="link-name">Dashboard</span></a></li>
+                <li><a href="index.php?controller=Admin&action=index"><i class="icon uil-users-alt"></i><span class="link-name">Usuarios</span></a></li>
+                <li><a href="index.php?controller=Config&action=index"><i class="icon uil-setting"></i><span class="link-name">Configuración</span></a></li>
+                <li><a href="index.php?controller=Auditoria&action=index"><i class="icon uil-analytics"></i><span class="link-name">Auditoría</span></a></li>
+            </ul>
+            
+            <ul class="logout-mode">
+                <li><a href="index.php?controller=Auth&action=logout"><i class="icon uil-signout"></i><span class="link-name">Cerrar sesión</span></a></li>
+
+                <li class="mode">
+                    <a href="#"><i class="icon uil-moon"></i><span class="link-name">Modo Oscuro</span></a>
+                    <div class="mode-toggle"><span class="switch"></span></div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="dashboard">
+        <div class="top">
+            <i class="icon uil-bars sidebar-toggle"></i>
+
+            <div class="search-box">
+                <i class="icon uil-search"></i>
+                <input type="text" placeholder="Buscar aquí...">
+            </div>
+            
+            <div class="profile-info">
+                <span class="user-name"><?= htmlspecialchars($_SESSION['usuario']['nombre']); ?></span>
+                <img src="images/profile.jpg" alt="Perfil">
+            </div>
+        </div>
+
+        <div class="dash-content">
+            <div class="overview">
+                <div class="title">
+                    <i class="icon uil-tachometer-fast-alt"></i>
+                    <span class="text">Panel de Administración</span>
+                </div>
+
+                <div class="boxes">
+                    <div class="box box1">
+                        <i class="icon uil-users-alt"></i>
+                        <span class="text">Gestión de Usuarios</span>
+                        <span class="number">Administrar</span>
+                        <a href="index.php?controller=Admin&action=index" class="box-link">Ir al módulo</a>
+
+                    </div>
+                    <div class="box box2">
+                        <i class="icon uil-setting"></i>
+                        <span class="text">Configuración</span>
+                        <span class="number">Ajustes</span>
+                        <a href="index.php?controller=Config&action=index" class="box-link">Ir al módulo</a>
+                    </div>
+                    <div class="box box3">
+                        <i class="icon uil-analytics"></i>
+                        <span class="text">Auditoría</span>
+                        <span class="number">Reportes</span>
+                        <a href="index.php?controller=Auditoria&action=index" class="box-link">Ir al módulo</a>
+                    </div>
                 </div>
             </div>
         </div>
-        
-        <div class="col-12 col-sm-6 col-lg-4">
-            <div class="card shadow-sm h-100 border-0">
-                <div class="card-body">
-                    <h5 class="card-title">⚙️ Configuración</h5>
-                    <p class="card-text">Parámetros globales, backups y seguridad del sistema.</p>
-                    <a href="index.php?controller=Config&action=index" class="btn btn-primary btn-sm w-100">
-                        Ir al módulo
-                    </a>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-12 col-sm-6 col-lg-4">
-            <div class="card shadow-sm h-100 border-0">
-                <div class="card-body">
-                    <h5 class="card-title">📊 Auditoría</h5>
-                    <p class="card-text">Monitorea actividades de usuarios y genera reportes de seguridad.</p>
-                    <a href="index.php?controller=Auditoria&action=index" class="btn btn-primary btn-sm w-100">
-                        Ir al módulo
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+    </section>
 
-<?php include __DIR__ . '/../templates/footer.php'; ?>
+    <!-- Script personalizado -->
+    <script src="/sistema-produccion/public/js/script_admin.js"></script>
+</body>
+</html>
