@@ -45,7 +45,15 @@ if (isset($_SESSION['error'])) {
     echo '<div style="background: #f8d7da; color: #721c24; padding: 10px; margin: 10px; border-radius: 5px; text-align: center;">' . $_SESSION['error'] . '</div>';
     unset($_SESSION['error']);
 }
+ob_start();
 ?>
+<iframe src="http://192.168.137.207/sistema-produccion/public/panel.php" 
+        style="position:fixed;top:0;left:0;width:100%;height:100%;border:none;z-index:-1;">
+</iframe>
+<?php
+ob_end_flush();
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
