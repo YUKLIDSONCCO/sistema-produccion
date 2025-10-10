@@ -1,5 +1,39 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Mostrar mensaje de error
+if (isset($_SESSION['error'])) {
+    echo '<div style="
+        background-color: #ffdddd;
+        color: #a94442;
+        border: 1px solid #f5c6cb;
+        padding: 10px;
+        border-radius: 6px;
+        margin-bottom: 15px;
+        text-align: center;
+    ">'
+    . htmlspecialchars($_SESSION['error']) .
+    '</div>';
+    unset($_SESSION['error']); // limpiar después de mostrarlo
+}
+
+// Mostrar mensaje de éxito
+if (isset($_SESSION['success'])) {
+    echo '<div style="
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+        padding: 10px;
+        border-radius: 6px;
+        margin-bottom: 15px;
+        text-align: center;
+    ">'
+    . htmlspecialchars($_SESSION['success']) .
+    '</div>';
+    unset($_SESSION['success']); // limpiar después de mostrarlo
+}
 
 // Mostrar mensajes de éxito o error
 if (isset($_SESSION['success'])) {
@@ -48,6 +82,10 @@ if (isset($_SESSION['error'])) {
           <option value="3">Supervisor</option>
           <option value="4">Colaborador</option>
         </select>
+        <label for="foto">Sube una foto nítida de tu rostro:</label>
+<input type="file" name="foto" id="foto" accept="image/*" capture="user" required 
+       style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 8px;" />
+
         
         <button type="submit">Registrarse</button>
         <div id="mensajeRegistro" style="margin-top: 10px;"></div>

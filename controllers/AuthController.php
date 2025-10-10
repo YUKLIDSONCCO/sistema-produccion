@@ -65,75 +65,72 @@ public function login() {
         exit;
     }
     public function register() {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $nombre = trim($_POST['nombre']);
-        $correo = filter_var(trim($_POST['correo']), FILTER_VALIDATE_EMAIL);
-        $password = $_POST['password'];
-        $rol = (int)$_POST['rol'];
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $nombre = $_POST['nombre'];
+        $correo = $_POST['correo'];
+        $passwordHash = password_hash($_POST['password'], PASSWORD_BCRYPT);
+        $rol = $_POST['rol'];
 
-        // Validaciones básicas
-        if (empty($nombre) || strlen($nombre) < 3) {
-            $_SESSION['error'] = 'El nombre debe tener al menos 3 caracteres';
+        // --- NUEVO: manejar subida de foto ---
+        $fotoRuta = null;
+        if (isset($_FILES['foto']) && $_FILES['foto']['error'] === 0) {
+            $carpeta = __DIR__ . '/../public/uploads/rostros/';
+            if (!file_exists($carpeta)) {
+                mkdir($carpeta, 0777, true);
+            }
+
+            $nombreArchivo = uniqid('rostro_') . '.' . pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
+            $rutaDestino = $carpeta . $nombreArchivo;
+
+            if (move_uploaded_file($_FILES['foto']['tmp_name'], $rutaDestino)) {
+                $fotoRuta = '/sistema-produccion/public/uploads/rostros/' . $nombreArchivo;
+            } else {
+                $_SESSION['error'] = 'Error al subir la foto del rostro.';
+                header("Location: index.php?controller=Auth&action=login");
+                exit;
+            }
+        } else {
+            $_SESSION['error'] = 'Debes subir una foto nítida de tu rostro.';
             header("Location: index.php?controller=Auth&action=login");
             exit;
         }
 
-        if (!$correo) {
-            $_SESSION['error'] = 'El correo electrónico no es válido';
-            header("Location: index.php?controller=Auth&action=login");
-            exit;
-        }
-
-        if (strlen($password) < 6) {
-            $_SESSION['error'] = 'La contraseña debe tener al menos 6 caracteres';
-            header("Location: index.php?controller=Auth&action=login");
-            exit;
-        }
-
-        if (!in_array($rol, [2, 3, 4])) {
-            $_SESSION['error'] = 'Rol no válido';
-            header("Location: index.php?controller=Auth&action=login");
-            exit;
-        }
-
-        // Verificar si el correo ya existe
+        // --- Verificar si el correo ya existe ---
         $queryCheck = "SELECT id_usuario FROM usuarios WHERE correo = :correo";
         $stmtCheck = $this->conn->prepare($queryCheck);
         $stmtCheck->bindParam(':correo', $correo);
         $stmtCheck->execute();
 
         if ($stmtCheck->rowCount() > 0) {
-            $_SESSION['error'] = 'El correo electrónico ya está registrado';
+            $_SESSION['error'] = 'El correo electrónico ya está registrado.';
             header("Location: index.php?controller=Auth&action=login");
             exit;
         }
 
-        // Registrar usuario con estado 'suspendido'
-        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-        
-        $query = "INSERT INTO usuarios (nombre, correo, password, id_rol, estado) 
-                  VALUES (:nombre, :correo, :password, :rol, 'suspendido')";
-        
+        // --- Insertar en la base de datos ---
+        $query = "INSERT INTO usuarios (nombre, correo, password, id_rol, estado, foto) 
+                  VALUES (:nombre, :correo, :password, :rol, 'suspendido', :foto)";
         $stmt = $this->conn->prepare($query);
+
         $stmt->bindParam(':nombre', $nombre);
         $stmt->bindParam(':correo', $correo);
         $stmt->bindParam(':password', $passwordHash);
         $stmt->bindParam(':rol', $rol);
+        $stmt->bindParam(':foto', $fotoRuta);
 
         if ($stmt->execute()) {
             $_SESSION['success'] = 'Registro exitoso. Tu cuenta está pendiente de activación por el administrador.';
         } else {
-            $_SESSION['error'] = 'Error al registrar el usuario';
+            $_SESSION['error'] = 'Error al registrar el usuario.';
         }
 
-        // Redirigir al login (siempre mostrará el formulario de inicio de sesión)
-        header("Location: index.php?controller=Auth&action=login");
-        exit;
-        
-    } else {
-        // Si no es POST, mostrar el login
+        // Redirigir al login
         header("Location: index.php?controller=Auth&action=login");
         exit;
     }
 }
+
+
+
+
 }

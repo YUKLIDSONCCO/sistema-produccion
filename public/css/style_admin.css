@@ -457,3 +457,19 @@ nav.close ~ .dashboard .top{
         width: 100%;
     }
 }
+        /* Simples íconos con pseudo-elementos en lugar de Unicons */
+        .icon::before {
+            display: inline-block;
+            font-weight: bold;
+            font-size: 18px;
+            margin-right: 6px;
+        }
+        .uil-estate::before { content: "🏠"; }
+        .uil-users-alt::before { content: "👥"; }
+        .uil-setting::before { content: "⚙️"; }
+        .uil-analytics::before { content: "📊"; }
+        .uil-signout::before { content: "🚪"; }
+        .uil-moon::before { content: "🌙"; }
+        .uil-bars::before { content: "☰"; }
+        .uil-search::before { content: "🔍"; }
+        .uil-tachometer-fast-alt::before { content: "📈"; }

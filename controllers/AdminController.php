@@ -20,6 +20,16 @@ class AdminController {
         $usuarios = $this->adminModel->obtenerUsuarios();
         require __DIR__ . '/../views/admin/usuarios.php';
     }
+    // Agregar este método en AdminController.php
+public function dashboard() {
+    if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'Administrador') {
+        header("Location: index.php?controller=Auth&action=login");
+        exit;
+    }
+
+    // Cargar la vista del dashboard
+    require __DIR__ . '/../views/admin/dashboard.php';
+}
 
     // Mostrar formulario de registro
     public function mostrarRegistro() {
