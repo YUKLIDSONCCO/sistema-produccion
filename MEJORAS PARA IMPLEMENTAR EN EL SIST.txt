@@ -1,0 +1,8 @@
+MEJORAS PARA IMPLEMENTAR EN EL SISTEMA DE PRODUCCION:
+1. el colaborador puede enviar un stock que necesita por tiempo y eso le direcciona a jefe de planta donde o puede visualizar en el menú de inventario 
+2. en cada rol podemos agregar que suba un archico.pdf, Excel, Word y también pueda visualizarlo 
+3. EN CADA PANEL DE OVAS ,PECES, INVENTARIO TIENE QUE TENER LOS 3 PUNTOS O HAMBURGUEZA (CLOSE SIDEBAR)
+4. EN CADA PANEL DE LOS ROLES SE PUEDE AGREGAR COMO EL BLACKBOARD EN UN COSTADO ,EL PERFIL COMPLETO,SU ACTIVIDAD DIARIA DE LA SEMA Y SALGA CON BARRAS
+5. REFERENCIAS DE PINTEREST
+6. PODEMOS PONER ANIMACION EN CADA PANEL QUE LE CORRESPONDE (OVAS, INVENTARIO Y PECES).
+7. 
