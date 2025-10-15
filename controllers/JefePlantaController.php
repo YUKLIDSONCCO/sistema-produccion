@@ -23,6 +23,37 @@ class JefePlantaController extends BaseController {
         ]);
     }
 
+    // ✅ Módulo Inventario (Vista con los BPAs)
+    public function moduloInventario() {
+        $this->checkAuth();
+        $usuario = $_SESSION['usuario'];
+
+        // Aquí puedes pasar variables si las necesitas más adelante
+        $this->view('jefeplanta/modulos-jefeplanta/inventario/dashboard', [
+            'usuario' => $usuario
+        ]);
+    }
+
+        // ✅ Módulo Ovas (Vista con los BPAs)
+    public function moduloOvas() {
+        $this->checkAuth();
+        $usuario = $_SESSION['usuario'];
+
+        $this->view('jefeplanta/modulos-jefeplanta/ovas/dashboard', [
+            'usuario' => $usuario
+        ]);
+    }
+
+    // ✅ Módulo Peces (Vista con los BPAs)
+    public function moduloPeces() {
+        $this->checkAuth();
+        $usuario = $_SESSION['usuario'];
+
+        $this->view('jefeplanta/modulos-jefeplanta/peces/dashboard', [
+            'usuario' => $usuario
+        ]);
+    }
+
     // ✅ Listar reportes
     public function reportes() {
         $this->checkAuth();
