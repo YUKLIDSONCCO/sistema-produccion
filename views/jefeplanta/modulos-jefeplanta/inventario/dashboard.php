@@ -9,7 +9,7 @@ include __DIR__ . '/../../../templates/header.php';
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 <div class="dashboard-container">
     <aside class="sidebar">
-        <div class="logo">corAqua</div>
+        <div class="logo">CORAQ</div>
         <nav class="main-nav">
             <ul>
                 <li class="active"><i class="fas fa-box-open"></i> Inventario</li>
@@ -53,9 +53,9 @@ include __DIR__ . '/../../../templates/header.php';
                     <?php
                     // Configuración de los BPA
                     $bpa_items = [
-                        ['num' => 'N°07', 'title' => 'ALIMENTACIÓN DIARIA', 'icon' => '🧾', 'color' => '#6c72e3', 'room' => 'BPA-7', 'action' => 'bpa7', 'time_range' => 'Registro Matutino', 'css_var' => 'var(--color-bpa1)'],
+                        ['num' => 'N°07', 'title' => 'ALIMENTACIÓN DIARIA', 'icon' => '🧾', 'color' => '#cbcdfaff', 'room' => 'BPA-1', 'action' => 'bpa1', 'time_range' => 'Registro Matutino', 'css_var' => 'var(--color-bpa1)'],
                         ['num' => 'N°08', 'title' => 'CONTROL DE ALIMENTO EN ALMACÉN', 'icon' => '📦', 'color' => '#8ce1b2', 'room' => 'BPA-8', 'action' => 'bpa8', 'time_range' => 'Inventario Semanal', 'css_var' => 'var(--color-bpa2)'],
-                        ['num' => 'N°13', 'title' => 'CONTROL DE SAL EN ALMACÉN', 'icon' => '🧂', 'color' => '#ff8e8e', 'room' => 'BPA-13', 'action' => 'bpa13', 'time_range' => 'Inventario Diario', 'css_var' => 'var(--color-bpa3)'],
+                        ['num' => 'N°13', 'title' => 'CONTROL DE SAL EN ALMACÉN', 'icon' => '🧂', 'color' => '#f9b2b2ff', 'room' => 'BPA-13', 'action' => 'bpa13', 'time_range' => 'Inventario Diario', 'css_var' => 'var(--color-bpa3)'],
                         ['num' => 'N°14', 'title' => 'CONTROL DE MEDICAMENTO', 'icon' => '💊', 'color' => '#ffe08a', 'room' => 'BPA-14', 'action' => 'bpa14', 'time_range' => 'Registro y Uso', 'css_var' => 'var(--color-bpa4)'],
                         ['num' => 'N°16', 'title' => 'DOSIFICACIÓN DE SUPLEMENTOS Y MEDICAMENTOS', 'icon' => '⚗️', 'color' => '#8edcff', 'room' => 'BPA-16', 'action' => 'bpa16', 'time_range' => 'Preparación', 'css_var' => 'var(--color-bpa5)'],
                     ];

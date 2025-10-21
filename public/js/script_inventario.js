@@ -37,4 +37,5 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // NOTA: Para hacer el carrusel de notas, los controles de fecha y 
     // el medidor de vacaciones, se necesitaría mucha más lógica JS.
+
 });

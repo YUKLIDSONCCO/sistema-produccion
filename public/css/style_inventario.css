@@ -410,6 +410,38 @@ a {
     color: var(--color-primary);
 }
 
+.bpa1-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    text-align: center;
+}
+
+.bpa1-table th, .bpa1-table td {
+    border: 1px solid #ccc;
+    padding: 6px;
+}
+
+.bpa1-table th {
+    background: #e0f2f1;
+    font-weight: 600;
+}
+
+.bpa1-table td[contenteditable="true"] {
+    background: #fffbe6;
+}
+
+.table-actions .btn {
+    display: inline-block;
+    padding: 10px 18px;
+    border-radius: 6px;
+    text-decoration: none;
+    background: #1e88e5;
+    color: #fff;
+}
+
 /*
  * ----------------------------------------
  * 4. Adaptabilidad (Multiplataforma)
