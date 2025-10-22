@@ -1,85 +1,109 @@
-<?php 
-include __DIR__ . '/../../../templates/header.php'; 
-?>
-<link rel="stylesheet" href="/sistema-produccion/public/css/style_inventario.css"> 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Formato BPA1 - Alimentación Diaria</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
 
-<div class="dashboard-container">
+        .titulo {
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
 
-    <aside class="sidebar">
-        <div class="logo">CORAQUA</div>
-        <nav class="main-nav">
-            <ul>
-                <li class="active"><i class="fas fa-box-open"></i> Inventario</li>
-                <li><i class="fas fa-file-alt"></i> BPA-01 Alimentación Diaria</li>
-                <li><i class="fas fa-warehouse"></i> BPA-08 Control Almacén</li>
-            </ul>
-        </nav>
-    </aside>
+        .subtitulo {
+            text-align: right;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
 
-    <main class="main-content">
-        <header class="dashboard-header">
-            <h1>FORMATO N°07 - ALIMENTACIÓN DIARIA</h1>
-            <div class="header-info">
-                <span>CÓDIGO: CORAQUA BPA-7 | VERSIÓN: 2.0 | FECHA: 03/08/2020</span>
-                <a href="index.php?controller=Inventario&action=index" class="btn btn-outline-secondary">⬅ Volver al Panel</a>
-            </div>
-        </header>
+        .encabezado {
+            width: 100%;
+            margin-bottom: 10px;
+        }
 
-        <section class="bpa-table-section">
-            <table class="bpa1-table">
-                <thead>
-                    <tr>
-                        <th colspan="7">RESPONSABLE:</th>
-                        <th colspan="7">FECHA:</th>
-                        <th colspan="7">SEDE:</th>
-                    </tr>
-                    <tr>
-                        <th>UP</th>
-                        <th>LOTE</th>
-                        <th>BIOMASA</th>
-                        <th>T.A. (%)</th>
-                        <th>AL. SUM (KG)</th>
-                        <th>CALIBRE</th>
-                        <th>OBS.</th>
+        .encabezado td {
+            padding: 3px;
+            font-size: 13px;
+        }
 
-                        <th>UP</th>
-                        <th>LOTE</th>
-                        <th>BIOMASA</th>
-                        <th>T.A. (%)</th>
-                        <th>AL. SUM (KG)</th>
-                        <th>CALIBRE</th>
-                        <th>OBS.</th>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 13px;
+        }
 
-                        <th>UP</th>
-                        <th>LOTE</th>
-                        <th>BIOMASA</th>
-                        <th>T.A. (%)</th>
-                        <th>AL. SUM (KG)</th>
-                        <th>CALIBRE</th>
-                        <th>OBS.</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php for($i=0; $i<10; $i++): ?>
-                    <tr>
-                        <?php for($j=0; $j<21; $j++): ?>
-                            <td contenteditable="true"></td>
-                        <?php endfor; ?>
-                    </tr>
-                    <?php endfor; ?>
-                </tbody>
-            </table>
+        th, td {
+            border: 1px solid black;
+            text-align: center;
+            padding: 4px;
+        }
 
-            <div class="table-actions" style="text-align:center; margin-top:20px;">
-                <a href="index.php?controller=Inventario&action=guardarBpa1" 
-                   class="btn btn-primary">💾 Guardar Registro BPA N°07</a>
-            </div>
-        </section>
-    </main>
-</div>
+        th {
+            background-color: #f2f2f2;
+        }
 
-<?php 
-include __DIR__ . '/../../../templates/footer.php'; 
-?>
+        .seccion {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="titulo">FORMATO N°07 - ALIMENTACIÓN DIARIA</div>
+    <div class="subtitulo">
+        <strong>CÓDIGO:</strong> CORAQUA BPA-1 &nbsp;&nbsp;&nbsp;
+        <strong>VERSIÓN:</strong> 2.0 &nbsp;&nbsp;&nbsp;
+        <strong>FECHA:</strong> 03/08/2020
+    </div>
+
+    <table class="encabezado">
+        <tr>
+            <td><strong>RESPONSABLE:</strong> ___________________________</td>
+            <td><strong>FECHA:</strong> __________________</td>
+            <td><strong>SEDE:</strong> __________________</td>
+        </tr>
+    </table>
+
+    <table>
+        <thead>
+            <tr>
+                <th>UP</th>
+                <th>LOTE</th>
+                <th>BIOMASA</th>
+                <th>T.A. (%)</th>
+                <th>AL. SUM (KG)</th>
+                <th>CALIBRE</th>
+                <th>OBS.</th>
+                <th>UP</th>
+                <th>LOTE</th>
+                <th>BIOMASA</th>
+                <th>T.A. (%)</th>
+                <th>AL. SUM (KG)</th>
+                <th>CALIBRE</th>
+                <th>OBS.</th>
+                <th>UP</th>
+                <th>LOTE</th>
+                <th>BIOMASA</th>
+                <th>T.A. (%)</th>
+                <th>AL. SUM (KG)</th>
+                <th>CALIBRE</th>
+                <th>OBS.</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Aquí puedes generar las filas dinámicamente desde la base de datos -->
+            <tr>
+                <td colspan="21" style="text-align:center;">Sin registros</td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>

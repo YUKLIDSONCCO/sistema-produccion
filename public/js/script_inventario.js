@@ -1,41 +1,43 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. Manejo de la navegación (simulación de activación de enlaces)
-    const navItems = document.querySelectorAll('.main-nav li');
-    navItems.forEach(item => {
-        item.addEventListener('click', function() {
-            // Elimina la clase 'active' de todos los elementos
-            navItems.forEach(i => i.classList.remove('active'));
-            // Agrega la clase 'active' solo al elemento clickeado
-            this.classList.add('active');
-            
-            // En una aplicación real, aquí cargarías el nuevo contenido 
-            // o redirigirías al usuario.
-            console.log(`Navegando a: ${this.textContent.trim()}`);
-        });
-    });
+document.addEventListener('DOMContentLoaded', function() {
+  const sidebar = document.getElementById('sidebar');
+  const mainContent = document.getElementById('mainContent');
+  const toggleBtn = document.getElementById('toggleSidebar');
 
-    // 2. Manejo de clics en el calendario (simulación de selección de fecha)
-    const calendarDays = document.querySelectorAll('.calendar-grid .day');
-    calendarDays.forEach(day => {
-        if (!day.classList.contains('inactive')) {
-            day.addEventListener('click', function() {
-                // Elimina la clase 'selected' de todos los días (excepto los inactivos)
-                calendarDays.forEach(d => d.classList.remove('selected'));
-                // Agrega la clase 'selected' al día clickeado
-                this.classList.add('selected');
-                console.log(`Día seleccionado: ${this.textContent.trim()}`);
-            });
-        }
-    });
+  // Función para alternar el sidebar
+  function toggleSidebar() {
+    sidebar.classList.toggle('open');
+    mainContent.classList.toggle('sidebar-open');
+  }
 
-    // 3. Simulación de la funcionalidad del botón Log Out
-    const logOutBtn = document.querySelector('.log-out-btn');
-    logOutBtn.addEventListener('click', () => {
-        alert('¡Sesión cerrada!');
-        // En un entorno real: window.location.href = '/login';
-    });
-    
-    // NOTA: Para hacer el carrusel de notas, los controles de fecha y 
-    // el medidor de vacaciones, se necesitaría mucha más lógica JS.
+  // Evento click para el botón hamburguesa
+  toggleBtn.addEventListener('click', toggleSidebar);
 
+  // Cerrar sidebar al hacer clic fuera en móvil
+  document.addEventListener('click', function(e) {
+    if (!sidebar.contains(e.target) && !toggleBtn.contains(e.target)) {
+      if (window.innerWidth <= 480) {
+        sidebar.classList.remove('open');
+        mainContent.classList.remove('sidebar-open');
+      }
+    }
+  });
+
+  // Ajustar sidebar según tamaño de pantalla
+  window.addEventListener('resize', function() {
+    if (window.innerWidth > 480) {
+      sidebar.classList.remove('open');
+      mainContent.classList.remove('sidebar-open');
+    }
+  });
+
+  // Opcional: cerrar sidebar si se hace clic en un enlace (en móvil)
+  const navLinks = document.querySelectorAll('.sidebar-nav a');
+  navLinks.forEach(link => {
+    link.addEventListener('click', function() {
+      if (window.innerWidth <= 480) {
+        sidebar.classList.remove('open');
+        mainContent.classList.remove('sidebar-open');
+      }
+      });
+    });
 });
