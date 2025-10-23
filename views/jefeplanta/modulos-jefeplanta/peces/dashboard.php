@@ -180,6 +180,20 @@
       <!-- BPA Cards -->
       <div class="projects-grid">
 
+        <!-- BPA 6 -->
+        <div class="project-card">
+          <div class="card-icon" style="background: #F4A261;">
+            <i class="fas fa-skull-crossbones"></i>
+          </div>
+          <h3>BPA 06 - Mortalidad Diaria Alevines</h3>
+          <div class="team-info"><i class="fas fa-users"></i> Equipo: BPA</div>
+          <div class="progress-bar">
+            <div class="fill" style="width: 80%; background:#F4A261;"></div>
+            <span>80%</span>
+          </div>
+          <a href="index.php?controller=JefePlanta&action=bpa6" class="btn-link">Ir al módulo</a>
+        </div>
+
         <!-- BPA 7 -->
         <div class="project-card">
           <div class="card-icon" style="background: #4A90E2;">
@@ -189,6 +203,7 @@
           <div class="team-info"><i class="fas fa-users"></i> Equipo: BPA</div>
           <div class="progress-bar"><div class="fill" style="width: 90%;"></div><span>90%</span></div>
           <a href="index.php?controller=JefePlanta&action=bpa7" class="btn-link">Ir al módulo</a>
+
         </div>
 
         <!-- BPA 10 -->
@@ -199,7 +214,9 @@
           <h3>BPA 10 - Control de Temperatura</h3>
           <div class="team-info"><i class="fas fa-users"></i> Equipo: BPA</div>
           <div class="progress-bar"><div class="fill" style="width: 85%; background:#FF9F1C;"></div><span>85%</span></div>
-          <a href="index.php?controller=BPA&action=bpa10" class="btn-link">Ir al módulo</a>
+          <a href="index.php?controller=JefePlanta&action=bpa10" class="btn-link">Ir al módulo</a>
+
+
         </div>
 
         <!-- BPA 11 -->
@@ -210,7 +227,7 @@
           <h3>BPA 11 - Registro de Alimentación</h3>
           <div class="team-info"><i class="fas fa-users"></i> Equipo: BPA</div>
           <div class="progress-bar"><div class="fill" style="width: 78%; background:#2EC4B6;"></div><span>78%</span></div>
-          <a href="index.php?controller=BPA&action=bpa11" class="btn-link">Ir al módulo</a>
+          <a href="index.php?controller=jefeplanta&action=bpa11" class="btn-link">Ir al módulo</a>
         </div>
 
         <!-- BPA 12 -->
@@ -221,7 +238,7 @@
           <h3>BPA 12 - Control de Crecimiento</h3>
           <div class="team-info"><i class="fas fa-users"></i> Equipo: BPA</div>
           <div class="progress-bar"><div class="fill" style="width: 82%; background:#FF6B9D;"></div><span>82%</span></div>
-          <a href="index.php?controller=BPA&action=bpa12" class="btn-link">Ir al módulo</a>
+          <a href="index.php?controller=jefeplanta&action=bpa12" class="btn-link">Ir al módulo</a>
         </div>
 
         <!-- BPA 15 -->
@@ -232,7 +249,7 @@
           <h3>BPA 15 - Registro de Áreas</h3>
           <div class="team-info"><i class="fas fa-users"></i> Equipo: BPA</div>
           <div class="progress-bar"><div class="fill" style="width: 65%; background:#9B5DE5;"></div><span>65%</span></div>
-          <a href="index.php?controller=BPA&action=bpa15" class="btn-link">Ir al módulo</a>
+          <a href="index.php?controller=jefeplanta&action=bpa15" class="btn-link">Ir al módulo</a>
         </div>
 
         <!-- Mortalidad -->
@@ -243,7 +260,7 @@
           <h3>Reporte de Mortalidad</h3>
           <div class="team-info"><i class="fas fa-users"></i> Equipo: BPA</div>
           <div class="progress-bar"><div class="fill" style="width: 70%; background:#E63946;"></div><span>70%</span></div>
-          <a href="index.php?controller=BPA&action=mortproducc" class="btn-link">Ir al módulo</a>
+          <a href="index.php?controller=jefeplanta&action=mortproducc" class="btn-link">Ir al módulo</a>
         </div>
 
       </div>
