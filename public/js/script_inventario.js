@@ -38,6 +38,6 @@ document.addEventListener('DOMContentLoaded', function() {
         sidebar.classList.remove('open');
         mainContent.classList.remove('sidebar-open');
       }
-      });
-    });
+    });
+  });
 });

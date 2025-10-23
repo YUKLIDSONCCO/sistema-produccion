@@ -4,20 +4,20 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Dashboard - CORAQUA / Producción</title>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com  " crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#f5f6f7;
-    --muted:#bfbfc3;
-    --card:#ffffff;
-    --accent1:#ff7a4a;
-    --accent2:#ffb599;
-    --accent-contrast:#ffffff;
-    --sidebar-bg: linear-gradient(180deg,#ff7a4a,#ff9a6a);
-    --radius:14px;
+    --bg: #eaf4f4; /* Fondo general azul pastel */
+    --muted: #7a8f8f; /* Ajustado al tono del azul pastel */
+    --card: #ffffff;
+    --accent1: #f49340; /* Naranja principal */
+    --accent2: #fbdcaf; /* Naranja claro para degradado */
+    --accent-contrast: #ffffff;
+    --sidebar-bg: linear-gradient(180deg, #f49340, #fbdcaf); /* Degradado naranja */
+    --radius: 14px;
     --glass: rgba(255,255,255,0.6);
-    --shadow: 0 6px 18px rgba(20,20,30,0.06);
+    --shadow: 0 6px 18px rgba(150, 120, 100, 0.12); /* Sombra más cálida */
   }
 
   *{box-sizing:border-box}
@@ -76,14 +76,13 @@
   .user p{margin:0;font-size:13px;opacity:.9}
 
   /* --- Estilo de item de navegación --- */
-  /* Lo cambié a 'a' (enlace) en lugar de 'div' para que los links funcionen */
   nav.sidebar-nav{margin-top:26px}
   .nav-section{display:flex;flex-direction:column;gap:8px}
   .nav-item{
     display:flex;gap:12px;align-items:center;padding:10px;border-radius:10px;
     cursor:pointer;color:rgba(255,255,255,0.92);font-weight:600;
     transition:background .18s, transform .12s;
-    text-decoration:none; /* Añadido para quitar subrayado de enlaces */
+    text-decoration:none;
   }
   .nav-item:hover{transform:translateY(-2px);background:rgba(255,255,255,0.08);}
   .nav-item.active{
@@ -118,8 +117,8 @@
   .icon-btn{
     background:var(--card);border-radius:10px;padding:8px 10px;box-shadow:var(--shadow);cursor:pointer;
     display:inline-flex;align-items:center;justify-content:center;
-    text-decoration:none; /* Añadido para enlaces con esta clase */
-    color:inherit; /* Añadido para enlaces con esta clase */
+    text-decoration:none;
+    color:inherit;
   }
   .toggle-sidebar{
     display:none;
@@ -142,7 +141,7 @@
 
   /* Project card gradient (para KPIs) */
   .project-card{
-    background: linear-gradient(180deg, rgba(255,106,69,1), rgba(255,154,105,1));
+    background: linear-gradient(180deg, var(--accent1), var(--accent2));
     color:white;
     padding:20px;border-radius:16px;display:flex;flex-direction:column;gap:10px;
   }
@@ -152,7 +151,7 @@
 
   /* small white project (para KPIs) */
   .project-card.light{
-    background:var(--card);color:#ff4f2a;border:1px solid rgba(255,120,90,0.08)
+    background:var(--card);color:var(--accent1);border:1px solid rgba(244, 147, 64, 0.12)
   }
 
   /* Chart card */
@@ -168,7 +167,7 @@
   .mini-calendar .month{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-weight:700}
   .days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center;color:var(--muted);font-size:13px}
   .day-num{padding:8px;border-radius:8px}
-  .day-num.today{background:linear-gradient(180deg,#fff4f0,#fffaf8);color:#ff6a3f;font-weight:700}
+  .day-num.today{background:linear-gradient(180deg,#fff4f0,#fffaf8);color:#f49340;font-weight:700}
 
   /* Messages */
   .messages{display:flex;flex-direction:column;gap:10px}
@@ -266,7 +265,7 @@
       <header class="topbar">
         <button class="icon-btn toggle-sidebar" id="btnToggle" title="Toggle sidebar">☰</button>
         <div class="search" role="search">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M21 21l-4.35-4.35" stroke="#bdbdbf" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M21 21l-4.35-4.35" stroke="#7a8f8f" stroke-width="1.6" stroke-linecap="round"/></svg>
           <input id="searchInput" placeholder="Buscar..." />
         </div>
         <div class="top-actions">
@@ -285,13 +284,13 @@
         </div>
         
         <div class="quick-actions" style="display:flex;gap:10px;flex-wrap:wrap;">
-          <a href="index.php?controller=JefePlanta&action=moduloInventario" class="icon-btn" style="padding:10px 14px;font-weight:600;gap:8px;">
+          <a href="index.php?controller=JefePlanta&action=moduloInventario" class="icon-btn" style="padding:10px 14px;font-weight:600;gap:8px;background:#C3A77F;color:white;">
             📦 <span>Abrir Inventario</span>
           </a>
-          <a href="index.php?controller=JefePlanta&action=moduloOvas" class="icon-btn" style="padding:10px 14px;font-weight:600;gap:8px;">
+          <a href="index.php?controller=JefePlanta&action=moduloOvas" class="icon-btn" style="padding:10px 14px;font-weight:600;gap:8px;background:#f49340;color:white;">
             🥚 <span>Ovas</span>
           </a>
-          <a href="index.php?controller=JefePlanta&action=moduloPeces" class="icon-btn" style="padding:10px 14px;font-weight:600;gap:8px;">
+          <a href="index.php?controller=JefePlanta&action=moduloPeces" class="icon-btn" style="padding:10px 14px;font-weight:600;gap:8px;background:#96b9b9;color:white;">
             🐟 <span>Peces</span>
           </a>
         </div>
@@ -302,7 +301,7 @@
         <div style="display:flex;flex-direction:column;gap:18px">
           <h3 style="margin:0 0 0 4px">Métricas Clave</h3>
 
-          <div class="project-card card" style="background: linear-gradient(180deg, #ff7a4a, #ff9a6a);">
+          <div class="project-card card">
             <div class="space-between">
               <h4 style="margin:0;font-size:16px;font-weight:600;">Ovas en incubación</h4>
               <div style="font-size:20px;background:rgba(255,255,255,0.12);width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;">🥚</div>
@@ -318,12 +317,12 @@
           <div class="project-card light card" style="padding:20px;">
             <div class="space-between">
               <h4 style="margin:0;font-size:16px;font-weight:600;">Peces en producción</h4>
-              <div style="font-size:20px;background:rgba(255,120,90,0.12);width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;">🐟</div>
+              <div style="font-size:20px;background:rgba(244, 147, 64, 0.12);width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;">🐟</div>
             </div>
             <div style="font-size:36px;font-weight:800;margin:10px 0;">
               <?php echo $produccion['peces'] ?? 0; ?>
             </div>
-            <div class="meta" style="font-size:13px;opacity:1;color:#ff4f2a;">
+            <div class="meta" style="font-size:13px;opacity:1;color:#f49340;">
               <span>⬆️ 8% vs mes anterior</span>
             </div>
           </div>
@@ -349,7 +348,7 @@
              <div class="card-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
                 <h5 style="margin:0;font-size:15px;font-weight:700;">📊 Resumen de Producción</h5>
                 <div class="chart-actions" style="display:flex;gap:6px;">
-                    <button class="icon-btn" style="padding:6px 10px;font-size:12px;background:var(--accent2);color:white;border:0;">Semanal</button>
+                    <button class="icon-btn" style="padding:6px 10px;font-size:12px;background:#f49340;color:white;border:0;">Semanal</button>
                     <button class="icon-btn" style="padding:6px 10px;font-size:12px;border:0;">Mensual</button>
                     <button class="icon-btn" style="padding:6px 10px;font-size:12px;border:0;">Anual</button>
                 </div>
@@ -363,19 +362,19 @@
             <h4 style="margin:0 0 10px 0">New Messages</h4>
             <div style="display:flex;gap:10px;margin-bottom:12px">
               <button class="icon-btn" style="background:#fff;border-radius:12px;border:0;">All</button>
-              <button class="icon-btn" style="background:linear-gradient(90deg,#ff7a4a,#ff9a6a);color:#fff;border-radius:12px;border:0;">Teammate</button>
+              <button class="icon-btn" style="background:linear-gradient(90deg,#f49340,#fbdcaf);color:#fff;border-radius:12px;border:0;">Teammate</button>
               <button class="icon-btn" style="border:0;">Customer</button>
             </div>
             <div class="messages">
               <div class="msg">
-                <div class="m-avatar"><img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?q=80&w=200&auto=format&fit=crop" alt=""></div>
+                <div class="m-avatar"><img src="  https://images.unsplash.com/photo-1607746882042-944635dfe10e?q=80&w=200&auto=format&fit=crop" alt=""></div>
                 <div class="m-body">
                   <div class="name">Barak <span class="muted" style="font-weight:400">• Hew How Are You</span></div>
                 </div>
                 <div class="m-time">12:30</div>
               </div>
               <div class="msg">
-                <div class="m-avatar"><img src="https://images.unsplash.com/photo-1542204165-6e5a7f6a13b6?q=80&w=200&auto=format&fit=crop" alt=""></div>
+                <div class="m-avatar"><img src="  https://images.unsplash.com/photo-1542204165-6e5a7f6a13b6?q=80&w=200&auto=format&fit=crop" alt=""></div>
                 <div class="m-body">
                   <div class="name">Nikole <span class="muted" style="font-weight:400">• Hew How Are You</span></div>
                 </div>
@@ -393,7 +392,7 @@
               <div style="font-weight:700">📈 Eficiencia de Producción</div>
             </div>
             <div class="card-body">
-                 <div style="height:120px;border-radius:12px;background:linear-gradient(180deg,#f5f6f7,#eee);display:flex;align-items:center;justify-content:center;color:var(--muted)">
+                 <div style="height:120px;border-radius:12px;background:linear-gradient(180deg,#eaf4f4,#d0e8e8);display:flex;align-items:center;justify-content:center;color:var(--muted)">
                    (Gráfica eficiencia)
                  </div>
             </div>
@@ -447,7 +446,6 @@
     const overlay = document.getElementById('overlay');
     const app = document.getElementById('app');
 
-    // Collapse on medium screens toggle
     function isMobile() {
       return window.matchMedia('(max-width:760px)').matches;
     }
@@ -456,7 +454,6 @@
       return window.matchMedia('(max-width:1000px)').matches;
     }
 
-    // initial state for smaller widths
     function applyInitialState() {
       if (isMobile()) {
         sidebar.classList.remove('collapsed');
@@ -473,7 +470,6 @@
     applyInitialState();
     window.addEventListener('resize', applyInitialState);
 
-    // Toggle button behaviour (open/close)
     btn.addEventListener('click', function(){
       if (isMobile()) {
         const open = sidebar.classList.toggle('open');
@@ -483,13 +479,11 @@
       }
     });
 
-    // overlay click closes sidebar on mobile
     overlay.addEventListener('click', function(){
       sidebar.classList.remove('open');
       overlay.style.display = 'none';
     });
 
-    // close sidebar by pressing Escape on mobile
     document.addEventListener('keydown', function(e){
       if (e.key === 'Escape') {
         sidebar.classList.remove('open');
@@ -497,10 +491,8 @@
       }
     });
 
-    // Close the sidebar when clicking outside (desktop narrow mode)
     document.addEventListener('click', function(e){
       if (!isMobile() && isNarrow()) {
-        // if clicked outside sidebar and outside toggle button, collapse it
         const path = e.composedPath ? e.composedPath() : (e.path || []);
         if (!path.includes(sidebar) && !path.includes(btn)) {
           sidebar.classList.add('collapsed');
@@ -508,10 +500,8 @@
       }
     });
 
-    // Example: make the search filter log (placeholder for future)
     const search = document.getElementById('searchInput');
     search.addEventListener('input', function(){
-      // Here podrías filtrar tarjetas en la UI
       // console.log('Buscar:', search.value)
     });
   })();
