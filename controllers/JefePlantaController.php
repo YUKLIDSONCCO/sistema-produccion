@@ -109,5 +109,29 @@ class JefePlantaController extends BaseController {
             $this->redirect("index.php?controller=Auth&action=login");
         }
     }
+    public function bpa7() {
+        require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa7.php';
+    }
+
+    public function bpa10() {
+        require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa10.php';
+    }
+
+    public function bpa11() {
+        require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa11.php';
+    }
+
+    public function bpa12() {
+        require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa12.php';
+    }
+
+    public function bpa15() {
+        require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa15.php';
+    }
+
+    public function mortproducc() {
+        require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/mortproducc.php';
+    }
+
 }
 ?>
