@@ -1,993 +1,520 @@
-<?php include __DIR__ . '/../templates/header.php'; ?>
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Dashboard - CORAQUA / Producción</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f5f6f7;
+    --muted:#bfbfc3;
+    --card:#ffffff;
+    --accent1:#ff7a4a;
+    --accent2:#ffb599;
+    --accent-contrast:#ffffff;
+    --sidebar-bg: linear-gradient(180deg,#ff7a4a,#ff9a6a);
+    --radius:14px;
+    --glass: rgba(255,255,255,0.6);
+    --shadow: 0 6px 18px rgba(20,20,30,0.06);
+  }
 
-<!-- dashboard completo estilo moderno -->
-<div class="app-layout">
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Inter, system-ui, Arial, sans-serif;
+    background:var(--bg);
+    color:#222;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    min-height:100vh;
+  }
+
+  /* Layout */
+  .app{
+    display:grid;
+    grid-template-columns: 280px 1fr;
+    gap:24px;
+    padding:28px;
+  }
+
+  /* Sidebar */
+  .sidebar{
+    background:var(--sidebar-bg);
+    border-radius:20px;
+    padding:22px;
+    color:var(--accent-contrast);
+    height:calc(100vh - 56px);
+    position:sticky;
+    top:28px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    transition:all .3s ease;
+  }
+
+  .sidebar.collapsed{
+    width:88px;
+    padding:16px;
+  }
+
+  .brand{
+    display:flex;
+    gap:12px;
+    align-items:center;
+  }
+  .avatar{
+    width:52px;height:52px;border-radius:12px;overflow:hidden;border:2px solid rgba(255,255,255,0.25);
+    flex:0 0 52px;
+  }
+  .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+  .user{
+    line-height:1;
+  }
+  .user h4{margin:0;font-size:15px;font-weight:700}
+  .user p{margin:0;font-size:13px;opacity:.9}
+
+  /* --- Estilo de item de navegación --- */
+  /* Lo cambié a 'a' (enlace) en lugar de 'div' para que los links funcionen */
+  nav.sidebar-nav{margin-top:26px}
+  .nav-section{display:flex;flex-direction:column;gap:8px}
+  .nav-item{
+    display:flex;gap:12px;align-items:center;padding:10px;border-radius:10px;
+    cursor:pointer;color:rgba(255,255,255,0.92);font-weight:600;
+    transition:background .18s, transform .12s;
+    text-decoration:none; /* Añadido para quitar subrayado de enlaces */
+  }
+  .nav-item:hover{transform:translateY(-2px);background:rgba(255,255,255,0.08);}
+  .nav-item.active{
+    background:rgba(255,255,255,0.12);
+    box-shadow:inset 0 -2px 0 rgba(255,255,255,0.06);
+  }
+  .nav-icon{
+    width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+    background:rgba(255,255,255,0.12);
+    flex:0 0 36px;
+  }
+
+  .tools{margin-top:20px;opacity:.95}
+  .tools .small{font-size:13px;opacity:.95}
+
+  /* Main content */
+  .main{
+    padding:22px 18px;
+  }
+  header.topbar{
+    display:flex;align-items:center;gap:16px;margin-bottom:18px;
+  }
+  .search{
+    flex:1;display:flex;align-items:center;gap:12px;
+    background:var(--card);padding:12px;border-radius:12px;box-shadow:var(--shadow);
+  }
+  .search input{
+    border:0;outline:0;font-size:15px;width:100%;
+    background:transparent;
+  }
+  .top-actions{display:flex;gap:10px;align-items:center}
+  .icon-btn{
+    background:var(--card);border-radius:10px;padding:8px 10px;box-shadow:var(--shadow);cursor:pointer;
+    display:inline-flex;align-items:center;justify-content:center;
+    text-decoration:none; /* Añadido para enlaces con esta clase */
+    color:inherit; /* Añadido para enlaces con esta clase */
+  }
+  .toggle-sidebar{
+    display:none;
+  }
+
+  /* Grid content */
+  .grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap:18px;
+    margin-top:16px;
+  }
+
+  .card{
+    background:var(--card);
+    border-radius:16px;
+    padding:16px;
+    box-shadow:var(--shadow);
+  }
+
+  /* Project card gradient (para KPIs) */
+  .project-card{
+    background: linear-gradient(180deg, rgba(255,106,69,1), rgba(255,154,105,1));
+    color:white;
+    padding:20px;border-radius:16px;display:flex;flex-direction:column;gap:10px;
+  }
+  .project-card .meta{display:flex;justify-content:space-between;align-items:center;font-size:13px;opacity:.95}
+  .progress{height:8px;background:rgba(255,255,255,0.2);border-radius:6px;overflow:hidden}
+  .progress > i{display:block;height:100%;background:white;border-radius:6px}
+
+  /* small white project (para KPIs) */
+  .project-card.light{
+    background:var(--card);color:#ff4f2a;border:1px solid rgba(255,120,90,0.08)
+  }
+
+  /* Chart card */
+  .chart{
+    padding:18px;border-radius:16px;height:200px;display:flex;align-items:center;justify-content:center;
+  }
+
+  /* Calendar & list */
+  .calendar{
+    display:flex;gap:16px;align-items:flex-start;
+  }
+  .mini-calendar{width:220px;padding:12px;border-radius:12px;background:var(--card);box-shadow:var(--shadow)}
+  .mini-calendar .month{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-weight:700}
+  .days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center;color:var(--muted);font-size:13px}
+  .day-num{padding:8px;border-radius:8px}
+  .day-num.today{background:linear-gradient(180deg,#fff4f0,#fffaf8);color:#ff6a3f;font-weight:700}
+
+  /* Messages */
+  .messages{display:flex;flex-direction:column;gap:10px}
+  .msg{display:flex;gap:12px;align-items:center;padding:10px;border-radius:10px}
+  .msg .m-avatar{width:44px;height:44px;border-radius:8px;overflow:hidden}
+  .msg .m-avatar img{width:100%;height:100%;object-fit:cover}
+  .msg .m-body{flex:1}
+  .msg .m-body .name{font-weight:700}
+  .msg .m-time{font-size:12px;color:var(--muted)}
+
+  /* Responsive */
+  @media (max-width: 1000px){
+    .app{grid-template-columns: 84px 1fr; padding:18px}
+    .sidebar{height:auto;position:relative;top:0}
+    .sidebar.collapsed{width:84px;padding:14px}
+    .brand .user{display:none}
+    .nav-item span.label{display:none}
+    .toggle-sidebar{display:inline-flex}
+  }
+
+  @media (max-width: 760px){
+    .app{grid-template-columns:1fr;padding:12px}
+    .sidebar{
+      position:fixed;left:0;top:0;bottom:0;z-index:50;transform:translateX(-110%);
+      width:260px;height:100vh;padding:18px;box-shadow:0 20px 60px rgba(0,0,0,0.18);
+    }
+    .sidebar.open{transform:translateX(0)}
+    .sidebar.collapsed{transform:translateX(-110%)}
+    .sidebar .user{display:flex}
+    .overlay{display:block}
+    .grid{grid-template-columns:1fr; margin-top:12px}
+  }
+
+  /* small helpers */
+  .muted{color:var(--muted)}
+  .flex{display:flex;align-items:center;gap:10px}
+  .space-between{display:flex;justify-content:space-between;align-items:center}
+</style>
+</head>
+<body>
+  <div class="app" id="app">
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="Sidebar">
+      <div>
         <div class="brand">
-            <div class="logo-circle">C</div>
-            <div class="brand-text">
-                <h4>CORAQUA</h4>
-                <small>Producción</small>
-            </div>
+          <div class="avatar" style="background:#fff;color:var(--accent1);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;">
+            C
+          </div>
+          <div class="user">
+            <h4>CORAQUA</h4>
+            <p style="opacity:.9">Producción</p>
+          </div>
         </div>
 
-        <nav class="nav-main">
+        <nav class="sidebar-nav" aria-label="Main navigation">
+          <div class="nav-section">
             <a href="index.php?controller=JefePlanta&action=dashboard" class="nav-item active">
-                <i class="fa fa-tachometer-alt"></i> <span>Dashboard</span>
+              <div class="nav-icon">🏠</div><span class="label">Dashboard</span>
             </a>
             <a href="index.php?controller=JefePlanta&action=moduloInventario" class="nav-item">
-                <i class="fa fa-boxes"></i> <span>Inventario</span>
+              <div class="nav-icon">📦</div><span class="label">Inventario</span>
             </a>
             <a href="index.php?controller=JefePlanta&action=moduloPeces" class="nav-item">
-                <i class="fa fa-fish"></i> <span>Peces</span>
+              <div class="nav-icon">🐟</div><span class="label">Peces</span>
             </a>
             <a href="index.php?controller=JefePlanta&action=moduloOvas" class="nav-item">
-                <i class="fa fa-egg"></i> <span>Ovas</span>
+              <div class="nav-icon">🥚</div><span class="label">Ovas</span>
             </a>
             <a href="index.php?controller=JefePlanta&action=reportes" class="nav-item">
-                <i class="fa fa-file-alt"></i> <span>Reportes</span>
+              <div class="nav-icon">📊</div><span class="label">Reportes</span>
             </a>
-            <a href="index.php?controller=Auth&action=settings" class="nav-item">
-                <i class="fa fa-cog"></i> <span>Configuración</span>
-            </a>
-        </nav>
+          </div>
 
-        <div class="sidebar-footer">
-            <small>Usuario:</small>
-            <div class="user-mini"><?php echo htmlspecialchars($usuario['nombre']); ?></div>
+          <div style="margin-top:18px" class="nav-section tools">
+            <a href="index.php?controller=Auth&action=settings" class="nav-item">
+              <div class="nav-icon">⚙️</div><span class="label small">Configuración</span>
+            </a>
+            <a href="index.php?controller=Auth&action=logout" class="nav-item">
+              <div class="nav-icon">🚪</div><span class="label small">Log Out</span>
+            </a>
+          </div>
+        </nav>
+      </div>
+
+      <div style="margin-top:16px;font-size:13px;opacity:.95">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;gap:8px;align-items:center">
+             <span>Usuario:</span>
+             <strong style="font-weight:700"><?php echo htmlspecialchars($usuario['nombre']); ?></strong>
+          </div>
         </div>
+      </div>
     </aside>
 
-    <!-- MAIN -->
-    <main class="main-content">
-        <header class="topbar">
-            <div class="search-area">
-                <input type="search" placeholder="Buscar...">
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-btn toggle-sidebar" id="btnToggle" title="Toggle sidebar">☰</button>
+        <div class="search" role="search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M21 21l-4.35-4.35" stroke="#bdbdbf" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <input id="searchInput" placeholder="Buscar..." />
+        </div>
+        <div class="top-actions">
+          <div class="icon-btn" title="New">＋</div>
+          <div class="icon-btn" title="Notifications">🔔</div>
+          <div class="icon-btn" title="Profile" style="display:flex;gap:8px;align-items:center;padding:6px 10px">
+            <img src="/public/img/user-default.png" alt="me" style="width:34px;height:34px;border-radius:8px;object-fit:cover">
+          </div>
+        </div>
+      </header>
+      
+      <section class="hero-row" style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap;">
+        <div class="greeting">
+          <h2 style="margin:0">Hola, <strong><?php echo htmlspecialchars($usuario['nombre']); ?></strong></h2>
+          <p class="muted" style="margin:4px 0 0 0">Revisa el estado de producción, inventario y los formularios.</p>
+        </div>
+        
+        <div class="quick-actions" style="display:flex;gap:10px;flex-wrap:wrap;">
+          <a href="index.php?controller=JefePlanta&action=moduloInventario" class="icon-btn" style="padding:10px 14px;font-weight:600;gap:8px;">
+            📦 <span>Abrir Inventario</span>
+          </a>
+          <a href="index.php?controller=JefePlanta&action=moduloOvas" class="icon-btn" style="padding:10px 14px;font-weight:600;gap:8px;">
+            🥚 <span>Ovas</span>
+          </a>
+          <a href="index.php?controller=JefePlanta&action=moduloPeces" class="icon-btn" style="padding:10px 14px;font-weight:600;gap:8px;">
+            🐟 <span>Peces</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="grid" aria-live="polite">
+        
+        <div style="display:flex;flex-direction:column;gap:18px">
+          <h3 style="margin:0 0 0 4px">Métricas Clave</h3>
+
+          <div class="project-card card" style="background: linear-gradient(180deg, #ff7a4a, #ff9a6a);">
+            <div class="space-between">
+              <h4 style="margin:0;font-size:16px;font-weight:600;">Ovas en incubación</h4>
+              <div style="font-size:20px;background:rgba(255,255,255,0.12);width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;">🥚</div>
             </div>
+            <div style="font-size:36px;font-weight:800;margin:10px 0;">
+              <?php echo $produccion['ovas'] ?? 0; ?>
+            </div>
+            <div class="meta" style="font-size:13px;opacity:1;">
+              <span>⬆️ 12% vs mes anterior</span>
+            </div>
+          </div>
 
-            <div class="top-actions">
-                <div class="user-card">
-                    <span class="user-name"><?php echo htmlspecialchars($usuario['nombre']); ?></span>
-                    <img src="/public/img/user-default.png" alt="user" class="user-avatar">
+          <div class="project-card light card" style="padding:20px;">
+            <div class="space-between">
+              <h4 style="margin:0;font-size:16px;font-weight:600;">Peces en producción</h4>
+              <div style="font-size:20px;background:rgba(255,120,90,0.12);width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;">🐟</div>
+            </div>
+            <div style="font-size:36px;font-weight:800;margin:10px 0;">
+              <?php echo $produccion['peces'] ?? 0; ?>
+            </div>
+            <div class="meta" style="font-size:13px;opacity:1;color:#ff4f2a;">
+              <span>⬆️ 8% vs mes anterior</span>
+            </div>
+          </div>
+
+          <div class="card" style="color:#333; padding:20px;">
+            <div class="space-between">
+              <h4 style="margin:0;font-size:16px;font-weight:600;">Ítems en inventario</h4>
+              <div style="font-size:20px;background:rgba(0,0,0,0.05);width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#555">📦</div>
+            </div>
+            <div style="font-size:36px;font-weight:800;margin:10px 0;">
+              <?php echo $produccion['insumos'] ?? 0; ?>
+            </div>
+            <div class="meta" style="font-size:13px;opacity:1;color:#666;">
+              <span>⬇️ 5% vs mes anterior</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="margin:0 0 6px 4px">Actividad</h3>
+          
+          <div class="card" style="padding:18px;height:auto;display:block;">
+             <div class="card-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                <h5 style="margin:0;font-size:15px;font-weight:700;">📊 Resumen de Producción</h5>
+                <div class="chart-actions" style="display:flex;gap:6px;">
+                    <button class="icon-btn" style="padding:6px 10px;font-size:12px;background:var(--accent2);color:white;border:0;">Semanal</button>
+                    <button class="icon-btn" style="padding:6px 10px;font-size:12px;border:0;">Mensual</button>
+                    <button class="icon-btn" style="padding:6px 10px;font-size:12px;border:0;">Anual</button>
                 </div>
             </div>
-        </header>
-
-        <section class="main-body container-fluid">
-            <!-- HERO / Greeting -->
-            <div class="hero-row">
-                <div class="greeting">
-                    <h2>Hola, <strong><?php echo htmlspecialchars($usuario['nombre']); ?></strong></h2>
-                    <p class="muted">Revisa el estado de producción, inventario y los formularios.</p>
-                </div>
-
-                <div class="quick-actions">
-                    <a href="index.php?controller=JefePlanta&action=moduloInventario" class="btn btn-primary">
-                        <i class="fa fa-box"></i> Abrir Inventario
-                    </a>
-                    <a href="index.php?controller=JefePlanta&action=moduloOvas" class="btn btn-primary">
-                        <i class="fa fa-egg"></i> Ovas
-                    </a>
-                    <a href="index.php?controller=JefePlanta&action=moduloPeces" class="btn btn-primary">
-                        <i class="fa fa-fish"></i> Peces
-                    </a>
-                </div>
+            <div class="card-body" style="height:250px;">
+                <canvas id="productionChart" style="width:100%;height:100%;"></canvas>
             </div>
+          </div>
 
-            <!-- GRID PRINCIPAL -->
-            <div class="grid-dashboard">
-                <!-- KPI Cards -->
-                <div class="kpis">
-                    <div class="kpi card kpi-ovas">
-                        <div class="kpi-icon">
-                            <i class="fa fa-egg"></i>
-                        </div>
-                        <div class="kpi-content">
-                            <div class="kpi-title">Ovas en incubación</div>
-                            <div class="kpi-value"><?php echo $produccion['ovas'] ?? 0; ?></div>
-                            <div class="kpi-trend">
-                                <i class="fa fa-arrow-up"></i>
-                                <span>12% vs mes anterior</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="kpi card kpi-peces">
-                        <div class="kpi-icon">
-                            <i class="fa fa-fish"></i>
-                        </div>
-                        <div class="kpi-content">
-                            <div class="kpi-title">Peces en producción</div>
-                            <div class="kpi-value"><?php echo $produccion['peces'] ?? 0; ?></div>
-                            <div class="kpi-trend">
-                                <i class="fa fa-arrow-up"></i>
-                                <span>8% vs mes anterior</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="kpi card kpi-inv">
-                        <div class="kpi-icon">
-                            <i class="fa fa-boxes"></i>
-                        </div>
-                        <div class="kpi-content">
-                            <div class="kpi-title">Ítems en inventario</div>
-                            <div class="kpi-value"><?php echo $produccion['insumos'] ?? 0; ?></div>
-                            <div class="kpi-trend">
-                                <i class="fa fa-arrow-down"></i>
-                                <span>5% vs mes anterior</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Main Charts -->
-                <div class="chart-row">
-                    <div class="chart-container card">
-                        <div class="card-header">
-                            <h5>📊 Resumen de Producción</h5>
-                            <div class="chart-actions">
-                                <button class="btn-chart active">Semanal</button>
-                                <button class="btn-chart">Mensual</button>
-                                <button class="btn-chart">Anual</button>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="productionChart" height="250"></canvas>
-                        </div>
-                    </div>
-                    
-                    <div class="small-charts">
-                        <div class="card">
-                            <div class="card-header">
-                                <h6>📈 Eficiencia de Producción</h6>
-                            </div>
-                            <div class="card-body">
-                                <canvas id="efficiencyChart" height="120"></canvas>
-                            </div>
-                        </div>
-                        
-                        <div class="card">
-                            <div class="card-header">
-                                <h6>📦 Estado de Inventario</h6>
-                            </div>
-                            <div class="card-body">
-                                <canvas id="inventoryChart" height="120"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Stats & Quick Actions -->
-                <div class="stats-actions-row">
-                    <div class="stats-container card">
-                        <div class="card-header">
-                            <h5>📈 Resumen de Producción</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="stats-grid">
-                                <div class="stat-item">
-                                    <div class="stat-label">Total de Lotes</div>
-                                    <div class="stat-value"><?php echo $produccion['total_lotes'] ?? 0; ?></div>
-                                </div>
-                                <div class="stat-item">
-                                    <div class="stat-label">Total Producido</div>
-                                    <div class="stat-value"><?php echo $produccion['total_producido'] ?? 0; ?> unidades</div>
-                                </div>
-                                <div class="stat-item">
-                                    <div class="stat-label">Eficiencia</div>
-                                    <div class="stat-value"><?php echo $produccion['eficiencia'] ?? '0%'; ?></div>
-                                </div>
-                                <div class="stat-item">
-                                    <div class="stat-label">Tasa de Supervivencia</div>
-                                    <div class="stat-value">94%</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                </div>
-
-                <!-- Right column: Inventario rápido + Accesos -->
-                <aside class="panel-right">
-                    <div class="card">
-                        <div class="card-header">
-                            <h6>📦 Últimos insumos</h6>
-                        </div>
-                        <div class="card-body small-list">
-                            <?php if (!empty($insumos)): ?>
-                                <ul>
-                                    <?php foreach (array_slice($insumos,0,6) as $it): ?>
-                                        <li>
-                                            <div class="item-info">
-                                                <span class="item-name"><?php echo $it['nombre']; ?></span>
-                                                <span class="item-category"><?php echo $it['categoria'] ?? 'General'; ?></span>
-                                            </div>
-                                            <span class="item-stock"><?php echo $it['stock']; ?> <?php echo $it['unidad_medida']; ?></span>
-                                        </li>
-                                    <?php endforeach; ?>
-                                </ul>
-                            <?php else: ?>
-                                <div class="empty-state">
-                                    <i class="fa fa-box-open"></i>
-                                    <p>No hay insumos registrados</p>
-                                </div>
-                            <?php endif; ?>
-                        </div>
-                        <div class="card-footer">
-                            <a href="index.php?controller=JefePlanta&action=moduloInventario" class="link">Ver inventario completo</a>
-                        </div>
-                    </div>
-
-                    <div class="card quick-links">
-                        <div class="card-header">
-                            <h6>🔗 Accesos Rápidos</h6>
-                        </div>
-                        <div class="card-body">
-                            <a href="index.php?controller=JefePlanta&action=moduloOvas" class="quick-link">
-                                <i class="fa fa-egg"></i>
-                                <span>Control de incubación</span>
-                                <i class="fa fa-chevron-right"></i>
-                            </a>
-                            <a href="index.php?controller=JefePlanta&action=moduloPeces" class="quick-link">
-                                <i class="fa fa-fish"></i>
-                                <span>Control de peces</span>
-                                <i class="fa fa-chevron-right"></i>
-                            </a>
-                            <a href="index.php?controller=JefePlanta&action=reportes" class="quick-link">
-                                <i class="fa fa-chart-bar"></i>
-                                <span>Reportes de producción</span>
-                                <i class="fa fa-chevron-right"></i>
-                            </a>
-                        </div>
-                    </div>
-                </aside>
+          <div style="margin-top:18px" class="card">
+            <h4 style="margin:0 0 10px 0">New Messages</h4>
+            <div style="display:flex;gap:10px;margin-bottom:12px">
+              <button class="icon-btn" style="background:#fff;border-radius:12px;border:0;">All</button>
+              <button class="icon-btn" style="background:linear-gradient(90deg,#ff7a4a,#ff9a6a);color:#fff;border-radius:12px;border:0;">Teammate</button>
+              <button class="icon-btn" style="border:0;">Customer</button>
             </div>
-        </section>
+            <div class="messages">
+              <div class="msg">
+                <div class="m-avatar"><img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?q=80&w=200&auto=format&fit=crop" alt=""></div>
+                <div class="m-body">
+                  <div class="name">Barak <span class="muted" style="font-weight:400">• Hew How Are You</span></div>
+                </div>
+                <div class="m-time">12:30</div>
+              </div>
+              <div class="msg">
+                <div class="m-avatar"><img src="https://images.unsplash.com/photo-1542204165-6e5a7f6a13b6?q=80&w=200&auto=format&fit=crop" alt=""></div>
+                <div class="m-body">
+                  <div class="name">Nikole <span class="muted" style="font-weight:400">• Hew How Are You</span></div>
+                </div>
+                <div class="m-time">12:36</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="margin:0 0 6px 4px">Eficiencia</h3>
+
+          <div class="card" style="margin-bottom:18px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <div style="font-weight:700">📈 Eficiencia de Producción</div>
+            </div>
+            <div class="card-body">
+                 <div style="height:120px;border-radius:12px;background:linear-gradient(180deg,#f5f6f7,#eee);display:flex;align-items:center;justify-content:center;color:var(--muted)">
+                   (Gráfica eficiencia)
+                 </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h4 style="margin:0 0 8px 0">Tasks</h4>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div class="muted">Design review</div><div style="font-weight:700">4/8</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div class="muted">Client call</div><div style="font-weight:700">1/1</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card" style="margin-top:18px; padding:12px;">
+             <div class="mini-calendar" aria-hidden style="width:100%; box-shadow:none; padding:0;">
+                <div class="month">
+                  <strong>May 2021</strong>
+                  <div style="display:flex;gap:8px">
+                    <button class="icon-btn" style="padding:6px;border:0;">◀</button>
+                    <button class="icon-btn" style="padding:6px;border:0;">▶</button>
+                  </div>
+                </div>
+                <div class="days muted" style="margin-top:8px">
+                  <div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div><div>S</div>
+                </div>
+                <div class="days" style="margin-top:8px;">
+                  <div class="day-num">27</div><div class="day-num">28</div><div class="day-num">29</div><div class="day-num">30</div><div class="day-num">1</div><div class="day-num">2</div><div class="day-num">3</div>
+                  <div class="day-num">4</div><div class="day-num">5</div><div class="day-num">6</div><div class="day-num">7</div><div class="day-num">8</div><div class="day-num">9</div><div class="day-num">10</div>
+                  <div class="day-num">11</div><div class="day-num">12</div><div class="day-num">13</div><div class="day-num">14</div><div class="day-num">15</div><div class="day-num">16</div><div class="day-num today">17</div>
+                  <div class="day-num">18</div><div class="day-num">19</div><div class="day-num">20</div><div class="day-num">21</div><div class="day-num">22</div><div class="day-num">23</div><div class="day-num">24</div>
+                </div>
+              </div>
+          </div>
+
+        </div>
+
+      </section>
     </main>
-</div>
 
-<!-- estilos específicos -->
-<style>
-/* Variables de colores */
-:root {
-    --primary: #FF7E00;
-    --primary-dark: #E67100;
-    --primary-light: #FF9A3D;
-    --secondary: #4A90E2;
-    --secondary-dark: #3A7BC8;
-    --secondary-light: #6BA8FF;
-    --accent: #FFCC33;
-    --text: #333333;
-    --text-light: #6B6B6B;
-    --text-lighter: #9E9E9E;
-    --bg-light: #FFF9F2;
-    --bg-white: #FFFFFF;
-    --border: rgba(0,0,0,0.06);
-    --shadow: 0 6px 18px rgba(0,0,0,0.06);
-    --shadow-hover: 0 10px 25px rgba(0,0,0,0.1);
-}
+    <div class="overlay" id="overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:40"></div>
+  </div>
 
-/* reset pequeño */
-.app-layout { 
-    display:flex; 
-    min-height:80vh; 
-    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; 
-    color: var(--text); 
-    background-color: #f8f9fa;
-}
-
-.sidebar { 
-    width:240px; 
-    background: linear-gradient(180deg, var(--primary) 0%, var(--primary-dark) 100%); 
-    color: var(--bg-white); 
-    padding:20px; 
-    position:fixed; 
-    height:100vh; 
-    box-shadow: var(--shadow); 
-    border-right:1px solid rgba(255,255,255,0.06); 
-    z-index: 100;
-}
-
-.brand { 
-    display:flex; 
-    align-items:center; 
-    gap:12px; 
-    margin-bottom:18px; 
-}
-
-.logo-circle{ 
-    width:44px; 
-    height:44px; 
-    background:rgba(255,255,255,0.15); 
-    border-radius:10px; 
-    display:flex; 
-    align-items:center; 
-    justify-content:center; 
-    font-weight:700; 
-    font-size:18px; 
-}
-
-.brand-text h4 { 
-    margin:0; 
-    font-size:16px; 
-    font-weight:700; 
-    letter-spacing:0.2px; 
-}
-
-.brand-text small { 
-    opacity:0.9; 
-    display:block; 
-    margin-top:2px; 
-    font-size:12px; 
-}
-
-/* nav */
-.nav-main { 
-    margin-top:8px; 
-    display:flex; 
-    flex-direction:column; 
-    gap:8px; 
-}
-
-.nav-item { 
-    display:flex; 
-    gap:10px; 
-    align-items:center; 
-    padding:10px 12px; 
-    border-radius:8px; 
-    color:rgba(255,255,255,0.95); 
-    text-decoration:none; 
-    font-weight:600; 
-    font-size:14px; 
-    transition: all 0.2s ease;
-}
-
-.nav-item i { 
-    width:20px; 
-    text-align:center; 
-}
-
-.nav-item:hover { 
-    background: rgba(255,255,255,0.08); 
-    transform: translateX(4px); 
-}
-
-.nav-item.active { 
-    background: rgba(255,255,255,0.14); 
-    box-shadow: inset 0 0 10px rgba(255,255,255,0.03); 
-}
-
-.sidebar-footer { 
-    position:absolute; 
-    bottom:20px; 
-    left:20px; 
-    right:20px; 
-}
-
-.user-mini { 
-    margin-top:6px; 
-    background:rgba(255,255,255,0.1); 
-    padding:6px 8px; 
-    border-radius:6px; 
-    font-weight:600; 
-}
-
-/* main content */
-.main-content { 
-    margin-left:240px; 
-    flex:1; 
-    background: linear-gradient(180deg, var(--bg-light) 0%, var(--bg-white) 100%); 
-    min-height:100vh; 
-}
-
-.topbar { 
-    display:flex; 
-    justify-content:space-between; 
-    align-items:center; 
-    padding:18px 28px; 
-    border-bottom:1px solid var(--border); 
-    background: var(--bg-white);
-    position: sticky;
-    top: 0;
-    z-index: 99;
-}
-
-.search-area input[type="search"] { 
-    width:360px; 
-    padding:10px 12px; 
-    border-radius:8px; 
-    border:1px solid var(--border); 
-    background: var(--bg-light);
-}
-
-.user-card { 
-    display:flex; 
-    align-items:center; 
-    gap:10px; 
-}
-
-.user-avatar { 
-    width:40px; 
-    height:40px; 
-    border-radius:50%; 
-    object-fit:cover; 
-}
-
-/* main body */
-.main-body { 
-    padding:22px 28px; 
-}
-
-.hero-row { 
-    display:flex; 
-    justify-content:space-between; 
-    align-items:center; 
-    gap:20px; 
-    margin-bottom:28px; 
-}
-
-.greeting h2 { 
-    margin:0; 
-    font-size:24px; 
-    font-weight: 700;
-}
-
-.muted { 
-    color: var(--text-light); 
-}
-
-/* grid */
-.grid-dashboard { 
-    display:grid; 
-    grid-template-columns: 1fr 320px; 
-    gap:22px; 
-    align-items:start; 
-}
-
-.kpis { 
-    display:grid; 
-    grid-template-columns: repeat(3, 1fr);
-    gap:18px; 
-    margin-bottom:18px; 
-    grid-column: 1 / -1;
-}
-
-.kpi { 
-    padding:20px; 
-    border-radius:12px; 
-    color: var(--text); 
-    box-shadow: var(--shadow);
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.kpi:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-hover);
-}
-
-.kpi-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-}
-
-.kpi-content {
-    flex: 1;
-}
-
-.kpi-title { 
-    font-weight:600; 
-    font-size:14px; 
-    margin-bottom: 4px;
-    color: var(--text-light);
-}
-
-.kpi-value { 
-    font-size:28px; 
-    font-weight:800; 
-    margin-bottom: 4px;
-}
-
-.kpi-trend {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 12px;
-    color: var(--text-lighter);
-}
-
-/* colores KPIs */
-.kpi-ovas { 
-    background: linear-gradient(135deg, #FFF9F2, #FFEBD6); 
-    border-left: 4px solid var(--accent);
-}
-
-.kpi-ovas .kpi-icon {
-    background: var(--accent);
-    color: #1a1200;
-}
-
-.kpi-peces { 
-    background: linear-gradient(135deg, #F0F7FF, #E1EFFF); 
-    border-left: 4px solid var(--secondary);
-}
-
-.kpi-peces .kpi-icon {
-    background: var(--secondary);
-    color: white;
-}
-
-.kpi-inv { 
-    background: linear-gradient(135deg, #FFF5F0, #FFE8DE); 
-    border-left: 4px solid var(--primary);
-}
-
-.kpi-inv .kpi-icon {
-    background: var(--primary);
-    color: white;
-}
-
-/* Chart Row */
-.chart-row {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 18px;
-    margin-bottom: 18px;
-}
-
-.chart-container {
-    grid-column: 1;
-}
-
-.small-charts {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-}
-
-.card { 
-    background: var(--bg-white); 
-    border-radius:12px; 
-    padding:18px; 
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border);
-}
-
-.card-header { 
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-}
-
-.card-header h5, .card-header h6 { 
-    margin:0; 
-    font-size: 16px;
-}
-
-.chart-actions {
-    display: flex;
-    gap: 8px;
-}
-
-.btn-chart {
-    padding: 6px 12px;
-    border-radius: 6px;
-    background: transparent;
-    border: 1px solid var(--border);
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.btn-chart.active {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
-}
-
-/* Stats & Actions Row */
-.stats-actions-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-    margin-bottom: 18px;
-}
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-}
-
-.stat-item {
-    padding: 12px;
-    border-radius: 8px;
-    background: var(--bg-light);
-}
-
-.stat-label {
-    font-size: 12px;
-    color: var(--text-light);
-    margin-bottom: 4px;
-}
-
-.stat-value {
-    font-size: 18px;
-    font-weight: 700;
-}
-
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px;
-}
-
-.form-btn {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px;
-    border-radius: 8px;
-    background: var(--bg-light);
-    text-decoration: none;
-    color: var(--text);
-    transition: all 0.2s ease;
-}
-
-.form-btn:hover {
-    background: #f0f0f0;
-    transform: translateY(-2px);
-}
-
-.form-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    background: var(--primary);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.form-info {
-    flex: 1;
-}
-
-.form-title {
-    font-weight: 700;
-    font-size: 14px;
-}
-
-.form-desc {
-    font-size: 12px;
-    color: var(--text-light);
-}
-
-/* right panel */
-.panel-right { 
-    display:flex; 
-    flex-direction:column; 
-    gap:18px; 
-    grid-column: 2;
-    grid-row: 2 / span 2;
-}
-
-.card .small-list ul { 
-    list-style:none; 
-    padding:0; 
-    margin:0; 
-    display:flex; 
-    flex-direction:column; 
-    gap:8px; 
-}
-
-.small-list li { 
-    display:flex; 
-    justify-content:space-between; 
-    align-items:center; 
-    padding:10px; 
-    border-radius:8px; 
-    background: var(--bg-light);
-    transition: all 0.2s ease;
-}
-
-.small-list li:hover {
-    background: #f5f5f5;
-}
-
-.item-info {
-    display: flex;
-    flex-direction: column;
-}
-
-.item-name {
-    font-weight: 600;
-    font-size: 14px;
-}
-
-.item-category {
-    font-size: 11px;
-    color: var(--text-lighter);
-}
-
-.item-stock {
-    font-weight: 700;
-    font-size: 14px;
-}
-
-.empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    color: var(--text-lighter);
-}
-
-.empty-state i {
-    font-size: 32px;
-    margin-bottom: 8px;
-}
-
-.empty-state p {
-    margin: 0;
-    font-size: 14px;
-}
-
-.quick-links .card-body {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.quick-link {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px;
-    border-radius: 8px;
-    text-decoration: none;
-    color: var(--text);
-    transition: all 0.2s ease;
-}
-
-.quick-link:hover {
-    background: var(--bg-light);
-}
-
-.quick-link i:first-child {
-    width: 20px;
-    text-align: center;
-}
-
-.quick-link span {
-    flex: 1;
-    font-size: 14px;
-}
-
-.quick-link i:last-child {
-    color: var(--text-lighter);
-}
-
-/* buttons */
-.btn { 
-    display:inline-block; 
-    padding:10px 16px; 
-    border-radius:8px; 
-    text-decoration:none; 
-    font-weight:700; 
-    font-size: 14px;
-    transition: all 0.2s ease;
-}
-
-.btn-primary { 
-    background: var(--primary); 
-    color: white;
-    border: 1px solid var(--primary);
-}
-
-.btn-primary:hover {
-    background: var(--primary-dark);
-    transform: translateY(-2px);
-}
-
-/* links */
-.link { 
-    color: var(--secondary); 
-    text-decoration:none; 
-    font-weight:700; 
-    font-size: 14px;
-}
-
-.card-footer { 
-    padding-top:12px; 
-    border-top: 1px solid var(--border);
-    margin-top: 8px;
-}
-
-/* responsive */
-@media (max-width: 1200px) {
-    .grid-dashboard { 
-        grid-template-columns: 1fr; 
-    }
-    
-    .panel-right {
-        grid-column: 1;
-        grid-row: auto;
-    }
-    
-    .chart-row {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 1000px) {
-    .sidebar { 
-        position:relative; 
-        width:100%; 
-        height:auto; 
-        display:flex; 
-        flex-direction:row; 
-        align-items:center; 
-        padding:10px; 
-        gap:10px; 
-    }
-    
-    .main-content { 
-        margin-left:0; 
-    }
-    
-    .topbar { 
-        padding:10px; 
-    }
-    
-    .kpis {
-        grid-template-columns: 1fr;
-    }
-    
-    .stats-actions-row {
-        grid-template-columns: 1fr;
-    }
-}
-</style>
-
-<!-- dependencias (FontAwesome y Chart.js) -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<!-- script gráfico -->
 <script>
-// Gráfico principal de producción
-const productionCtx = document.getElementById('productionChart').getContext('2d');
-const productionChart = new Chart(productionCtx, {
-    type: 'line',
-    data: {
-        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-        datasets: [
-            {
-                label: 'Ovas',
-                data: [120, 150, 180, 200, 240, 220, 260, 280, 300, 320, 350, 380],
-                borderColor: '#FFCC33',
-                backgroundColor: 'rgba(255, 204, 51, 0.1)',
-                tension: 0.3,
-                fill: true
-            },
-            {
-                label: 'Peces',
-                data: [800, 850, 900, 950, 1000, 1050, 1100, 1150, 1200, 1250, 1300, 1350],
-                borderColor: '#4A90E2',
-                backgroundColor: 'rgba(74, 144, 226, 0.1)',
-                tension: 0.3,
-                fill: true
-            }
-        ]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: { 
-                position: 'top',
-                labels: {
-                    usePointStyle: true,
-                    padding: 15
-                }
-            }
-        },
-        scales: {
-            y: { 
-                beginAtZero: true,
-                grid: {
-                    color: 'rgba(0,0,0,0.05)'
-                }
-            },
-            x: {
-                grid: {
-                    display: false
-                }
-            }
-        }
-    }
-});
+  (function(){
+    const sidebar = document.getElementById('sidebar');
+    const btn = document.getElementById('btnToggle');
+    const overlay = document.getElementById('overlay');
+    const app = document.getElementById('app');
 
-// Gráfico de eficiencia
-const efficiencyCtx = document.getElementById('efficiencyChart').getContext('2d');
-const efficiencyChart = new Chart(efficiencyCtx, {
-    type: 'doughnut',
-    data: {
-        labels: ['Eficiencia', 'Pérdidas'],
-        datasets: [{
-            data: [85, 15],
-            backgroundColor: ['#FF7E00', '#E0E0E0'],
-            borderWidth: 0
-        }]
-    },
-    options: {
-        responsive: true,
-        cutout: '70%',
-        plugins: {
-            legend: {
-                display: false
-            },
-            tooltip: {
-                callbacks: {
-                    label: function(context) {
-                        return context.label + ': ' + context.raw + '%';
-                    }
-                }
-            }
-        }
+    // Collapse on medium screens toggle
+    function isMobile() {
+      return window.matchMedia('(max-width:760px)').matches;
     }
-});
 
-// Gráfico de inventario
-const inventoryCtx = document.getElementById('inventoryChart').getContext('2d');
-const inventoryChart = new Chart(inventoryCtx, {
-    type: 'bar',
-    data: {
-        labels: ['Alimento', 'Medicamentos', 'Equipos', 'Materiales'],
-        datasets: [{
-            label: 'Stock',
-            data: [75, 40, 60, 85],
-            backgroundColor: '#4A90E2',
-            borderRadius: 6
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: {
-                display: false
-            }
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                max: 100,
-                ticks: {
-                    callback: function(value) {
-                        return value + '%';
-                    }
-                }
-            },
-            x: {
-                grid: {
-                    display: false
-                }
-            }
-        }
+    function isNarrow(){
+      return window.matchMedia('(max-width:1000px)').matches;
     }
-});
+
+    // initial state for smaller widths
+    function applyInitialState() {
+      if (isMobile()) {
+        sidebar.classList.remove('collapsed');
+        sidebar.classList.remove('open');
+      } else if (isNarrow()) {
+        sidebar.classList.add('collapsed');
+        sidebar.classList.remove('open');
+      } else {
+        sidebar.classList.remove('collapsed');
+        sidebar.classList.remove('open');
+      }
+    }
+
+    applyInitialState();
+    window.addEventListener('resize', applyInitialState);
+
+    // Toggle button behaviour (open/close)
+    btn.addEventListener('click', function(){
+      if (isMobile()) {
+        const open = sidebar.classList.toggle('open');
+        overlay.style.display = open ? 'block' : 'none';
+      } else {
+        sidebar.classList.toggle('collapsed');
+      }
+    });
+
+    // overlay click closes sidebar on mobile
+    overlay.addEventListener('click', function(){
+      sidebar.classList.remove('open');
+      overlay.style.display = 'none';
+    });
+
+    // close sidebar by pressing Escape on mobile
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape') {
+        sidebar.classList.remove('open');
+        overlay.style.display = 'none';
+      }
+    });
+
+    // Close the sidebar when clicking outside (desktop narrow mode)
+    document.addEventListener('click', function(e){
+      if (!isMobile() && isNarrow()) {
+        // if clicked outside sidebar and outside toggle button, collapse it
+        const path = e.composedPath ? e.composedPath() : (e.path || []);
+        if (!path.includes(sidebar) && !path.includes(btn)) {
+          sidebar.classList.add('collapsed');
+        }
+      }
+    });
+
+    // Example: make the search filter log (placeholder for future)
+    const search = document.getElementById('searchInput');
+    search.addEventListener('input', function(){
+      // Here podrías filtrar tarjetas en la UI
+      // console.log('Buscar:', search.value)
+    });
+  })();
 </script>
-
-<?php include __DIR__ . '/../templates/footer.php'; ?>
+</body>
+</html>
