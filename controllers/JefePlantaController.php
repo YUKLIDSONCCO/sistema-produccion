@@ -109,6 +109,9 @@ class JefePlantaController extends BaseController {
             $this->redirect("index.php?controller=Auth&action=login");
         }
     }
+    public function bpa6() {
+        require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa6.php';
+    }
     public function bpa7() {
         require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa7.php';
     }
