@@ -27,10 +27,11 @@
 
     <nav class="sidebar-nav">
       <ul>
-        <li><a href="#"><i class="fas fa-th-large"></i> Inicio</a></li>
-        <li><a href="#"><i class="far fa-calendar-alt"></i> Formatos BPA</a></li>
-        <li class="active"><a href="#"><i class="far fa-file-alt"></i> Listado BPA</a></li>
-        <li><a href="#"><i class="fas fa-users"></i> Listado BPA</a></li>
+        <li><a href="javascript:history.back()"><i class="fas fa-arrow-left"></i> Volver atrás</a></li>
+        <li><a href="#" id="inicioBtn"><i class="fas fa-th-large"></i> Inicio</a></li>
+        <li><a href="#" id="formatosBtn"><i class="far fa-calendar-alt"></i> Formatos BPA</a></li>
+        <li><a href="#" id="listadoBtn"><i class="far fa-file-alt"></i> Listado BPA</a></li>
+        <li><a href="#"><i class="fas fa-users"></i> Usuarios BPA</a></li>
         <li><a href="#"><i class="fas fa-cogs"></i> Reportes BPA</a></li>
         <li><a href="#"><i class="fas fa-cog"></i> Configuración</a></li>
         <li><a href="index.php?controller=Login&action=cerrarSesion"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
@@ -38,7 +39,7 @@
     </nav>
   </aside>
 
-  <!-- Main Content -->
+  <!-- Contenido Principal -->
   <main class="main-content" id="mainContent">
     <header class="header">
       <div class="search-bar">
@@ -61,7 +62,17 @@
       </div>
     </header>
 
-    <section class="dashboard">
+    <!-- INICIO -->
+    <section class="dashboard" id="inicioSection">
+      <div class="welcome">
+        <h1>🐟 Bienvenido al Panel de Inventario</h1>
+        <p>Aquí podrás acceder a todos los formatos BPA disponibles, registrar información y mantener actualizados los procesos de tu planta.</p>
+      </div>
+      <div class="fish"></div>
+    </section>
+
+    <!-- FORMATOS BPA -->
+    <section class="dashboard" id="formatosSection" style="display:none;">
       <div class="section-header">
         <h2>Formatos BPA</h2>
         <p>Gestión de registros internos (Inventario, Alimentación, Medicamentos, etc.)</p>
@@ -74,7 +85,6 @@
         <button class="filter-btn">Medicamentos <span>2</span></button>
       </div>
 
-      <!-- Grid BPA -->
       <div class="projects-grid bpa-grid">
         <?php
         $bpa_items = [
@@ -116,7 +126,45 @@
         <?php endforeach; ?>
       </div>
     </section>
+
+    <!-- LISTADO BPA -->
+    <section class="dashboard" id="listadoSection" style="display:none;">
+      <div class="section-header">
+        <h2>Listado de BPA</h2>
+        <p>Consulta rápida de los formatos BPA registrados en el sistema.</p>
+      </div>
+      <table class="bpa-list">
+        <tr><th>N°</th><th>Nombre del Formato</th><th>Tipo</th></tr>
+        <tr><td>01</td><td>Alimentación diaria</td><td>Registro</td></tr>
+        <tr><td>02</td><td>Control de alimento en almacén</td><td>Inventario</td></tr>
+        <tr><td>03</td><td>Control de sal en almacén</td><td>Inventario</td></tr>
+        <tr><td>04</td><td>Control de medicamento</td><td>Registro</td></tr>
+        <tr><td>05</td><td>Dosificación de suplementos y medicamentos</td><td>Preparación</td></tr>
+      </table>
+    </section>
   </main>
+
+  <script>
+    // Navegación entre secciones
+    const inicioBtn = document.getElementById('inicioBtn');
+    const formatosBtn = document.getElementById('formatosBtn');
+    const listadoBtn = document.getElementById('listadoBtn');
+
+    const inicioSection = document.getElementById('inicioSection');
+    const formatosSection = document.getElementById('formatosSection');
+    const listadoSection = document.getElementById('listadoSection');
+
+    function mostrar(seccion) {
+      inicioSection.style.display = 'none';
+      formatosSection.style.display = 'none';
+      listadoSection.style.display = 'none';
+      seccion.style.display = 'block';
+    }
+
+    inicioBtn.addEventListener('click', () => mostrar(inicioSection));
+    formatosBtn.addEventListener('click', () => mostrar(formatosSection));
+    listadoBtn.addEventListener('click', () => mostrar(listadoSection));
+  </script>
 
   <script src="/sistema-produccion/public/js/script_inventario.js"></script>
 </body>

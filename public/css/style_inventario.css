@@ -595,3 +595,55 @@ main.main-content {
   margin-left: 0;
   margin-right: 0;
 }
+
+/*AQUI ES DONDE TIENES QUE VER EL LISTADO SII*/
+
+    /* === ANIMACIÓN DEL PEZ === */
+    .fish {
+      position: absolute;
+      left: -100px;
+      bottom: 80px;
+      width: 120px;
+      height: 70px;
+      background: url('https://i.pinimg.com/originals/92/61/b3/9261b3445438ca96b8ecec445171704b.gif') no-repeat center/contain;
+      animation: swim 12s linear infinite;
+      opacity: 0.9;
+    }
+
+    @keyframes swim {
+      0% { transform: translateX(-150px) scaleX(1); }
+      50% { transform: translateX(100vw) scaleX(1); }
+      51% { transform: translateX(100vw) scaleX(-1); }
+      100% { transform: translateX(-150px) scaleX(-1); }
+    }
+
+    /* === BIENVENIDA === */
+    .welcome {
+      text-align: center;
+      margin-top: 80px;
+      color: #333;
+    }
+
+    .welcome h1 {
+      color: #ff7b00;
+      font-size: 2em;
+      margin-bottom: 10px;
+      animation: fadeIn 1.5s ease;
+    }
+
+    .welcome p {
+      font-size: 1.1em;
+      color: #555;
+      animation: fadeIn 2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+   
+  
+
+
+    
