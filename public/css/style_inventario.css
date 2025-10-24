@@ -1,0 +1,597 @@
+/* --- CSS base (tu primer dashboard) --- */
+
+body {
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+background: #ffffff;
+color: #333333;
+}
+
+/* Main Content */
+.main-content {
+flex: 1;
+transition: margin-left 0.3s ease;
+padding: 20px;
+overflow-x: hidden;
+}
+
+.header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 15px 20px;
+background: #bde0fe;
+border-radius: 10px;
+box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+margin-bottom: 20px;
+}
+
+.search-bar {
+display: flex;
+align-items: center;
+background: #ffffff;
+border: 1px solid #bde0fe;
+border-radius: 20px;
+padding: 8px 15px;
+width: 300px;
+}
+
+.search-bar input {
+border: none;
+background: transparent;
+outline: none;
+padding: 5px 10px;
+width: 100%;
+color: #333333;
+}
+
+.search-bar i {
+color: #333333;
+}
+
+.header-right {
+display: flex;
+align-items: center;
+gap: 20px;
+}
+
+.notification {
+position: relative;
+cursor: pointer;
+}
+
+.notification i {
+font-size: 1.2rem;
+color: #333333;
+}
+
+.badge {
+position: absolute;
+top: -8px;
+right: -8px;
+background: #ffb347;
+color: #ffffff;
+border-radius: 50%;
+width: 20px;
+height: 20px;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 0.7rem;
+font-weight: bold;
+}
+
+.user-profile {
+display: flex;
+align-items: center;
+gap: 10px;
+cursor: pointer;
+}
+
+.user-profile img {
+width: 40px;
+height: 40px;
+border-radius: 50%;
+object-fit: cover;
+border: 2px solid #ffb347;
+}
+
+.user-info {
+text-align: right;
+}
+
+.user-info span {
+font-weight: bold;
+display: block;
+color: #333333;
+}
+
+.user-info small {
+color: #333333;
+font-size: 0.8rem;
+}
+
+.user-profile i {
+color: #333333;
+}
+
+/* Dashboard Section */
+.dashboard {
+background: #ffffff;
+border-radius: 10px;
+padding: 20px;
+box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+border: 2px solid #bde0fe;
+}
+
+.section-header {
+margin-bottom: 20px;
+}
+
+.section-header h2 {
+font-size: 1.5rem;
+margin-bottom: 5px;
+color: #333333;
+}
+
+.section-header p {
+color: #333333;
+font-size: 0.9rem;
+}
+
+.filters {
+display: flex;
+gap: 10px;
+margin-bottom: 20px;
+flex-wrap: wrap;
+}
+
+.filter-btn {
+padding: 8px 15px;
+background: #ffffff;
+border: 1px solid #bde0fe;
+border-radius: 20px;
+cursor: pointer;
+font-size: 0.9rem;
+display: flex;
+align-items: center;
+gap: 5px;
+transition: all 0.2s;
+color: #333333;
+}
+
+.filter-btn.active {
+background: #ffb347;
+color: #ffffff;
+}
+
+.filter-btn span {
+background: rgba(0,0,0,0.05);
+padding: 2px 6px;
+border-radius: 10px;
+font-size: 0.8rem;
+}
+
+.actions {
+display: flex;
+justify-content: space-between;
+margin-bottom: 20px;
+}
+
+.btn-add {
+background: #ffb347;
+color: #ffffff;
+border: none;
+width: 40px;
+height: 40px;
+border-radius: 50%;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 1.2rem;
+transition: all 0.2s;
+font-weight: bold;
+}
+
+.btn-add:hover {
+background: #ffa533;
+}
+
+.view-options button {
+background: #ffffff;
+border: 1px solid #bde0fe;
+width: 40px;
+height: 40px;
+border-radius: 8px;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+color: #333333;
+margin-left: 5px;
+transition: all 0.2s;
+}
+
+.view-options button:hover {
+background: #ffb347;
+color: #ffffff;
+}
+
+.projects-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+gap: 20px;
+}
+
+.project-card {
+background: #ffffff;
+border-radius: 10px;
+padding: 20px;
+box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+transition: transform 0.2s;
+cursor: pointer;
+border: 2px solid #ffb347;
+}
+
+.project-card:hover {
+transform: translateY(-5px);
+box-shadow: 0 5px 15px rgba(255,179,71,0.3);
+}
+
+.card-icon {
+width: 50px;
+height: 50px;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+color: #ffffff;
+margin-bottom: 15px;
+font-size: 1.5rem;
+background: #ffb347;
+}
+
+.project-card h3 {
+font-size: 1.1rem;
+margin-bottom: 10px;
+color: #333333;
+}
+
+.team-info {
+display: flex;
+align-items: center;
+gap: 5px;
+color: #333333;
+font-size: 0.9rem;
+margin-bottom: 10px;
+}
+
+.time-left {
+display: flex;
+align-items: center;
+gap: 8px;
+color: #333333;
+font-size: 0.9rem;
+margin-bottom: 15px;
+}
+
+.progress-info {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-top: 15px;
+padding-top: 15px;
+border-top: 2px solid #ffb347;
+}
+
+.avatars {
+display: flex;
+align-items: center;
+gap: 5px;
+}
+
+.avatars img {
+width: 24px;
+height: 24px;
+border-radius: 50%;
+object-fit: cover;
+border: 2px solid #ffb347;
+}
+
+.avatars span {
+font-size: 0.9rem;
+color: #333333;
+}
+
+.progress {
+display: flex;
+flex-direction: column;
+gap: 5px;
+font-size: 0.8rem;
+color: #333333;
+text-align: center;
+}
+
+.progress-bar {
+width: 100%;
+background: #bde0fe;
+border-radius: 10px;
+height: 6px;
+position: relative;
+margin-top: 5px;
+}
+
+.fill {
+height: 100%;
+border-radius: 10px;
+background: #ffb347;
+position: relative;
+}
+
+.fill::after {
+content: attr(data-percent);
+position: absolute;
+right: -25px;
+top: -20px;
+font-size: 0.8rem;
+color: #ffb347;
+font-weight: bold;
+}
+
+/* --- Pequeños añadidos para mostrar BPAs sin alterar el estilo general --- */
+.bpa-grid .schedule-item {
+padding: 18px;
+display: flex;
+flex-direction: column;
+gap: 8px;
+background: #ffffff;
+border: 2px solid #ffb347;
+}
+
+.schedule-item-link {
+text-decoration: none;
+color: inherit;
+display: block;
+}
+
+.time-slot .bpa-emoji {
+font-size: 1.4rem;
+display: inline-block;
+width: 50px;
+height: 50px;
+line-height: 50px;
+text-align: center;
+border-radius: 50%;
+background: rgba(255,179,71,0.3);
+color: #333333;
+}
+
+.bpa-title {
+font-size: 1rem;
+color: #333333;
+margin-top: 4px;
+}
+
+.bpa-sub {
+font-size: 0.9rem;
+color: #333333;
+}
+
+.bpa-room {
+background: #bde0fe;
+padding: 4px 8px;
+border-radius: 8px;
+font-weight: 600;
+font-size: 0.8rem;
+color: #333333;
+border: 1px solid #ffb347;
+}
+
+.bpa-num {
+margin-left: auto;
+color: #333333;
+font-size: 0.85rem;
+font-weight: bold;
+}
+
+.project-card.schedule-item .progress-info {
+border-top: none;
+padding-top: 10px;
+}
+
+.project-card.schedule-item .progress-bar {
+width: 70px;
+height: 6px;
+border-radius: 6px;
+background: #bde0fe;
+}
+
+/* === NUEVO: convertir el sidebar en barra superior === */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  background: #fff;
+  border-bottom: 3px solid #f6a564;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 25px; 
+  z-index: 1000;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sidebar-header .logo {
+  display: flex;
+  align-items: center;
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #f6a564;
+}
+
+.sidebar-header .logo i {
+  margin-right: 8px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.sidebar-nav ul {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar-nav ul li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s; /* CAMBIADO: para transicionar color y fondo */
+  padding: 8px 12px; /* AÑADIDO: para darle forma de caja */
+  border-radius: 6px; /* AÑADIDO: para darle forma de caja */
+}
+
+/* MODIFICADO: Añadido fondo naranja y color blanco de texto para el efecto de caja */
+.sidebar-nav ul li.active a,
+.sidebar-nav ul li a:hover {
+  color: #ffffff; 
+  background: #f6a564;
+}
+
+.toggle-btn {
+  display: none;
+}
+
+/* === Ajuste del main content (para dejar espacio arriba) === */
+.main-content {
+  margin-top: 100px; /* MODIFICADO: Cambiado de 85px a 90px */
+  padding: 20px;
+}
+
+/* === Los estilos de los cuadros (sin tocar lo anterior) === */
+.bpa-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 22px;
+  margin-top: 18px;
+}
+
+.project-card {
+  background: #ffffff;
+  border: 2px solid rgba(255,169,64,0.25);
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(17,24,39,0.06);
+  text-align: center;
+  padding: 28px 18px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.project-card .card-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  color: #fff;
+  margin-bottom: 14px;
+  flex: 0 0 auto;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.project-card .bpa-title {
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 6px 0 10px;
+  line-height: 1.2;
+}
+
+.project-card .bpa-sub { color: #475569; font-size: 0.92rem; margin-bottom: 8px; }
+.project-card .time-left { color: #475569; font-size: .9rem; display:flex; gap:8px; align-items:center; justify-content:center; margin-top:6px; }
+
+.project-card .progress-info { width: 100%; display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:auto; padding-top:14px; }
+.project-card .avatars img { width:28px; height:28px; border-radius:50%; border:2px solid rgba(255,169,64,0.25); object-fit:cover; }
+
+.project-card .progress-bar { flex: 1 1 auto; height:8px; background:#eef2ff; border-radius:10px; overflow:hidden; margin-left:8px; margin-right:8px; }
+.project-card .fill { height:100%; width:40%; border-radius:10px; transition: width .45s ease; }
+
+/* Colores por tarjeta */
+.bpa-grid a:nth-child(1) .card-icon { background:#f6a564; }
+.bpa-grid a:nth-child(1) .fill { background:#f6a564; }
+.bpa-grid a:nth-child(2) .card-icon { background:#4b9df6; }
+.bpa-grid a:nth-child(2) .fill { background:#4b9df6; }
+.bpa-grid a:nth-child(3) .card-icon { background:#f59e0b; }
+.bpa-grid a:nth-child(3) .fill { background:#f59e0b; }
+.bpa-grid a:nth-child(4) .card-icon { background:#2fbf86; }
+.bpa-grid a:nth-child(4) .fill { background:#2fbf86; }
+.bpa-grid a:nth-child(5) .card-icon { background:#f472b6; }
+.bpa-grid a:nth-child(5) .fill { background:#f472b6; }
+
+/* Hover */
+.bpa-grid a .project-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 14px 32px rgba(2,6,23,0.12);
+}
+.bpa-grid a:nth-child(1) .project-card:hover { background: rgba(246,165,100,0.08); }
+.bpa-grid a:nth-child(2) .project-card:hover { background: rgba(75,157,246,0.08); }
+.bpa-grid a:nth-child(3) .project-card:hover { background: rgba(245,158,11,0.08); }
+.bpa-grid a:nth-child(4) .project-card:hover { background: rgba(47,191,134,0.08); }
+.bpa-grid a:nth-child(5) .project-card:hover { background: rgba(244,114,182,0.08); }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .sidebar-nav ul { flex-wrap: wrap; gap: 12px; justify-content: center; }
+}
+
+@media (max-width: 600px) {
+  .sidebar { flex-direction: column; align-items: flex-start; }
+  .sidebar-nav ul { flex-direction: column; align-items: flex-start; }
+  .main-content { margin-top: 130px; }
+}
+
+/* === CORRECCIÓN PARA OCUPAR TODO EL ESPACIO LUEGO DE MOVER EL SIDEBAR ARRIBA (ADAPTADO AL BODY ORIGINAL) === */
+body {
+  flex-direction: column;
+  margin: 0;
+}
+
+main.main-content {
+  flex: 1;
+  width: 100%;
+  margin-left: 0 !important;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.bpa-grid {
+  margin-left: 0;
+  margin-right: 0;
+}

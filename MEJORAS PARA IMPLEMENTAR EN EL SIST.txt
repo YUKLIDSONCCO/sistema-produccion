@@ -5,4 +5,5 @@ MEJORAS PARA IMPLEMENTAR EN EL SISTEMA DE PRODUCCION:
 4. EN CADA PANEL DE LOS ROLES SE PUEDE AGREGAR COMO EL BLACKBOARD EN UN COSTADO ,EL PERFIL COMPLETO,SU ACTIVIDAD DIARIA DE LA SEMA Y SALGA CON BARRAS
 5. REFERENCIAS DE PINTEREST
 6. PODEMOS PONER ANIMACION EN CADA PANEL QUE LE CORRESPONDE (OVAS, INVENTARIO Y PECES).
-7. 
+7. En el login poner protección cuando se cierra sesión no puede volver ingresar o retroceder al panel principal. OJO tiene que volver a ingresar sus datos al iniciar sesion
+8. Poner en cada bpa un boton de visualizar el listado del bpa 

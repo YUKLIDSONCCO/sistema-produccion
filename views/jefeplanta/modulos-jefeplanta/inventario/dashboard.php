@@ -1,14 +1,16 @@
 <?php 
-// dashboard.php — versión final con diseño moderno + enlaces funcionales BPA
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title> CORAQUA</title>
+  <title>CORAQUA</title>
+
   <link rel="stylesheet" href="/sistema-produccion/public/css/style_inventario.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
 </head>
 <body>
   <!-- Sidebar -->
@@ -38,7 +40,6 @@
 
   <!-- Main Content -->
   <main class="main-content" id="mainContent">
-    <!-- Header -->
     <header class="header">
       <div class="search-bar">
         <i class="fas fa-search"></i>
@@ -60,7 +61,6 @@
       </div>
     </header>
 
-    <!-- Dashboard Content -->
     <section class="dashboard">
       <div class="section-header">
         <h2>Formatos BPA</h2>
@@ -74,55 +74,41 @@
         <button class="filter-btn">Medicamentos <span>2</span></button>
       </div>
 
-      <div class="actions">
-        <button class="btn-add"><i class="fas fa-plus"></i></button>
-        <div class="view-options">
-          <button><i class="fas fa-list"></i></button>
-          <button><i class="fas fa-th-large"></i></button>
-          <button><i class="fas fa-ellipsis-v"></i></button>
-        </div>
-      </div>
-
-      <!-- Grid de BPA -->
+      <!-- Grid BPA -->
       <div class="projects-grid bpa-grid">
         <?php
         $bpa_items = [
-            ['num' => 'N°01', 'title' => 'ALIMENTACIÓN DIARIA', 'icon' => '🧾', 'room' => 'BPA-1', 'action' => 'bpa1', 'time_range' => 'Registro Matutino'],
-            ['num' => 'N°02', 'title' => 'CONTROL DE ALIMENTO EN ALMACÉN', 'icon' => '📦', 'room' => 'BPA-2', 'action' => 'bpa2', 'time_range' => 'Inventario Semanal'],
-            ['num' => 'N°03', 'title' => 'CONTROL DE SAL EN ALMACÉN', 'icon' => '🧂', 'room' => 'BPA-3', 'action' => 'bpa3', 'time_range' => 'Inventario Diario'],
-            ['num' => 'N°04', 'title' => 'CONTROL DE MEDICAMENTO', 'icon' => '🩹', 'room' => 'BPA-4', 'action' => 'bpa4', 'time_range' => 'Registro y Uso'],
-            ['num' => 'N°05', 'title' => 'DOSIFICACIÓN DE SUPLEMENTOS Y MEDICAMENTOS', 'icon' => '🧪', 'room' => 'BPA-5', 'action' => 'bpa5', 'time_range' => 'Preparación'],
+          ['num' => 'N°01', 'title' => 'ALIMENTACIÓN DIARIA', 'fa' => 'fa-utensils', 'action' => 'bpa1', 'time_range' => 'Registro Matutino'],
+          ['num' => 'N°02', 'title' => 'CONTROL DE ALIMENTO EN ALMACÉN', 'fa' => 'fa-box', 'action' => 'bpa2', 'time_range' => 'Inventario Semanal'],
+          ['num' => 'N°03', 'title' => 'CONTROL DE SAL EN ALMACÉN', 'fa' => 'fa-salt', 'action' => 'bpa3', 'time_range' => 'Inventario Diario'],
+          ['num' => 'N°04', 'title' => 'CONTROL DE MEDICAMENTO', 'fa' => 'fa-prescription-bottle-medical', 'action' => 'bpa4', 'time_range' => 'Registro y Uso'],
+          ['num' => 'N°05', 'title' => 'DOSIFICACIÓN DE SUPLEMENTOS Y MEDICAMENTOS', 'fa' => 'fa-flask', 'action' => 'bpa5', 'time_range' => 'Preparación'],
         ];
 
         foreach ($bpa_items as $item): ?>
           <a href="index.php?controller=Inventario&action=<?php echo $item['action']; ?>" class="schedule-item-link">
             <div class="project-card schedule-item">
-              <div class="card-icon time-slot" style="background: transparent;">
-                <span class="bpa-emoji"><?php echo $item['icon']; ?></span>
+              <div class="card-icon time-slot" aria-hidden="true">
+                <i class="fas <?php echo $item['fa']; ?>"></i>
               </div>
-
               <h3 class="bpa-title"><?php echo $item['title']; ?></h3>
-
               <div class="team-info">
                 <i class="fas fa-users"></i>
                 <span class="bpa-sub"><?php echo $item['time_range']; ?></span>
               </div>
-
               <div class="time-left">
                 <i class="far fa-clock"></i>
-                <span class="bpa-room"><?php echo $item['room']; ?></span>
                 <span class="bpa-num"><?php echo $item['num']; ?></span>
               </div>
-
               <div class="progress-info">
                 <div class="avatars">
-                  <img src="https://via.placeholder.com/24" alt="u" />
+                  <img src="https://via.placeholder.com/28" alt="u" />
                 </div>
                 <div class="progress">
                   <span class="small muted">Abrir</span>
                 </div>
-                <div class="progress-bar" style="width:70px; max-width:100%;">
-                  <div class="fill" style="width: 0%; height:6px;"></div>
+                <div class="progress-bar">
+                  <div class="fill" style="width: 65%; height:8px;"></div>
                 </div>
               </div>
             </div>
