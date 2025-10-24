@@ -183,8 +183,11 @@
     .app{grid-template-columns: 84px 1fr; padding:18px}
     .sidebar{height:auto;position:relative;top:0}
     .sidebar.collapsed{width:84px;padding:14px}
-    .brand .user{display:none}
-    .nav-item span.label{display:none}
+    /* Mantener los nombres visibles en tablets y dispositivos móviles */
+    .brand .user{display:flex !important; flex-direction:column; align-items:flex-start}
+    .brand .user h4{font-size:14px}
+    .brand .user p{font-size:12px}
+    .nav-item span.label{display:inline !important; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
     .toggle-sidebar{display:inline-flex}
   }
 
