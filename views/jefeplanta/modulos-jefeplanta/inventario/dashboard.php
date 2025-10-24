@@ -6,7 +6,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Boardto Dashboard - CORAQUA</title>
+  <title> CORAQUA</title>
   <link rel="stylesheet" href="/sistema-produccion/public/css/style_inventario.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
@@ -25,11 +25,11 @@
 
     <nav class="sidebar-nav">
       <ul>
-        <li><a href="#"><i class="fas fa-th-large"></i> Panel</a></li>
-        <li><a href="#"><i class="far fa-calendar-alt"></i> Programación</a></li>
-        <li class="active"><a href="#"><i class="far fa-file-alt"></i> Formatos BPA</a></li>
-        <li><a href="#"><i class="fas fa-users"></i> Personal</a></li>
-        <li><a href="#"><i class="fas fa-cogs"></i> Herramientas</a></li>
+        <li><a href="#"><i class="fas fa-th-large"></i> Inicio</a></li>
+        <li><a href="#"><i class="far fa-calendar-alt"></i> Formatos BPA</a></li>
+        <li class="active"><a href="#"><i class="far fa-file-alt"></i> Listado BPA</a></li>
+        <li><a href="#"><i class="fas fa-users"></i> Listado BPA</a></li>
+        <li><a href="#"><i class="fas fa-cogs"></i> Reportes BPA</a></li>
         <li><a href="#"><i class="fas fa-cog"></i> Configuración</a></li>
         <li><a href="index.php?controller=Login&action=cerrarSesion"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
       </ul>
@@ -52,8 +52,8 @@
         <div class="user-profile">
           <img src="https://via.placeholder.com/40" alt="User" />
           <div class="user-info">
-            <span>Usuario CORAQUA</span>
-            <small>Administrador</small>
+            <span>CORAQUA</span>
+            <small>Jefe de Planta</small>
           </div>
           <i class="fas fa-chevron-down"></i>
         </div>
@@ -87,11 +87,11 @@
       <div class="projects-grid bpa-grid">
         <?php
         $bpa_items = [
-            ['num' => 'N°07', 'title' => 'ALIMENTACIÓN DIARIA', 'icon' => '🧾', 'room' => 'BPA-1', 'action' => 'bpa1', 'time_range' => 'Registro Matutino'],
-            ['num' => 'N°08', 'title' => 'CONTROL DE ALIMENTO EN ALMACÉN', 'icon' => '📦', 'room' => 'BPA-8', 'action' => 'bpa8', 'time_range' => 'Inventario Semanal'],
-            ['num' => 'N°13', 'title' => 'CONTROL DE SAL EN ALMACÉN', 'icon' => '🧂', 'room' => 'BPA-13', 'action' => 'bpa13', 'time_range' => 'Inventario Diario'],
-            ['num' => 'N°14', 'title' => 'CONTROL DE MEDICAMENTO', 'icon' => '💊', 'room' => 'BPA-14', 'action' => 'bpa14', 'time_range' => 'Registro y Uso'],
-            ['num' => 'N°16', 'title' => 'DOSIFICACIÓN DE SUPLEMENTOS Y MEDICAMENTOS', 'icon' => '⚗️', 'room' => 'BPA-16', 'action' => 'bpa16', 'time_range' => 'Preparación'],
+            ['num' => 'N°01', 'title' => 'ALIMENTACIÓN DIARIA', 'icon' => '🧾', 'room' => 'BPA-1', 'action' => 'bpa1', 'time_range' => 'Registro Matutino'],
+            ['num' => 'N°02', 'title' => 'CONTROL DE ALIMENTO EN ALMACÉN', 'icon' => '📦', 'room' => 'BPA-2', 'action' => 'bpa2', 'time_range' => 'Inventario Semanal'],
+            ['num' => 'N°03', 'title' => 'CONTROL DE SAL EN ALMACÉN', 'icon' => '🧂', 'room' => 'BPA-3', 'action' => 'bpa3', 'time_range' => 'Inventario Diario'],
+            ['num' => 'N°04', 'title' => 'CONTROL DE MEDICAMENTO', 'icon' => '🩹', 'room' => 'BPA-4', 'action' => 'bpa4', 'time_range' => 'Registro y Uso'],
+            ['num' => 'N°05', 'title' => 'DOSIFICACIÓN DE SUPLEMENTOS Y MEDICAMENTOS', 'icon' => '🧪', 'room' => 'BPA-5', 'action' => 'bpa5', 'time_range' => 'Preparación'],
         ];
 
         foreach ($bpa_items as $item): ?>

@@ -217,23 +217,23 @@
           </div>
           <div class="user">
             <h4>CORAQUA</h4>
-            <p style="opacity:.9">Producción</p>
+            <p style="opacity:.9">PRODUCCION CORAQUA</p>
           </div>
         </div>
 
         <nav class="sidebar-nav" aria-label="Main navigation">
           <div class="nav-section">
             <a href="index.php?controller=JefePlanta&action=dashboard" class="nav-item active">
-              <div class="nav-icon">🏠</div><span class="label">Dashboard</span>
-            </a>
-            <a href="index.php?controller=JefePlanta&action=moduloInventario" class="nav-item">
-              <div class="nav-icon">📦</div><span class="label">Inventario</span>
+              <div class="nav-icon">🏠</div><span class="label">Inicio</span>
             </a>
             <a href="index.php?controller=JefePlanta&action=moduloPeces" class="nav-item">
               <div class="nav-icon">🐟</div><span class="label">Peces</span>
             </a>
             <a href="index.php?controller=JefePlanta&action=moduloOvas" class="nav-item">
               <div class="nav-icon">🥚</div><span class="label">Ovas</span>
+            </a>
+            <a href="index.php?controller=JefePlanta&action=moduloInventario" class="nav-item">
+              <div class="nav-icon">📦</div><span class="label">Inventario</span>
             </a>
             <a href="index.php?controller=JefePlanta&action=reportes" class="nav-item">
               <div class="nav-icon">📊</div><span class="label">Reportes</span>
@@ -245,7 +245,7 @@
               <div class="nav-icon">⚙️</div><span class="label small">Configuración</span>
             </a>
             <a href="index.php?controller=Auth&action=logout" class="nav-item">
-              <div class="nav-icon">🚪</div><span class="label small">Log Out</span>
+              <div class="nav-icon">🚪</div><span class="label small"> Cerrar Sesión</span>
             </a>
           </div>
         </nav>
@@ -329,7 +329,7 @@
 
           <div class="card" style="color:#333; padding:20px;">
             <div class="space-between">
-              <h4 style="margin:0;font-size:16px;font-weight:600;">Ítems en inventario</h4>
+              <h4 style="margin:0;font-size:16px;font-weight:600;"> Inventario</h4>
               <div style="font-size:20px;background:rgba(0,0,0,0.05);width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#555">📦</div>
             </div>
             <div style="font-size:36px;font-weight:800;margin:10px 0;">
@@ -359,7 +359,7 @@
           </div>
 
           <div style="margin-top:18px" class="card">
-            <h4 style="margin:0 0 10px 0">New Messages</h4>
+            <h4 style="margin:0 0 10px 0">Nuevo Mensaje</h4>
             <div style="display:flex;gap:10px;margin-bottom:12px">
               <button class="icon-btn" style="background:#fff;border-radius:12px;border:0;">All</button>
               <button class="icon-btn" style="background:linear-gradient(90deg,#f49340,#fbdcaf);color:#fff;border-radius:12px;border:0;">Teammate</button>
@@ -399,13 +399,13 @@
           </div>
 
           <div class="card">
-            <h4 style="margin:0 0 8px 0">Tasks</h4>
+            <h4 style="margin:0 0 8px 0">Tareas</h4>
             <div style="display:flex;flex-direction:column;gap:8px">
               <div style="display:flex;justify-content:space-between;align-items:center">
-                <div class="muted">Design review</div><div style="font-weight:700">4/8</div>
+                <div class="muted"> Revisión de diseño</div><div style="font-weight:700">4/8</div>
               </div>
               <div style="display:flex;justify-content:space-between;align-items:center">
-                <div class="muted">Client call</div><div style="font-weight:700">1/1</div>
+                <div class="muted"> Client call</div><div style="font-weight:700">1/1</div>
               </div>
             </div>
           </div>
