@@ -4,6 +4,11 @@ class Session {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
+
+        // 🔒 Evita que el navegador guarde caché (bloquea botón "Atrás")
+        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+        header("Pragma: no-cache");
+        header("Expires: 0");
     }
 
     public static function set(string $key, $value): void {
@@ -39,5 +44,14 @@ class Session {
             );
         }
         session_destroy();
+    }
+
+    // 🚫 Redirige si no hay sesión
+    public static function requireLogin() {
+        self::init();
+        if (!isset($_SESSION['usuario'])) {
+            header("Location: /sistema-produccion/public/Auth/login");
+            exit;
+        }
     }
 }
