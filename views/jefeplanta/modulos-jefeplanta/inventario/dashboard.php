@@ -87,11 +87,10 @@
       <div class="projects-grid bpa-grid">
         <?php
         $bpa_items = [
-          ['num' => 'N°01', 'title' => 'ALIMENTACIÓN DIARIA', 'fa' => 'fa-utensils', 'action' => 'bpa1', 'time_range' => 'Registro Matutino'],
-          ['num' => 'N°02', 'title' => 'CONTROL DE ALIMENTO EN ALMACÉN', 'fa' => 'fa-box', 'action' => 'bpa2', 'time_range' => 'Inventario Semanal'],
-          ['num' => 'N°03', 'title' => 'CONTROL DE SAL EN ALMACÉN', 'fa' => 'fa-salt', 'action' => 'bpa3', 'time_range' => 'Inventario Diario'],
-          ['num' => 'N°04', 'title' => 'CONTROL DE MEDICAMENTO', 'fa' => 'fa-prescription-bottle-medical', 'action' => 'bpa4', 'time_range' => 'Registro y Uso'],
-          ['num' => 'N°05', 'title' => 'DOSIFICACIÓN DE SUPLEMENTOS Y MEDICAMENTOS', 'fa' => 'fa-flask', 'action' => 'bpa5', 'time_range' => 'Preparación'],
+          ['num' => 'N°01', 'title' => 'CONTROL DE ALIMENTO EN ALMACÉN', 'fa' => 'fa-box', 'action' => 'bpa1', 'time_range' => 'Inventario Semanal'],
+          ['num' => 'N°02', 'title' => 'CONTROL DE SAL EN ALMACÉN', 'fa' => 'fa-salt', 'action' => 'bpa2', 'time_range' => 'Inventario Diario'],
+          ['num' => 'N°03', 'title' => 'CONTROL DE MEDICAMENTO', 'fa' => 'fa-prescription-bottle-medical', 'action' => 'bpa3', 'time_range' => 'Registro y Uso'],
+          ['num' => 'N°04', 'title' => 'DOSIFICACIÓN DE SUPLEMENTOS Y MEDICAMENTOS', 'fa' => 'fa-flask', 'action' => 'bpa4', 'time_range' => 'Preparación'],
         ];
 
         foreach ($bpa_items as $item): ?>
@@ -134,11 +133,10 @@
       </div>
       <table class="bpa-list">
         <tr><th>N°</th><th>Nombre del Formato</th><th>Tipo</th></tr>
-        <tr><td>01</td><td>Alimentación diaria</td><td>Registro</td></tr>
-        <tr><td>02</td><td>Control de alimento en almacén</td><td>Inventario</td></tr>
-        <tr><td>03</td><td>Control de sal en almacén</td><td>Inventario</td></tr>
-        <tr><td>04</td><td>Control de medicamento</td><td>Registro</td></tr>
-        <tr><td>05</td><td>Dosificación de suplementos y medicamentos</td><td>Preparación</td></tr>
+        <tr><td>01</td><td>Control de alimento en almacén</td><td>Inventario</td></tr>
+        <tr><td>02</td><td>Control de sal en almacén</td><td>Inventario</td></tr>
+        <tr><td>03</td><td>Control de medicamento</td><td>Registro</td></tr>
+        <tr><td>04</td><td>Dosificación de suplementos y medicamentos</td><td>Preparación</td></tr>
       </table>
     </section>
   </main>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>FORMATO N°08 - CONTROL DE ALIMENTO EN ALMACÉN</title>
+<title>CONTROL DE SAL EN ALMACÉN</title>
 <style>
   * { box-sizing: border-box; font-family: "Poppins", "Segoe UI", sans-serif; }
   body {
@@ -29,26 +29,22 @@
   /* ===== Encabezado ===== */
   .header-row {
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     flex-direction: column;
-    gap: 10px;
     text-align: center;
   }
   .logo {
-    width: 85px; height: 85px;
-    background: #fff;
-    border-radius: 8px;
-    padding: 8px;
-    display:flex; align-items:center; justify-content:center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    width: 72px; height: 72px;
+    margin-bottom: 8px;
   }
-  .logo img { width:100%; height:auto; object-fit:contain; }
+  .logo img { width: 100%; height: auto; }
 
   .title-block h1 {
-    margin: 8px 0 0;
-    font-size: 1.4rem;
-    color: #0f2b2b;
+    margin: 0;
+    font-size: 1.25rem;
+    color: #ff7b00;
+    letter-spacing: 0.2px;
     font-weight: 700;
   }
   .meta {
@@ -63,8 +59,9 @@
     display:flex;
     justify-content:center;
     align-items:flex-start;
-    gap: 80px;
-    margin: 24px 0 12px;
+    gap:72px;
+    margin:22px auto 10px;
+    flex-wrap:wrap;
   }
   .step {
     display:flex;
@@ -78,8 +75,8 @@
     content:"";
     position:absolute;
     top:22px;
-    right:-60px;
-    width:120px;
+    right:-56px;
+    width:112px;
     height:3px;
     background:#e6e6e6;
     z-index:0;
@@ -90,7 +87,7 @@
     background:#ddd;
     display:flex; align-items:center; justify-content:center;
     font-weight:700; color:#fff; z-index:1;
-    transition: all .25s ease;
+    transition:all .25s ease;
     font-size:1rem;
   }
   .label {
@@ -100,20 +97,29 @@
     color:#555;
     text-align:center;
   }
-  .step.active .circle { background:#ff7b00; box-shadow:0 0 12px #ffb366; transform:translateY(-2px); }
+  .step.active .circle { background:#ff7b00; box-shadow:0 0 12px #ffb366; transform:translateY(-2px);}
   .step.active .label { color:#ff7b00; }
   .step:hover .circle { transform:translateY(-3px); box-shadow:0 6px 18px rgba(0,0,0,0.08); }
 
-  /* ===== Panel del wizard (descargas a la izquierda) ===== */
+  /* ===== Wizard contenido ===== */
   .wizard-panel {
-    margin: 0 auto 0;
+    margin: 8px auto 20px;
     max-width: 880px;
-    text-align:left;
+    text-align: center;
   }
-  .wizard-content { display:none; opacity:0; transform:translateY(6px); transition: all .35s ease; }
-  .wizard-content.active { display:block; opacity:1; transform:none; }
-
+  .wizard-content {
+    display: none;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: all .35s ease;
+  }
+  .wizard-content.active {
+    display: block;
+    opacity: 1;
+    transform: none;
+  }
   .download-btn {
+    display:inline-block;
     background:#ff7b00;
     color:#fff;
     border:none;
@@ -134,8 +140,8 @@
   }
   label { display:block; font-weight:600; color:#333; margin-bottom:6px; font-size:0.92rem; }
   input[type="text"], input[type="date"], select {
-    width:100%; padding:9px 10px; border-radius:8px; border:1px solid #d8d8d8; font-size:0.95rem;
-    transition: box-shadow .15s, border-color .15s;
+    width:100%; padding:9px 10px; border-radius:8px; border:1px solid #d8d8d8;
+    font-size:0.95rem; transition: box-shadow .15s, border-color .15s;
   }
   input:focus, select:focus { outline:none; border-color:#ff7b00; box-shadow:0 0 6px rgba(255,123,0,0.12); }
 
@@ -144,15 +150,20 @@
     background:#ffeedb; color:#ff7b00; padding:8px 12px; border-radius:8px; font-weight:700; margin-top:20px;
   }
   .table-container { overflow:auto; margin-top:10px; }
-  table { width:100%; border-collapse:collapse; min-width:780px; }
+  table { width:100%; border-collapse:collapse; min-width:700px; }
   th, td { padding:8px 6px; border:1px solid #e6e6e6; text-align:center; font-size:0.92rem; }
-  th { background:#ff7b00; color:#fff; position:sticky; top:0; }
+  th { background:#ff7b00; color:#fff; }
   td input { width:100%; border:none; background:transparent; padding:4px; text-align:center; }
   td input:focus { background:#fff7f0; outline:none; }
 
   /* ===== Botones ===== */
-  .actions { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-top:18px; }
-  .left-actions, .right-actions { display:flex; gap:10px; align-items:center; }
+  .actions {
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-top:18px;
+  }
   .btn { background:#ff7b00; color:#fff; border:none; padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:700; }
   .btn:hover { background:#e66e00; transform:translateY(-2px); }
   .btn.secondary { background:#fff; color:#ff7b00; border:2px solid #ff7b00; }
@@ -160,41 +171,28 @@
 
   footer { text-align:center; color:#666; font-size:0.88rem; margin-top:20px; }
 
-  @media (max-width:900px){
-    .wizard { gap:34px; }
-    .step:not(:last-child)::after { right:-44px; width:88px; }
-  }
-  @media (max-width:640px){
-    .wizard { gap:20px; }
-    .step:not(:last-child)::after { display:none; }
-    .step { width:84px; }
-  }
 </style>
 </head>
 <body>
 
 <div class="container">
 
-  <!-- Encabezado -->
+  <!-- Logo y título centrado -->
   <div class="header-row">
     <div class="logo">
       <img src="img/logo-coraqua.png" alt="Logo CORAQUA" />
     </div>
-
     <div class="title-block">
-      <h1>FORMATO N°8 — CONTROL DE ALIMENTO EN ALMACÉN</h1>
+      <h1>CONTROL DE SAL EN ALMACÉN</h1>
       <div class="meta">
-        <span><strong>CÓDIGO:</strong> CORAQUA BPA8</span>
-        &nbsp;&nbsp;|&nbsp;&nbsp;
-        <span><strong>VERSIÓN:</strong> 2.0</span>
-        &nbsp;&nbsp;|&nbsp;&nbsp;
-        <span><strong>FECHA:</strong> 03/08/2020</span>
+        <span><strong>CÓDIGO:</strong> CORAQUA BPA-2</span> |
+        <span><strong>VERSIÓN:</strong> 2.0</span> |
       </div>
     </div>
   </div>
 
   <!-- Wizard -->
-  <div class="wizard" role="tablist" aria-label="Descargas">
+  <div class="wizard">
     <div class="step active" onclick="mostrarPaso(1)">
       <div class="circle">1</div>
       <div class="label">Semanal</div>
@@ -209,38 +207,27 @@
     </div>
   </div>
 
-  <!-- Descargas a la izquierda -->
   <div class="wizard-panel">
     <div id="contenido1" class="wizard-content active">
-      <p>📅 Generar y descargar reporte semanal en Excel</p>
+      <p>📅 Descargar reporte semanal en Excel</p>
       <button class="download-btn" onclick="descargarExcel('semana')">Descargar Excel Semanal</button>
     </div>
     <div id="contenido2" class="wizard-content">
-      <p>🗓️ Generar y descargar reporte mensual en Excel</p>
+      <p>🗓️ Descargar reporte mensual en Excel</p>
       <button class="download-btn" onclick="descargarExcel('mes')">Descargar Excel Mensual</button>
     </div>
     <div id="contenido3" class="wizard-content">
-      <p>📊 Generar y descargar reporte anual en Excel</p>
+      <p>📊 Descargar reporte anual en Excel</p>
       <button class="download-btn" onclick="descargarExcel('anio')">Descargar Excel Anual</button>
     </div>
   </div>
 
   <!-- Formulario -->
   <div class="info-grid">
-    <div>
-      <label for="fecha">Fecha</label>
-      <input id="fecha" type="date" />
-    </div>
-    <div>
-      <label for="sede">Sede</label>
-      <input id="sede" type="text" placeholder="Ejemplo: Almacén Central" />
-    </div>
-    <div>
-      <label for="encargado">Encargado</label>
-      <input id="encargado" type="text" placeholder="Nombre del encargado" />
-    </div>
-    <div>
-      <label for="mes">Mes</label>
+    <div><label for="fecha">Fecha</label><input id="fecha" type="date" /></div>
+    <div><label for="sede">Sede</label><input id="sede" type="text" placeholder="Ejemplo: Almacén Central" /></div>
+    <div><label for="encargado">Encargado</label><input id="encargado" type="text" placeholder="Nombre del encargado" /></div>
+    <div><label for="mes">Mes</label>
       <select id="mes">
         <option value="">Seleccione mes</option>
         <option>Enero</option><option>Febrero</option><option>Marzo</option>
@@ -252,26 +239,22 @@
   </div>
 
   <!-- Tabla -->
-  <div class="section-title">Detalle de Alimentos</div>
+  <div class="section-title">Detalle de Control de Sal</div>
   <div class="table-container">
-    <table id="tablaAlimentos">
+    <table id="tablaSal">
       <thead>
         <tr>
           <th>#</th>
           <th>FECHA</th>
-          <th>MARCA</th>
-          <th>CALIBRE</th>
           <th>CANTIDAD</th>
           <th>NOMBRE</th>
           <th>OBS</th>
         </tr>
       </thead>
-      <tbody id="bodyAlimentos">
+      <tbody id="bodySal">
         <tr>
           <td>1</td>
           <td><input type="date" /></td>
-          <td><input type="text" placeholder="Marca A" /></td>
-          <td><input type="text" placeholder="Calibre" /></td>
           <td><input type="number" step="0.01" placeholder="Kg / Unid" /></td>
           <td><input type="text" placeholder="Nombre del producto" /></td>
           <td><input type="text" placeholder="Observaciones" /></td>
@@ -280,11 +263,11 @@
     </table>
   </div>
 
-  <!-- Botones -->
+  <!-- Acciones -->
   <div class="actions">
     <div class="left-actions">
-      <button class="btn" onclick="agregarFilaAlimentos()">➕ Agregar fila</button>
-      <button class="btn" onclick="eliminarFilaAlimentos()">➖ Quitar fila</button>
+      <button class="btn" onclick="agregarFila()">➕ Agregar fila</button>
+      <button class="btn" onclick="eliminarFila()">➖ Quitar fila</button>
     </div>
 
     <div class="right-actions">
@@ -293,40 +276,39 @@
     </div>
   </div>
 
-  <footer> CORAQUA © 2025 — Control de Alimento en Almacén </footer>
+  <footer>CORAQUA © 2025 — Control de Sal en Almacén</footer>
 </div>
 
 <script>
-  function mostrarPaso(n){
-    const steps=document.querySelectorAll('.step');
-    const contents=document.querySelectorAll('.wizard-content');
-    steps.forEach((s,i)=>s.classList.toggle('active',i===n-1));
-    contents.forEach((c,i)=>c.classList.toggle('active',i===n-1));
-  }
-  function agregarFilaAlimentos(){
-    const tbody=document.getElementById('bodyAlimentos');
-    const n=tbody.rows.length+1;
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${n}</td>
-      <td><input type="date" /></td>
-      <td><input type="text" placeholder="Marca" /></td>
-      <td><input type="text" placeholder="Calibre" /></td>
-      <td><input type="number" step="0.01" placeholder="Kg / Unid" /></td>
-      <td><input type="text" placeholder="Nombre del producto" /></td>
-      <td><input type="text" placeholder="Observaciones" /></td>`;
-    tbody.appendChild(tr);
-  }
-  function eliminarFilaAlimentos(){
-    const tbody=document.getElementById('bodyAlimentos');
-    if(tbody.rows.length>1) tbody.deleteRow(-1);
-    else alert('Debe quedar al menos una fila.');
-  }
-  function descargarExcel(tipo){
-    let nombre={semana:'ControlAlimento_Semanal.xlsx',mes:'ControlAlimento_Mensual.xlsx',anio:'ControlAlimento_Anual.xlsx'}[tipo];
-    alert('📁 Se generará el archivo: '+nombre+' (simulado).');
-  }
-  function verListado(){ alert('📅 Mostrando listado diario (simulado).'); }
-  function volverAtras(){ window.history.back(); }
+function mostrarPaso(n){
+  const steps=document.querySelectorAll('.step');
+  const contents=document.querySelectorAll('.wizard-content');
+  steps.forEach((s,i)=>s.classList.toggle('active',i===n-1));
+  contents.forEach((c,i)=>c.classList.toggle('active',i===n-1));
+}
+
+function agregarFila(){
+  const tbody=document.getElementById('bodySal');
+  const n=tbody.rows.length+1;
+  const tr=document.createElement('tr');
+  tr.innerHTML=`
+    <td>${n}</td>
+    <td><input type="date" /></td>
+    <td><input type="number" step="0.01" placeholder="Kg / Unid" /></td>
+    <td><input type="text" placeholder="Nombre del producto" /></td>
+    <td><input type="text" placeholder="Observaciones" /></td>`;
+  tbody.appendChild(tr);
+}
+function eliminarFila(){
+  const tbody=document.getElementById('bodySal');
+  if(tbody.rows.length>1){tbody.deleteRow(-1);}
+  else{alert('Debe quedar al menos una fila.');}
+}
+function descargarExcel(tipo){
+  alert('📁 Se generará el archivo Excel: ControlSal_'+tipo+'.xlsx (simulado)');
+}
+function verListado(){alert('📅 Mostrando listado diario (simulado).');}
+function volverAtras(){window.history.back();}
 </script>
 </body>
 </html>

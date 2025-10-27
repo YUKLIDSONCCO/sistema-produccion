@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>FORMATO N°13 - CONTROL DE SAL EN ALMACÉN</title>
+<title>CONTROL DE MEDICAMENTO</title>
 <style>
   * { box-sizing: border-box; font-family: "Poppins", "Segoe UI", sans-serif; }
   body {
@@ -183,11 +183,10 @@
       <img src="img/logo-coraqua.png" alt="Logo CORAQUA" />
     </div>
     <div class="title-block">
-      <h1>FORMATO N°13 — CONTROL DE SAL EN ALMACÉN</h1>
+      <h1>CONTROL DE MEDICAMENTO</h1>
       <div class="meta">
-        <span><strong>CÓDIGO:</strong> CORAQUA BPA13</span> |
+        <span><strong>CÓDIGO:</strong> CORAQUA BPA-3</span> |
         <span><strong>VERSIÓN:</strong> 2.0</span> |
-        <span><strong>FECHA:</strong> 03/08/2020</span>
       </div>
     </div>
   </div>
@@ -210,15 +209,15 @@
 
   <div class="wizard-panel">
     <div id="contenido1" class="wizard-content active">
-      <p>📅 Generar reporte semanal</p>
+      <p>📅 Descargar reporte semanal en Excel</p>
       <button class="download-btn" onclick="descargarExcel('semana')">Descargar Excel Semanal</button>
     </div>
     <div id="contenido2" class="wizard-content">
-      <p>🗓️ Generar reporte mensual</p>
+      <p>🗓️ Descargar reporte mensual en Excel</p>
       <button class="download-btn" onclick="descargarExcel('mes')">Descargar Excel Mensual</button>
     </div>
     <div id="contenido3" class="wizard-content">
-      <p>📊 Generar reporte anual</p>
+      <p>📊 Descargar reporte  en Excel</p>
       <button class="download-btn" onclick="descargarExcel('anio')">Descargar Excel Anual</button>
     </div>
   </div>
@@ -226,7 +225,7 @@
   <!-- Formulario -->
   <div class="info-grid">
     <div><label for="fecha">Fecha</label><input id="fecha" type="date" /></div>
-    <div><label for="sede">Sede</label><input id="sede" type="text" placeholder="Ejemplo: Almacén Central" /></div>
+    <div><label for="sede">Sede</label><input id="sede" type="text" placeholder="Ejemplo: Laboratorio Principal" /></div>
     <div><label for="encargado">Encargado</label><input id="encargado" type="text" placeholder="Nombre del encargado" /></div>
     <div><label for="mes">Mes</label>
       <select id="mes">
@@ -240,24 +239,26 @@
   </div>
 
   <!-- Tabla -->
-  <div class="section-title">Detalle de Control de Sal</div>
+  <div class="section-title">Detalle de Control de Medicamento</div>
   <div class="table-container">
-    <table id="tablaSal">
+    <table id="tablaMed">
       <thead>
         <tr>
           <th>#</th>
           <th>FECHA</th>
+          <th>MEDICAMENTO O SUPLEMENTO</th>
           <th>CANTIDAD</th>
           <th>NOMBRE</th>
           <th>OBS</th>
         </tr>
       </thead>
-      <tbody id="bodySal">
+      <tbody id="bodyMed">
         <tr>
           <td>1</td>
           <td><input type="date" /></td>
-          <td><input type="number" step="0.01" placeholder="Kg / Unid" /></td>
-          <td><input type="text" placeholder="Nombre del producto" /></td>
+          <td><input type="text" placeholder="Nombre del medicamento o suplemento" /></td>
+          <td><input type="number" step="0.01" placeholder="Cantidad" /></td>
+          <td><input type="text" placeholder="Nombre del responsable" /></td>
           <td><input type="text" placeholder="Observaciones" /></td>
         </tr>
       </tbody>
@@ -277,7 +278,7 @@
     </div>
   </div>
 
-  <footer>CORAQUA © 2025 — Control de Sal en Almacén</footer>
+  <footer>CORAQUA © 2025 — Control de Medicamento</footer>
 </div>
 
 <script>
@@ -289,24 +290,25 @@ function mostrarPaso(n){
 }
 
 function agregarFila(){
-  const tbody=document.getElementById('bodySal');
+  const tbody=document.getElementById('bodyMed');
   const n=tbody.rows.length+1;
   const tr=document.createElement('tr');
   tr.innerHTML=`
     <td>${n}</td>
     <td><input type="date" /></td>
-    <td><input type="number" step="0.01" placeholder="Kg / Unid" /></td>
-    <td><input type="text" placeholder="Nombre del producto" /></td>
+    <td><input type="text" placeholder="Nombre del medicamento o suplemento" /></td>
+    <td><input type="number" step="0.01" placeholder="Cantidad" /></td>
+    <td><input type="text" placeholder="Nombre del responsable" /></td>
     <td><input type="text" placeholder="Observaciones" /></td>`;
   tbody.appendChild(tr);
 }
 function eliminarFila(){
-  const tbody=document.getElementById('bodySal');
+  const tbody=document.getElementById('bodyMed');
   if(tbody.rows.length>1){tbody.deleteRow(-1);}
   else{alert('Debe quedar al menos una fila.');}
 }
 function descargarExcel(tipo){
-  alert('📁 Se generará el archivo Excel: ControlSal_'+tipo+'.xlsx (simulado)');
+  alert('📁 Se generará el archivo Excel: ControlMedicamento_'+tipo+'.xlsx (simulado)');
 }
 function verListado(){alert('📅 Mostrando listado diario (simulado).');}
 function volverAtras(){window.history.back();}

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>FORMATO N°14 - CONTROL DE MEDICAMENTO</title>
+<title>CONTROL DE DOSIFICACIÓN DE SUPLEMENTOS Y MEDICAMENTOS</title>
 <style>
   * { box-sizing: border-box; font-family: "Poppins", "Segoe UI", sans-serif; }
   body {
@@ -150,7 +150,7 @@
     background:#ffeedb; color:#ff7b00; padding:8px 12px; border-radius:8px; font-weight:700; margin-top:20px;
   }
   .table-container { overflow:auto; margin-top:10px; }
-  table { width:100%; border-collapse:collapse; min-width:700px; }
+  table { width:100%; border-collapse:collapse; min-width:900px; }
   th, td { padding:8px 6px; border:1px solid #e6e6e6; text-align:center; font-size:0.92rem; }
   th { background:#ff7b00; color:#fff; }
   td input { width:100%; border:none; background:transparent; padding:4px; text-align:center; }
@@ -183,11 +183,10 @@
       <img src="img/logo-coraqua.png" alt="Logo CORAQUA" />
     </div>
     <div class="title-block">
-      <h1>FORMATO N°14 — CONTROL DE MEDICAMENTO</h1>
+      <h1>CONTROL DE DOSIFICACIÓN DE SUPLEMENTOS Y MEDICAMENTOS</h1>
       <div class="meta">
-        <span><strong>CÓDIGO:</strong> CORAQUA BPA14</span> |
-        <span><strong>VERSIÓN:</strong> 2.0</span> |
-        <span><strong>FECHA:</strong> 03/08/2020</span>
+        <span><strong>CÓDIGO:</strong> CORAQUA BPA-4</span> |
+        <span><strong>REVISIÓN:</strong> 2.0</span> |
       </div>
     </div>
   </div>
@@ -210,15 +209,15 @@
 
   <div class="wizard-panel">
     <div id="contenido1" class="wizard-content active">
-      <p>📅 Generar reporte semanal</p>
+      <p>📅 Descargar reporte semanal en Excel</p>
       <button class="download-btn" onclick="descargarExcel('semana')">Descargar Excel Semanal</button>
     </div>
     <div id="contenido2" class="wizard-content">
-      <p>🗓️ Generar reporte mensual</p>
+      <p>🗓️ Descargar reporte mensual en Excel</p>
       <button class="download-btn" onclick="descargarExcel('mes')">Descargar Excel Mensual</button>
     </div>
     <div id="contenido3" class="wizard-content">
-      <p>📊 Generar reporte anual</p>
+      <p>📊 Descargar reporte anual en Excel</p>
       <button class="download-btn" onclick="descargarExcel('anio')">Descargar Excel Anual</button>
     </div>
   </div>
@@ -226,7 +225,7 @@
   <!-- Formulario -->
   <div class="info-grid">
     <div><label for="fecha">Fecha</label><input id="fecha" type="date" /></div>
-    <div><label for="sede">Sede</label><input id="sede" type="text" placeholder="Ejemplo: Laboratorio Principal" /></div>
+    <div><label for="sede">Sede</label><input id="sede" type="text" placeholder="Ejemplo: Piscigranja Principal" /></div>
     <div><label for="encargado">Encargado</label><input id="encargado" type="text" placeholder="Nombre del encargado" /></div>
     <div><label for="mes">Mes</label>
       <select id="mes">
@@ -240,27 +239,31 @@
   </div>
 
   <!-- Tabla -->
-  <div class="section-title">Detalle de Control de Medicamento</div>
+  <div class="section-title">Detalle de Dosificación</div>
   <div class="table-container">
-    <table id="tablaMed">
+    <table id="tablaDosificacion">
       <thead>
         <tr>
           <th>#</th>
           <th>FECHA</th>
           <th>MEDICAMENTO O SUPLEMENTO</th>
-          <th>CANTIDAD</th>
-          <th>NOMBRE</th>
-          <th>OBS</th>
+          <th>DOSIS (gr)</th>
+          <th>DIAS DE TRATAMIENTO</th>
+          <th>LOTE / ALEVINES</th>
+          <th>SALA</th>
+          <th>RESPONSABLE</th>
         </tr>
       </thead>
-      <tbody id="bodyMed">
+      <tbody id="bodyDosificacion">
         <tr>
           <td>1</td>
           <td><input type="date" /></td>
           <td><input type="text" placeholder="Nombre del medicamento o suplemento" /></td>
-          <td><input type="number" step="0.01" placeholder="Cantidad" /></td>
-          <td><input type="text" placeholder="Nombre del responsable" /></td>
-          <td><input type="text" placeholder="Observaciones" /></td>
+          <td><input type="number" step="0.01" placeholder="gr" /></td>
+          <td><input type="number" step="1" placeholder="Días" /></td>
+          <td><input type="text" placeholder="Lote o alevines" /></td>
+          <td><input type="text" placeholder="Sala" /></td>
+          <td><input type="text" placeholder="Responsable" /></td>
         </tr>
       </tbody>
     </table>
@@ -279,7 +282,7 @@
     </div>
   </div>
 
-  <footer>CORAQUA © 2025 — Control de Medicamento</footer>
+  <footer>CORAQUA © 2025 — Control de Dosificación de Suplementos y Medicamentos</footer>
 </div>
 
 <script>
@@ -291,25 +294,27 @@ function mostrarPaso(n){
 }
 
 function agregarFila(){
-  const tbody=document.getElementById('bodyMed');
+  const tbody=document.getElementById('bodyDosificacion');
   const n=tbody.rows.length+1;
   const tr=document.createElement('tr');
   tr.innerHTML=`
     <td>${n}</td>
     <td><input type="date" /></td>
     <td><input type="text" placeholder="Nombre del medicamento o suplemento" /></td>
-    <td><input type="number" step="0.01" placeholder="Cantidad" /></td>
-    <td><input type="text" placeholder="Nombre del responsable" /></td>
-    <td><input type="text" placeholder="Observaciones" /></td>`;
+    <td><input type="number" step="0.01" placeholder="gr" /></td>
+    <td><input type="number" step="1" placeholder="Días" /></td>
+    <td><input type="text" placeholder="Lote o alevines" /></td>
+    <td><input type="text" placeholder="Sala" /></td>
+    <td><input type="text" placeholder="Responsable" /></td>`;
   tbody.appendChild(tr);
 }
 function eliminarFila(){
-  const tbody=document.getElementById('bodyMed');
+  const tbody=document.getElementById('bodyDosificacion');
   if(tbody.rows.length>1){tbody.deleteRow(-1);}
   else{alert('Debe quedar al menos una fila.');}
 }
 function descargarExcel(tipo){
-  alert('📁 Se generará el archivo Excel: ControlMedicamento_'+tipo+'.xlsx (simulado)');
+  alert('📁 Se generará el archivo Excel: Dosificacion_'+tipo+'.xlsx (simulado)');
 }
 function verListado(){alert('📅 Mostrando listado diario (simulado).');}
 function volverAtras(){window.history.back();}

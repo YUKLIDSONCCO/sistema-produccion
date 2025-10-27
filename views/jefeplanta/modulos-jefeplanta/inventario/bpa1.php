@@ -1,417 +1,334 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FORMATO N°07 - ALIMENTACIÓN DIARIA</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>CONTROL DE ALIMENTO EN ALMACÉN</title>
 <style>
-  * {
-    box-sizing: border-box;
-    font-family: "Poppins", "Segoe UI", sans-serif;
-  }
-
+  * { box-sizing: border-box; font-family: "Poppins", "Segoe UI", sans-serif; }
   body {
-    background: linear-gradient(135deg, #fffaf2, #ffd9b3);
     margin: 0;
-    padding: 0;
-    color: #333;
     min-height: 100vh;
+    background: linear-gradient(135deg,#fffaf2,#ffd9b3 60%);
+    color: #333;
+    padding: 30px 16px;
   }
 
   .container {
     max-width: 1200px;
-    margin: 40px auto;
+    margin: 18px auto;
     background: #fff;
-    padding: 35px 40px;
-    border-radius: 16px;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-    border-top: 6px solid #ff7b00;
-    animation: fadeIn 0.8s ease;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  header {
-    text-align: center;
-    margin-bottom: 30px;
-  }
-
-  header h2 {
-    color: #ff7b00;
-    font-size: 1.6em;
-    margin-bottom: 5px;
-  }
-
-  header p {
-    font-size: 0.9em;
-    color: #555;
-  }
-
-  /* ==== Wizard ==== */
-  .wizard {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 80px;
-  margin-bottom: 30px;
-}
-
-.step {
-  display: flex;
-  flex-direction: column; /* 👉 ahora el texto irá debajo */
-  align-items: center;
-  position: relative;
-  cursor: pointer;
-}
-
-.step:not(:last-child)::after {
-  content: "";
-  width: 100px;
-  height: 3px;
-  background: #ddd;
-  position: absolute;
-  top: 19px; /* centra la línea con el círculo */
-  right: -90px;
-  z-index: 0;
-}
-
-.circle {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  background: #ddd;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  z-index: 1;
-  transition: all 0.3s;
-  font-size: 1.1em;
-}
-
-.step.active .circle {
-  background: #ff7b00;
-  box-shadow: 0 0 10px #ffb366;
-}
-
-.label {
-  margin-top: 8px; /* separa el texto del círculo */
-  font-weight: 600;
-  color: #555;
-  text-align: center;
-}
-
-.step.active .label {
-  color: #ff7b00;
-}
-
-  /* ==== Contenido de pasos ==== */
-  .wizard-content {
-    display: none;
+    border-radius: 14px;
+    padding: 28px 32px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    border-top: 7px solid #ff7b00;
     animation: fadeIn 0.6s ease;
   }
+  @keyframes fadeIn { from {opacity:0; transform:translateY(8px)} to {opacity:1; transform:none} }
 
-  .wizard-content.active {
-    display: block;
+  /* ===== Encabezado ===== */
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
   }
+  .logo {
+    width: 85px; height: 85px;
+    background: #fff;
+    border-radius: 8px;
+    padding: 8px;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .logo img { width:100%; height:auto; object-fit:contain; }
+
+  .title-block h1 {
+    margin: 8px 0 0;
+    font-size: 1.4rem;
+    color: #0f2b2b;
+    font-weight: 700;
+  }
+  .meta {
+    margin-top:6px;
+    color:#555;
+    font-size:0.9rem;
+  }
+  .meta strong { color:#ff7b00; }
+
+  /* ===== Wizard ===== */
+  .wizard {
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    gap: 80px;
+    margin: 24px 0 12px;
+  }
+  .step {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    position:relative;
+    cursor:pointer;
+    width:100px;
+  }
+  .step:not(:last-child)::after {
+    content:"";
+    position:absolute;
+    top:22px;
+    right:-60px;
+    width:120px;
+    height:3px;
+    background:#e6e6e6;
+    z-index:0;
+  }
+  .circle {
+    width:48px; height:48px;
+    border-radius:50%;
+    background:#ddd;
+    display:flex; align-items:center; justify-content:center;
+    font-weight:700; color:#fff; z-index:1;
+    transition: all .25s ease;
+    font-size:1rem;
+  }
+  .label {
+    margin-top:8px;
+    font-weight:600;
+    font-size:0.92rem;
+    color:#555;
+    text-align:center;
+  }
+  .step.active .circle { background:#ff7b00; box-shadow:0 0 12px #ffb366; transform:translateY(-2px); }
+  .step.active .label { color:#ff7b00; }
+  .step:hover .circle { transform:translateY(-3px); box-shadow:0 6px 18px rgba(0,0,0,0.08); }
+
+  /* ===== Panel del wizard (descargas a la izquierda) ===== */
+  .wizard-panel {
+    margin: 0 auto 0;
+    max-width: 880px;
+    text-align:left;
+  }
+  .wizard-content { display:none; opacity:0; transform:translateY(6px); transition: all .35s ease; }
+  .wizard-content.active { display:block; opacity:1; transform:none; }
 
   .download-btn {
-    background: #ff7b00;
-    color: #fff;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.95em;
-    transition: all 0.2s;
+    background:#ff7b00;
+    color:#fff;
+    border:none;
+    padding:10px 16px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+    transition: background .18s, transform .12s;
   }
+  .download-btn:hover { background:#e66e00; transform:translateY(-2px); }
 
-  .download-btn:hover {
-    background: #e66e00;
-  }
-
-  /* ==== Info General ==== */
+  /* ===== Formulario ===== */
   .info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 15px;
-    margin-top: 30px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:14px;
+    margin-top:20px;
   }
-
-  label {
-    font-weight: 600;
-    font-size: 0.9em;
-    color: #2d3436;
+  label { display:block; font-weight:600; color:#333; margin-bottom:6px; font-size:0.92rem; }
+  input[type="text"], input[type="date"], select {
+    width:100%; padding:9px 10px; border-radius:8px; border:1px solid #d8d8d8; font-size:0.95rem;
+    transition: box-shadow .15s, border-color .15s;
   }
+  input:focus, select:focus { outline:none; border-color:#ff7b00; box-shadow:0 0 6px rgba(255,123,0,0.12); }
 
-  input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 0.9em;
-    transition: 0.2s;
-  }
-
-  input:focus {
-    border-color: #ff7b00;
-    outline: none;
-    box-shadow: 0 0 4px #ffb366;
-  }
-
-  /* ==== Tabla ==== */
+  /* ===== Tabla ===== */
   .section-title {
-    background: #ffeedb;
-    color: #ff7b00;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-weight: 600;
-    margin-top: 25px;
+    background:#ffeedb; color:#ff7b00; padding:8px 12px; border-radius:8px; font-weight:700; margin-top:20px;
   }
+  .table-container { overflow:auto; margin-top:10px; }
+  table { width:100%; border-collapse:collapse; min-width:780px; }
+  th, td { padding:8px 6px; border:1px solid #e6e6e6; text-align:center; font-size:0.92rem; }
+  th { background:#ff7b00; color:#fff; position:sticky; top:0; }
+  td input { width:100%; border:none; background:transparent; padding:4px; text-align:center; }
+  td input:focus { background:#fff7f0; outline:none; }
 
-  .table-container {
-    overflow-x: auto;
-    margin-top: 10px;
+  /* ===== Botones ===== */
+  .actions { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-top:18px; }
+  .left-actions, .right-actions { display:flex; gap:10px; align-items:center; }
+  .btn { background:#ff7b00; color:#fff; border:none; padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:700; }
+  .btn:hover { background:#e66e00; transform:translateY(-2px); }
+  .btn.secondary { background:#fff; color:#ff7b00; border:2px solid #ff7b00; }
+  .btn.secondary:hover { background:#ff7b00; color:#fff; }
+
+  footer { text-align:center; color:#666; font-size:0.88rem; margin-top:20px; }
+
+  @media (max-width:900px){
+    .wizard { gap:34px; }
+    .step:not(:last-child)::after { right:-44px; width:88px; }
   }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.9em;
-  }
-
-  th, td {
-    border: 1px solid #ddd;
-    padding: 6px;
-    text-align: center;
-  }
-
-  th {
-    background: #ff7b00;
-    color: white;
-    position: sticky;
-    top: 0;
-  }
-
-  td input {
-    width: 100%;
-    border: none;
-    background: transparent;
-    text-align: center;
-  }
-
-  td input:focus {
-    background: #fff4e6;
-    outline: none;
-  }
-
-  /* ==== Botones ==== */
-  .actions {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    margin-top: 20px;
-    gap: 10px;
-  }
-
-  button {
-    background: #ff7b00;
-    color: white;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-size: 0.9em;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-
-  button:hover {
-    background: #e66e00;
-  }
-
-  .secondary {
-    background: white;
-    color: #ff7b00;
-    border: 2px solid #ff7b00;
-  }
-
-  .secondary:hover {
-    background: #ff7b00;
-    color: white;
-  }
-
-  footer {
-    text-align: center;
-    margin-top: 30px;
-    font-size: 0.85em;
-    color: #666;
+  @media (max-width:640px){
+    .wizard { gap:20px; }
+    .step:not(:last-child)::after { display:none; }
+    .step { width:84px; }
   }
 </style>
 </head>
 <body>
 
 <div class="container">
-  <header>
-    <h2>FORMATO N°07 - ALIMENTACIÓN DIARIA</h2>
-    <p><strong>CÓDIGO:</strong> CORAQUA BPA-1 | <strong>VERSIÓN:</strong> 2.0 | <strong>FECHA:</strong> 03/08/2020</p>
-  </header>
 
-  <!-- WIZARD -->
-  <div class="wizard">
+  <!-- Encabezado -->
+  <div class="header-row">
+    <div class="logo">
+      <img src="img/logo-coraqua.png" alt="Logo CORAQUA" />
+    </div>
+
+    <div class="title-block">
+      <h1>CONTROL DE ALIMENTO EN ALMACÉN</h1>
+      <div class="meta">
+        <span><strong>CÓDIGO:</strong> CORAQUA BPA-1</span>
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <span><strong>VERSIÓN:</strong> 2.0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wizard -->
+  <div class="wizard" role="tablist" aria-label="Descargas">
     <div class="step active" onclick="mostrarPaso(1)">
-      <div class="circle">1</div><span class="label">Semanal</span>
+      <div class="circle">1</div>
+      <div class="label">Semanal</div>
     </div>
     <div class="step" onclick="mostrarPaso(2)">
-      <div class="circle">2</div><span class="label">Mensual</span>
+      <div class="circle">2</div>
+      <div class="label">Mensual</div>
     </div>
     <div class="step" onclick="mostrarPaso(3)">
-      <div class="circle">3</div><span class="label">Anual</span>
+      <div class="circle">3</div>
+      <div class="label">Anual</div>
     </div>
   </div>
 
-  <div id="contenido1" class="wizard-content active">
-    <p>📅 Descargar reporte semanal en formato Excel:</p>
-    <button class="download-btn" onclick="descargarExcel('semana')">Descargar Excel Semanal</button>
-  </div>
-
-  <div id="contenido2" class="wizard-content">
-    <p>🗓️ Descargar reporte mensual en formato Excel:</p>
-    <button class="download-btn" onclick="descargarExcel('mes')">Descargar Excel Mensual</button>
-  </div>
-
-  <div id="contenido3" class="wizard-content">
-    <p>📊 Descargar reporte anual en formato Excel:</p>
-    <button class="download-btn" onclick="descargarExcel('anio')">Descargar Excel Anual</button>
-  </div>
-
-  <!-- FORMULARIO GENERAL -->
-  <section class="info-grid">
-    <div>
-      <label>Responsable</label>
-      <input type="text" placeholder="Ejemplo: Juan Pérez">
+  <!-- Descargas a la izquierda -->
+  <div class="wizard-panel">
+    <div id="contenido1" class="wizard-content active">
+      <p>📅 Descargar reporte semanal en Excel</p>
+      <button class="download-btn" onclick="descargarExcel('semana')">Descargar Excel Semanal</button>
     </div>
+    <div id="contenido2" class="wizard-content">
+      <p>🗓️ Descargar reporte mensual en Excel</p>
+      <button class="download-btn" onclick="descargarExcel('mes')">Descargar Excel Mensual</button>
+    </div>
+    <div id="contenido3" class="wizard-content">
+      <p>📊 Descargar reporte anual en Excel</p>
+      <button class="download-btn" onclick="descargarExcel('anio')">Descargar Excel Anual</button>
+    </div>
+  </div>
+
+  <!-- Formulario -->
+  <div class="info-grid">
     <div>
-      <label>Fecha</label>
-      <input type="date">
+      <label for="fecha">Fecha</label>
+      <input id="fecha" type="date" />
     </div>
     <div>
-      <label>Sede</label>
-      <input type="text" placeholder="Ejemplo: Planta Principal">
+      <label for="sede">Sede</label>
+      <input id="sede" type="text" placeholder="Ejemplo: Almacén Central" />
     </div>
-  </section>
+    <div>
+      <label for="encargado">Encargado</label>
+      <input id="encargado" type="text" placeholder="Nombre del encargado" />
+    </div>
+    <div>
+      <label for="mes">Mes</label>
+      <select id="mes">
+        <option value="">Seleccione mes</option>
+        <option>Enero</option><option>Febrero</option><option>Marzo</option>
+        <option>Abril</option><option>Mayo</option><option>Junio</option>
+        <option>Julio</option><option>Agosto</option><option>Setiembre</option>
+        <option>Octubre</option><option>Noviembre</option><option>Diciembre</option>
+      </select>
+    </div>
+  </div>
 
-  <!-- TABLA -->
-  <div class="section-title">Registro de Alimentación</div>
+  <!-- Tabla -->
+  <div class="section-title">Detalle de Alimentos</div>
   <div class="table-container">
-    <table id="tablaAlimentacion">
+    <table id="tablaAlimentos">
       <thead>
         <tr>
-          <th>N°</th>
-          <th>UP</th>
-          <th>LOTE</th>
-          <th>BIOMASA</th>
-          <th>T.A. (%)</th>
-          <th>AL. SUM (KG)</th>
+          <th>#</th>
+          <th>FECHA</th>
+          <th>MARCA</th>
           <th>CALIBRE</th>
-          <th>OBSERVACIONES</th>
+          <th>CANTIDAD</th>
+          <th>NOMBRE</th>
+          <th>OBS</th>
         </tr>
       </thead>
-      <tbody id="bodyAlimentacion">
+      <tbody id="bodyAlimentos">
         <tr>
           <td>1</td>
-          <td><input type="text" placeholder="UP-01"></td>
-          <td><input type="text" placeholder="L-001"></td>
-          <td><input type="number" step="0.01"></td>
-          <td><input type="number" step="0.01"></td>
-          <td><input type="number" step="0.01"></td>
-          <td><input type="text"></td>
-          <td><input type="text"></td>
+          <td><input type="date" /></td>
+          <td><input type="text" placeholder="Marca A" /></td>
+          <td><input type="text" placeholder="Calibre" /></td>
+          <td><input type="number" step="0.01" placeholder="Kg / Unid" /></td>
+          <td><input type="text" placeholder="Nombre del producto" /></td>
+          <td><input type="text" placeholder="Observaciones" /></td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <!-- BOTONES -->
+  <!-- Botones -->
   <div class="actions">
-    <div>
-      <button onclick="agregarFila()">➕ Agregar Fila</button>
-      <button onclick="eliminarFila()">➖ Quitar Fila</button>
+    <div class="left-actions">
+      <button class="btn" onclick="agregarFilaAlimentos()">➕ Agregar fila</button>
+      <button class="btn" onclick="eliminarFilaAlimentos()">➖ Quitar fila</button>
     </div>
-    <div>
-      <button class="secondary" onclick="verListado()">📖 Ver Listado Diario</button>
-      <button class="secondary" onclick="volverAtras()">⬅️ Volver Atrás</button>
+
+    <div class="right-actions">
+      <button class="btn secondary" onclick="verListado()">📖 Ver Listado Diario</button>
+      <button class="btn secondary" onclick="volverAtras()">⬅️ Volver Atrás</button>
     </div>
   </div>
 
-  <footer>
-    CORAQUA © 2025 - Alimentación Diaria
-  </footer>
+  <footer> CORAQUA © 2025 — Control de Alimento en Almacén </footer>
 </div>
 
 <script>
-  // ======= FUNCIONES DEL WIZARD =======
-  function mostrarPaso(n) {
-    const steps = document.querySelectorAll('.step');
-    const contents = document.querySelectorAll('.wizard-content');
-
-    steps.forEach((step, i) => {
-      if (i === n - 1) step.classList.add('active');
-      else step.classList.remove('active');
-    });
-
-    contents.forEach((content, i) => {
-      content.classList.remove('active');
-      if (i === n - 1) content.classList.add('active');
-    });
+  function mostrarPaso(n){
+    const steps=document.querySelectorAll('.step');
+    const contents=document.querySelectorAll('.wizard-content');
+    steps.forEach((s,i)=>s.classList.toggle('active',i===n-1));
+    contents.forEach((c,i)=>c.classList.toggle('active',i===n-1));
   }
-
-  // ======= FUNCIONES DE TABLA =======
-  function agregarFila() {
-    const tbody = document.getElementById("bodyAlimentacion");
-    const num = tbody.querySelectorAll("tr").length + 1;
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${num}</td>
-      <td><input type="text" placeholder="UP-${num.toString().padStart(2,'0')}"></td>
-      <td><input type="text" placeholder="L-${num.toString().padStart(3,'0')}"></td>
-      <td><input type="number" step="0.01"></td>
-      <td><input type="number" step="0.01"></td>
-      <td><input type="number" step="0.01"></td>
-      <td><input type="text"></td>
-      <td><input type="text"></td>
-    `;
+  function agregarFilaAlimentos(){
+    const tbody=document.getElementById('bodyAlimentos');
+    const n=tbody.rows.length+1;
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${n}</td>
+      <td><input type="date" /></td>
+      <td><input type="text" placeholder="Marca" /></td>
+      <td><input type="text" placeholder="Calibre" /></td>
+      <td><input type="number" step="0.01" placeholder="Kg / Unid" /></td>
+      <td><input type="text" placeholder="Nombre del producto" /></td>
+      <td><input type="text" placeholder="Observaciones" /></td>`;
     tbody.appendChild(tr);
   }
-
-  function eliminarFila() {
-    const tbody = document.getElementById("bodyAlimentacion");
-    if (tbody.rows.length > 1) tbody.deleteRow(-1);
-    else alert("Debe haber al menos una fila.");
+  function eliminarFilaAlimentos(){
+    const tbody=document.getElementById('bodyAlimentos');
+    if(tbody.rows.length>1) tbody.deleteRow(-1);
+    else alert('Debe quedar al menos una fila.');
   }
-
-  // ======= DESCARGAS SIMULADAS =======
-  function descargarExcel(tipo) {
-    let archivo = "";
-    switch (tipo) {
-      case 'semana': archivo = "Reporte_Semanal.xlsx"; break;
-      case 'mes': archivo = "Reporte_Mensual.xlsx"; break;
-      case 'anio': archivo = "Reporte_Anual.xlsx"; break;
-    }
-    alert(`📂 Descargando ${archivo}...`);
+  function descargarExcel(tipo){
+    let nombre={semana:'ControlAlimento_Semanal.xlsx',mes:'ControlAlimento_Mensual.xlsx',anio:'ControlAlimento_Anual.xlsx'}[tipo];
+    alert('📁 Se generará el archivo: '+nombre+' (simulado).');
   }
-
   function verListado() {
-    alert("📅 Mostrando listado diario...");
-  }
+  // Redirige al método listarBPA1 del controlador
+  window.location.href = "?url=lista1";
+}
 
-  function volverAtras() {
-    window.history.back();
-  }
+  function volverAtras(){ window.history.back(); }
 </script>
-
 </body>
 </html>
