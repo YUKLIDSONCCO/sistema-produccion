@@ -81,7 +81,6 @@
       <div class="filters">
         <button class="filter-btn active">Todos <span>5</span></button>
         <button class="filter-btn">Inventario <span>2</span></button>
-        <button class="filter-btn">Alimentación <span>1</span></button>
         <button class="filter-btn">Medicamentos <span>2</span></button>
       </div>
 
