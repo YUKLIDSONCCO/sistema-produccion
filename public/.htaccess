@@ -1,16 +1,9 @@
 # ========================================
-# 🔒 SEGURIDAD Y REESCRITURA MVC LIMPIA
+# 🌐 REESCRITURA MVC LIMPIA (TEMPORAL)
 # ========================================
 Options -Indexes
 RewriteEngine On
 RewriteBase /sistema-produccion/public/
-
-# ========================================
-# 🚫 BLOQUEAR ACCESO DIRECTO A index.php
-# ========================================
-# Si alguien intenta acceder con "index.php", redirigir al formato limpio
-RewriteCond %{THE_REQUEST} \s/+index\.php[\s?] [NC]
-RewriteRule ^index\.php(.*)$ /sistema-produccion/public/ [R=301,L]
 
 # ========================================
 # 📂 ENRUTAMIENTO MVC LIMPIO
@@ -20,10 +13,8 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^([^/]+)/?([^/]*)/?$ index.php?controller=$1&action=$2 [L,QSA]
 
 # ========================================
-# 🛡️ BLOQUEAR ARCHIVOS Y CARPETAS SENSIBLES
+# 🛡️ BLOQUEAR ARCHIVOS SENSIBLES
 # ========================================
 <FilesMatch "\.(env|log|ini|json|lock|config|sql)$">
     Require all denied
 </FilesMatch>
-
-RedirectMatch 403 ^/sistema-produccion/(core|controllers|models|config)/.*

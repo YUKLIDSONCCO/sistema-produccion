@@ -28,8 +28,10 @@ if (!in_array($controller, $publicControllers)) {
 */
 
 // ==========================================
-// 🧹 LIMPIAR URLS CON index.php
+// 🧹 LIMPIAR URLS CON index.php (DESACTIVADO TEMPORALMENTE)
 // ==========================================
+// 🔸 Bloqueo desactivado para desarrollo
+/*
 $basePath = '/sistema-produccion/public/';
 $requestUri = $_SERVER['REQUEST_URI'] ?? '';
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
@@ -58,6 +60,7 @@ if ($method === 'POST' && stripos($requestUri, 'index.php') !== false) {
         exit;
     }
 }
+*/
 
 // ==========================================
 // 🚦 CARGAR APLICACIÓN MVC
@@ -66,7 +69,7 @@ $router = new Router();
 $router->handleRequest();
 
 // ==========================================
-// 🧠 SE QUITA BLOQUEO DE NAVEGACIÓN (JS)
+// 🧠 BLOQUEO DE NAVEGACIÓN DESACTIVADO
 // ==========================================
 // 🔸 Ya no se bloquea el botón atrás o adelante del navegador.
 // Si deseas reactivarlo, descomenta el siguiente bloque:
