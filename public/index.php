@@ -11,9 +11,11 @@ require_once __DIR__ . '/../core/Router.php';
 Session::init();
 
 // ==========================================
-// 🔒 BLOQUEAR ACCESO SIN SESIÓN
+// 🔓 ACCESO LIBRE TEMPORAL (sin restricción de sesión)
 // ==========================================
-$publicControllers = ['Auth']; // Solo Auth es público (login, register)
+// 🔸 Se desactiva la validación de sesión para desarrollo
+/*
+$publicControllers = ['Auth'];
 $controller = $_GET['controller'] ?? '';
 $action = $_GET['action'] ?? '';
 
@@ -23,6 +25,7 @@ if (!in_array($controller, $publicControllers)) {
         exit;
     }
 }
+*/
 
 // ==========================================
 // 🧹 LIMPIAR URLS CON index.php
@@ -31,7 +34,6 @@ $basePath = '/sistema-produccion/public/';
 $requestUri = $_SERVER['REQUEST_URI'] ?? '';
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
-// Redirigir a versión limpia si usan index.php en GET
 if ($method === 'GET' && stripos($requestUri, 'index.php') !== false) {
     $controllerClean = ucfirst($_GET['controller'] ?? '');
     $actionClean = $_GET['action'] ?? '';
@@ -45,7 +47,6 @@ if ($method === 'GET' && stripos($requestUri, 'index.php') !== false) {
     exit;
 }
 
-// Solo permitir POSTs válidos (Auth/login, Auth/register)
 if ($method === 'POST' && stripos($requestUri, 'index.php') !== false) {
     $allowedPosts = [
         'Auth' => ['login', 'register']
@@ -65,15 +66,16 @@ $router = new Router();
 $router->handleRequest();
 
 // ==========================================
-// 🧠 BLOQUEAR FLECHAS DE NAVEGACIÓN (JS)
+// 🧠 SE QUITA BLOQUEO DE NAVEGACIÓN (JS)
 // ==========================================
-// Se inyecta automáticamente en todas las vistas PHP renderizadas.
-// Añade este snippet al final de cada vista si no usas header común:
-?>
+// 🔸 Ya no se bloquea el botón atrás o adelante del navegador.
+// Si deseas reactivarlo, descomenta el siguiente bloque:
+/*
 <script>
-  // Evitar navegación atrás / adelante
   history.pushState(null, null, location.href);
   window.onpopstate = function () {
     history.go(1);
   };
 </script>
+*/
+?>

@@ -22,12 +22,13 @@ class Router {
         $controllerName = isset($_GET['controller']) ? ucfirst($_GET['controller']) : 'Auth';
         $action = isset($_GET['action']) ? $_GET['action'] : 'login';
 
-        // 🔒 Iniciar sesión si no está iniciada
+        // 🟢 Sesión activa, pero sin restricciones de acceso
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
 
-        // 🔒 Protección: si no hay usuario y no está en Auth/login o Auth/register, redirigir
+        /*
+        // 🔒 Protección desactivada temporalmente
         if (
             (!isset($_SESSION['usuario'])) &&
             !($controllerName === 'Auth' && in_array($action, ['login', 'register']))
@@ -35,6 +36,7 @@ class Router {
             header("Location: /sistema-produccion/public/Auth/login");
             exit;
         }
+        */
 
         // Construir nombre del archivo y clase
         $controllerFile = __DIR__ . '/../controllers/' . $controllerName . 'Controller.php';

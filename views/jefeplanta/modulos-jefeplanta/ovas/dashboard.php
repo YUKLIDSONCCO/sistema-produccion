@@ -103,6 +103,17 @@
           <a href="index.php?controller=Ovas&action=bpa4" class="btn-add"><i class="fas fa-eye"></i></a>
         </div>
 
+        <!-- BPA 9 -->
+        <div class="project-card">
+          <div class="card-icon" style="background: #00BFA5;">
+            <i class="fas fa-balance-scale"></i>
+          </div>
+          <h3>BPA N°9 - Selección, Pesaje y Traslado</h3>
+          <div class="team-info"><i class="fas fa-water"></i> Clasificación, peso y movimiento de alevinos</div>
+          <div class="time-left"><i class="far fa-clock"></i> Actualizado: <?php echo date('d/m/Y'); ?></div>
+          <a href="index.php?controller=Ovas&action=bpa9" class="btn-add"><i class="fas fa-eye"></i></a>
+        </div>
+
         <!-- Informes BPA -->
         <div class="project-card">
           <div class="card-icon" style="background: #FF6B9D;">
