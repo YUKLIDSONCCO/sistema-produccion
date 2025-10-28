@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CORAQUA</title>
 
-  <link rel="stylesheet" href="/sistema-produccion/public/css/style_inventario.css" />
+  <link rel="stylesheet" href="../css/style_inventario.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
 </head>
@@ -27,14 +27,15 @@
 
     <nav class="sidebar-nav">
       <ul>
-        <li><a href="javascript:history.back()"><i class="fas fa-arrow-left"></i> Volver atrás</a></li>
-        <li><a href="#" id="inicioBtn"><i class="fas fa-th-large"></i> Inicio</a></li>
-        <li><a href="#" id="formatosBtn"><i class="far fa-calendar-alt"></i> Formatos BPA</a></li>
-        <li><a href="#" id="listadoBtn"><i class="far fa-file-alt"></i> Listado BPA</a></li>
-        <li><a href="#"><i class="fas fa-users"></i> Usuarios BPA</a></li>
-        <li><a href="#"><i class="fas fa-cogs"></i> Reportes BPA</a></li>
-        <li><a href="#"><i class="fas fa-cog"></i> Configuración</a></li>
-        <li><a href="index.php?controller=Login&action=cerrarSesion"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
+        <li><a href="javascript:history.back()"><i class="fas fa-circle-arrow-left"></i> Volver atrás</a></li>
+      <li><a href="#" id="inicioBtn"><i class="fas fa-house-chimney"></i> Inicio</a></li>
+      <li><a href="#" id="formatosBtn"><i class="fas fa-folder-open"></i> Formatos MPA</a></li>
+      <li><a href="#" id="listadoBtn"><i class="fas fa-list-check"></i> Listado MPA</a></li>
+      <li><a href="#"><i class="fas fa-flask-vial"></i> Laboratorio</a></li>
+      <li><a href="#"><i class="fas fa-water"></i> Sala Empeques</a></li>
+      <li><a href="#"><i class="fas fa-chart-line"></i> Reportes MPA</a></li>
+      <li><a href="index.php?controller=Login&action=cerrarSesion"><i class="fas fa-door-open"></i> Cerrar sesión</a></li>
+
       </ul>
     </nav>
   </aside>
@@ -141,28 +142,7 @@
     </section>
   </main>
 
-  <script>
-    // Navegación entre secciones
-    const inicioBtn = document.getElementById('inicioBtn');
-    const formatosBtn = document.getElementById('formatosBtn');
-    const listadoBtn = document.getElementById('listadoBtn');
 
-    const inicioSection = document.getElementById('inicioSection');
-    const formatosSection = document.getElementById('formatosSection');
-    const listadoSection = document.getElementById('listadoSection');
-
-    function mostrar(seccion) {
-      inicioSection.style.display = 'none';
-      formatosSection.style.display = 'none';
-      listadoSection.style.display = 'none';
-      seccion.style.display = 'block';
-    }
-
-    inicioBtn.addEventListener('click', () => mostrar(inicioSection));
-    formatosBtn.addEventListener('click', () => mostrar(formatosSection));
-    listadoBtn.addEventListener('click', () => mostrar(listadoSection));
-  </script>
-
-  <script src="/sistema-produccion/public/js/script_inventario.js"></script>
+  <script src="../public/js/script_inventario.js"></script>
 </body>
 </html>
