@@ -1,6 +1,6 @@
 <?php
-//require_once "../config/database.php";
-//require_once "../models/InventarioModel.php";
+require_once "../config/database.php";
+require_once "../models/InventarioModel.php";
 class InventarioController {
 
      public function bpa1() {

@@ -41,24 +41,27 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-    // Navegación entre secciones
     const inicioBtn = document.getElementById('inicioBtn');
     const formatosBtn = document.getElementById('formatosBtn');
     const listadoBtn = document.getElementById('listadoBtn');
-
-    const inicioSection = document.getElementById('inicioSection');
-    const formatosSection = document.getElementById('formatosSection');
-    const listadoSection = document.getElementById('listadoSection');
+    const laboratorioBtn = document.getElementById('laboratorioBtn');
+    const salaBtn = document.getElementById('salaBtn');
+    const reportesBtn = document.getElementById('reportesBtn');
 
     function mostrar(seccion) {
-      inicioSection.style.display = 'none';
-      formatosSection.style.display = 'none';
-      listadoSection.style.display = 'none';
+      [inicioSection, formatosSection, listadoSection, laboratorioSection, salaSection, reportesSection].forEach(s => s.style.display = 'none');
       seccion.style.display = 'block';
     }
 
     inicioBtn.addEventListener('click', () => mostrar(inicioSection));
     formatosBtn.addEventListener('click', () => mostrar(formatosSection));
     listadoBtn.addEventListener('click', () => mostrar(listadoSection));
+    laboratorioBtn.addEventListener('click', () => mostrar(laboratorioSection));
+    salaBtn.addEventListener('click', () => mostrar(salaSection));
+    reportesBtn.addEventListener('click', () => {
+      mostrar(reportesSection);
+      renderCharts();
+    });
 
+    
 });

@@ -1,5 +1,4 @@
 <?php 
-
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -8,9 +7,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CORAQUA</title>
 
-  <link rel="stylesheet" href="../css/style_inventario.css">
+  <link rel="stylesheet" href="/sistema-produccion/public/css/style_inventarios.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
+  <!-- Librería para gráficos -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <!-- Sidebar -->
@@ -28,14 +29,13 @@
     <nav class="sidebar-nav">
       <ul>
         <li><a href="javascript:history.back()"><i class="fas fa-circle-arrow-left"></i> Volver atrás</a></li>
-      <li><a href="#" id="inicioBtn"><i class="fas fa-house-chimney"></i> Inicio</a></li>
-      <li><a href="#" id="formatosBtn"><i class="fas fa-folder-open"></i> Formatos MPA</a></li>
-      <li><a href="#" id="listadoBtn"><i class="fas fa-list-check"></i> Listado MPA</a></li>
-      <li><a href="#"><i class="fas fa-flask-vial"></i> Laboratorio</a></li>
-      <li><a href="#"><i class="fas fa-water"></i> Sala Empeques</a></li>
-      <li><a href="#"><i class="fas fa-chart-line"></i> Reportes MPA</a></li>
-      <li><a href="index.php?controller=Login&action=cerrarSesion"><i class="fas fa-door-open"></i> Cerrar sesión</a></li>
-
+        <li><a href="#" id="inicioBtn"><i class="fas fa-house-chimney"></i> Inicio</a></li>
+        <li><a href="#" id="formatosBtn"><i class="fas fa-folder-open"></i> Formatos MPA</a></li>
+        <li><a href="#" id="listadoBtn"><i class="fas fa-list-check"></i> Listado MPA</a></li>
+        <li><a href="#" id="laboratorioBtn"><i class="fas fa-flask-vial"></i> Laboratorio</a></li>
+        <li><a href="#" id="salaBtn"><i class="fas fa-water"></i> Sala Empeques</a></li>
+        <li><a href="#" id="reportesBtn"><i class="fas fa-chart-line"></i> Reportes MPA</a></li>
+        <li><a href="index.php?controller=Login&action=cerrarSesion"><i class="fas fa-door-open"></i> Cerrar sesión</a></li>
       </ul>
     </nav>
   </aside>
@@ -110,12 +110,7 @@
                 <span class="bpa-num"><?php echo $item['num']; ?></span>
               </div>
               <div class="progress-info">
-                <div class="avatars">
-                  <img src="https://via.placeholder.com/28" alt="u" />
-                </div>
-                <div class="progress">
-                  <span class="small muted">Abrir</span>
-                </div>
+               
                 <div class="progress-bar">
                   <div class="fill" style="width: 65%; height:8px;"></div>
                 </div>
@@ -126,23 +121,98 @@
       </div>
     </section>
 
-    <!-- LISTADO BPA -->
+    <!-- LISTADO BPA (CUADRITOS) -->
     <section class="dashboard" id="listadoSection" style="display:none;">
       <div class="section-header">
-        <h2>Listado de BPA</h2>
-        <p>Consulta rápida de los formatos BPA registrados en el sistema.</p>
+        <h2>Listado MPA</h2>
+        <p>Visualiza y accede a los formatos registrados en el sistema.</p>
       </div>
-      <table class="bpa-list">
-        <tr><th>N°</th><th>Nombre del Formato</th><th>Tipo</th></tr>
-        <tr><td>01</td><td>Control de alimento en almacén</td><td>Inventario</td></tr>
-        <tr><td>02</td><td>Control de sal en almacén</td><td>Inventario</td></tr>
-        <tr><td>03</td><td>Control de medicamento</td><td>Registro</td></tr>
-        <tr><td>04</td><td>Dosificación de suplementos y medicamentos</td><td>Preparación</td></tr>
-      </table>
+
+      <div class="projects-grid bpa-grid">
+        <?php
+        $listado_items = [
+          ['num' => '01', 'title' => 'CONTROL DE ALIMENTO EN ALMACÉN', 'fa' => 'fa-box', 'tipo' => 'Inventario', 'file' => 'list1.php'],
+          ['num' => '02', 'title' => 'CONTROL DE SAL EN ALMACÉN', 'fa' => 'fa-salt', 'tipo' => 'Inventario', 'file' => 'list1.php'],
+          ['num' => '03', 'title' => 'CONTROL DE MEDICAMENTO', 'fa' => 'fa-prescription-bottle-medical', 'tipo' => 'Registro', 'file' => 'list1.php'],
+          ['num' => '04', 'title' => 'DOSIFICACIÓN DE SUPLEMENTOS Y MEDICAMENTOS', 'fa' => 'fa-flask', 'tipo' => 'Preparación', 'file' => 'list1.php'],
+        ];
+
+        foreach ($listado_items as $item): ?>
+          <a href="views/jefeplanta/modulos-jefeplanta/inventario/<?php echo $item['file']; ?>" class="schedule-item-link">
+            <div class="project-card schedule-item">
+              <div class="card-icon">
+                <i class="fas <?php echo $item['fa']; ?>"></i>
+              </div>
+              <h3 class="bpa-title"><?php echo $item['title']; ?></h3>
+              <div class="team-info">
+                <i class="fas fa-tag"></i>
+                <span class="bpa-sub"><?php echo $item['tipo']; ?></span>
+              </div>
+              <div class="time-left">
+                <i class="far fa-file-alt"></i>
+                <span class="bpa-num">N°<?php echo $item['num']; ?></span>
+              </div>
+              <div class="progress-info">  
+              </div>
+            </div>
+          </a>
+        <?php endforeach; ?>
+      </div>
+    </section>
+
+    <!-- LABORATORIO -->
+    <section class="dashboard" id="laboratorioSection" style="display:none;">
+      <div class="section-header">
+        <h2>Laboratorio</h2>
+        <p>Gestión de pruebas y análisis de agua, oxígeno y salud de peces.</p>
+      </div>
+      <div class="projects-grid">
+        <div class="project-card">
+          <i class="fas fa-vial-circle-check fa-3x"></i>
+          <h3>Análisis de Calidad de Agua</h3>
+          <p>Control de parámetros físicos y químicos del agua.</p>
+        </div>
+        <div class="project-card">
+          <i class="fas fa-dna fa-3x"></i>
+          <h3>Salud de Especies</h3>
+          <p>Registros y estudios de condiciones sanitarias.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SALA DE EMPEQUES -->
+    <section class="dashboard" id="salaSection" style="display:none;">
+      <div class="section-header">
+        <h2>Sala de Empeques</h2>
+        <p>Gestión del área de incubación y control de temperatura.</p>
+      </div>
+      <div class="projects-grid">
+        <div class="project-card">
+          <i class="fas fa-temperature-high fa-3x"></i>
+          <h3>Control de Temperatura</h3>
+          <p>Monitoreo en tiempo real del ambiente de las ovas.</p>
+        </div>
+        <div class="project-card">
+          <i class="fas fa-egg fa-3x"></i>
+          <h3>Incubación</h3>
+          <p>Seguimiento del proceso de desarrollo embrionario.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- REPORTES -->
+    <section class="dashboard" id="reportesSection" style="display:none;">
+      <div class="section-header">
+        <h2>Reportes MPA</h2>
+        <p>Visualiza el estado actual del alimento, stock y producción.</p>
+      </div>
+      <div class="charts-grid">
+        <canvas id="graficoAlimento" height="120"></canvas>
+        <canvas id="graficoStock" height="120"></canvas>
+      </div>
     </section>
   </main>
 
-
-  <script src="../public/js/script_inventario.js"></script>
+  <script src="/sistema-produccion/public/js/script_inventario.js"></script>
 </body>
 </html>
