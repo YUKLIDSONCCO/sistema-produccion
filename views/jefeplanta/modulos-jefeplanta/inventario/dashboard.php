@@ -9,10 +9,10 @@
 
   <link rel="stylesheet" href="/sistema-produccion/public/css/style_inventarios.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
-  <!-- Librería para gráficos -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
+
 <body>
   <!-- Sidebar -->
   <aside class="sidebar" id="sidebar">
@@ -29,7 +29,7 @@
     <nav class="sidebar-nav">
       <ul>
         <li><a href="javascript:history.back()"><i class="fas fa-circle-arrow-left"></i> Volver atrás</a></li>
-        <li><a href="#" id="inicioBtn"><i class="fas fa-house-chimney"></i> Inicio</a></li>
+        <li><a href="#" id="inicioBtn" class="active"><i class="fas fa-house-chimney"></i> Inicio</a></li>
         <li><a href="#" id="formatosBtn"><i class="fas fa-folder-open"></i> Formatos MPA</a></li>
         <li><a href="#" id="listadoBtn"><i class="fas fa-list-check"></i> Listado MPA</a></li>
         <li><a href="#" id="laboratorioBtn"><i class="fas fa-flask-vial"></i> Laboratorio</a></li>
@@ -69,94 +69,73 @@
         <h1>🐟 Bienvenido al Panel de Inventario</h1>
         <p>Aquí podrás acceder a todos los formatos BPA disponibles, registrar información y mantener actualizados los procesos de tu planta.</p>
       </div>
+
+      <!-- 🐠 Pez animado -->
       <div class="fish"></div>
     </section>
 
     <!-- FORMATOS BPA -->
     <section class="dashboard" id="formatosSection" style="display:none;">
       <div class="section-header">
-        <h2>Formatos BPA</h2>
+        <h2>FORMATOS DE MEJORAS PRÁCTICAS DE ACUICULTURA</h2>
         <p>Gestión de registros internos (Inventario, Alimentación, Medicamentos, etc.)</p>
       </div>
 
-      <div class="filters">
-        <button class="filter-btn active">Todos <span>5</span></button>
-        <button class="filter-btn">Inventario <span>2</span></button>
-        <button class="filter-btn">Medicamentos <span>2</span></button>
-      </div>
+      <div class="bpa-grid">
+        <div class="project-card" onclick="window.location.href='index.php?controller=Inventario&action=bpa1'">
+          <i class="fas fa-box fa-3x"></i>
+          <h3>CONTROL DE ALIMENTO EN ALMACÉN</h3>
+          <p>Registro del ingreso, salida y control semanal de alimentos.</p>
+        </div>
 
-      <div class="projects-grid bpa-grid">
-        <?php
-        $bpa_items = [
-          ['num' => 'N°01', 'title' => 'CONTROL DE ALIMENTO EN ALMACÉN', 'fa' => 'fa-box', 'action' => 'bpa1', 'time_range' => 'Inventario Semanal'],
-          ['num' => 'N°02', 'title' => 'CONTROL DE SAL EN ALMACÉN', 'fa' => 'fa-salt', 'action' => 'bpa2', 'time_range' => 'Inventario Diario'],
-          ['num' => 'N°03', 'title' => 'CONTROL DE MEDICAMENTO', 'fa' => 'fa-prescription-bottle-medical', 'action' => 'bpa3', 'time_range' => 'Registro y Uso'],
-          ['num' => 'N°04', 'title' => 'DOSIFICACIÓN DE SUPLEMENTOS Y MEDICAMENTOS', 'fa' => 'fa-flask', 'action' => 'bpa4', 'time_range' => 'Preparación'],
-        ];
+        <div class="project-card" onclick="window.location.href='index.php?controller=Inventario&action=bpa2'">
+          <i class="fas fa-clipboard-list fa-3x"></i>
+          <h3>CONTROL DE SAL EN ALMACÉN</h3>
+          <p>Inventario diario y manejo del insumo de sal utilizada.</p>
+        </div>
 
-        foreach ($bpa_items as $item): ?>
-          <a href="index.php?controller=Inventario&action=<?php echo $item['action']; ?>" class="schedule-item-link">
-            <div class="project-card schedule-item">
-              <div class="card-icon time-slot" aria-hidden="true">
-                <i class="fas <?php echo $item['fa']; ?>"></i>
-              </div>
-              <h3 class="bpa-title"><?php echo $item['title']; ?></h3>
-              <div class="team-info">
-                <i class="fas fa-users"></i>
-                <span class="bpa-sub"><?php echo $item['time_range']; ?></span>
-              </div>
-              <div class="time-left">
-                <i class="far fa-clock"></i>
-                <span class="bpa-num"><?php echo $item['num']; ?></span>
-              </div>
-              <div class="progress-info">
-               
-                <div class="progress-bar">
-                  <div class="fill" style="width: 65%; height:8px;"></div>
-                </div>
-              </div>
-            </div>
-          </a>
-        <?php endforeach; ?>
+        <div class="project-card" onclick="window.location.href='index.php?controller=Inventario&action=bpa3'">
+          <i class="fas fa-prescription-bottle-medical fa-3x"></i>
+          <h3>CONTROL DE MEDICAMENTO</h3>
+          <p>Gestión de stock, vencimiento y uso responsable de medicamentos.</p>
+        </div>
+
+        <div class="project-card" onclick="window.location.href='index.php?controller=Inventario&action=bpa4'">
+          <i class="fas fa-flask fa-3x"></i>
+          <h3>DOSIFICACIÓN DE SUPLEMENTOS Y MEDICAMENTOS</h3>
+          <p>Preparación y aplicación controlada de suplementos.</p>
+        </div>
       </div>
     </section>
 
-    <!-- LISTADO BPA (CUADRITOS) -->
+    <!-- LISTADO BPA -->
     <section class="dashboard" id="listadoSection" style="display:none;">
       <div class="section-header">
-        <h2>Listado MPA</h2>
+        <h2>LISTADO DE MEJORAS PRÁCTICAS DE ACUICULTURA</h2>
         <p>Visualiza y accede a los formatos registrados en el sistema.</p>
       </div>
 
-      <div class="projects-grid bpa-grid">
-        <?php
-        $listado_items = [
-          ['num' => '01', 'title' => 'CONTROL DE ALIMENTO EN ALMACÉN', 'fa' => 'fa-box', 'tipo' => 'Inventario', 'file' => 'list1.php'],
-          ['num' => '02', 'title' => 'CONTROL DE SAL EN ALMACÉN', 'fa' => 'fa-salt', 'tipo' => 'Inventario', 'file' => 'list1.php'],
-          ['num' => '03', 'title' => 'CONTROL DE MEDICAMENTO', 'fa' => 'fa-prescription-bottle-medical', 'tipo' => 'Registro', 'file' => 'list1.php'],
-          ['num' => '04', 'title' => 'DOSIFICACIÓN DE SUPLEMENTOS Y MEDICAMENTOS', 'fa' => 'fa-flask', 'tipo' => 'Preparación', 'file' => 'list1.php'],
-        ];
-
-        foreach ($listado_items as $item): ?>
-          <a href="views/jefeplanta/modulos-jefeplanta/inventario/<?php echo $item['file']; ?>" class="schedule-item-link">
-            <div class="project-card schedule-item">
-              <div class="card-icon">
-                <i class="fas <?php echo $item['fa']; ?>"></i>
-              </div>
-              <h3 class="bpa-title"><?php echo $item['title']; ?></h3>
-              <div class="team-info">
-                <i class="fas fa-tag"></i>
-                <span class="bpa-sub"><?php echo $item['tipo']; ?></span>
-              </div>
-              <div class="time-left">
-                <i class="far fa-file-alt"></i>
-                <span class="bpa-num">N°<?php echo $item['num']; ?></span>
-              </div>
-              <div class="progress-info">  
-              </div>
-            </div>
-          </a>
-        <?php endforeach; ?>
+      <div class="bpa-grid">
+        <div class="project-card" onclick="window.location.href='lista1.php'">
+          <i class="fas fa-box fa-3x"></i>
+          <h3>CONTROL DE ALIMENTO EN ALMACÉN</h3>
+          <p>Listado de registros de control semanal de alimentos.</p>
+        </div>
+        <div class="project-card" onclick="window.location.href='lista2.php'">
+          <i class="fas fa-clipboard-list fa-3x"></i>
+          <h3>CONTROL DE SAL EN ALMACÉN</h3>
+          <p>Listado de inventario diario de sal utilizada.</p>
+        </div>
+        <div class="project-card" onclick="window.location.href='lista3.php'">
+          <i class="fas fa-prescription-bottle-medical fa-3x"></i>
+          <h3>CONTROL DE MEDICAMENTO</h3>
+          <p>Listado general de medicamentos registrados.</p>
+        </div>
+        <div class="project-card" onclick="window.location.href='lista4.php'">
+          <i class="fas fa-flask fa-3x"></i>
+          <h3>DOSIFICACIÓN DE SUPLEMENTOS Y MEDICAMENTOS</h3>
+          <p>Listado de registros de dosificación y aplicación.</p>
+        </div>
       </div>
     </section>
 
@@ -212,6 +191,7 @@
       </div>
     </section>
   </main>
+
 
   <script src="/sistema-produccion/public/js/script_inventario.js"></script>
 </body>
