@@ -4,7 +4,7 @@ require_once __DIR__ . '/../models/OvasModel.php';
 
 class OvasController {
 
-    public function bpa1() {
+    public function bpa_1() {
         if (isset($_GET['success'])) {
             echo "<script>alert('Se guardaron " . $_GET['success'] . " registros correctamente');</script>";
         }
@@ -31,7 +31,7 @@ class OvasController {
         include __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/lista-1.php';
     }
 
-    public function bpa2() {
+    public function bpa_2() {
         if (isset($_GET['success'])) {
             echo "<script>alert('Se guardaron " . $_GET['success'] . " registros correctamente');</script>";
         }
@@ -58,6 +58,17 @@ class OvasController {
         include __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/lista-2.php';
     }
 
+    public function bpa_3() {
+        if (isset($_GET['success'])) {
+            echo "<script>alert('Se guardaron " . $_GET['success'] . " registros correctamente');</script>";
+        }
+        if (isset($_GET['error'])) {
+            echo "<script>alert('Error al guardar los registros');</script>";
+        }
+
+        include __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/bpa-3.php';
+    }
+
     public function listarBPA3() {
         $fecha = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
         $database = new Database();
@@ -74,7 +85,7 @@ class OvasController {
         include __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/lista-3.php';
     }
 
-    public function bpa4() {
+    public function bpa_4() {
         if (isset($_GET['success'])) {
             echo "<script>alert('Se guardaron " . $_GET['success'] . " registros correctamente');</script>";
         }

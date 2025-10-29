@@ -79,25 +79,25 @@
       </div>
 
       <div class="bpa-grid">
-        <div class="project-card" onclick="window.location.href='index.php?controller=Ovas&action=bpa2'">
+        <div class="project-card" onclick="window.location.href='index.php?controller=Ovas&action=bpa_1'">
           <i class="fas fa-egg fa-3x"></i>
           <h3>FORMATO N°02 - SELECCIÓN Y FERTILIZACIÓN DE OVAS NACIONALES</h3>
           <p>Registro detallado de reproductores, fertilización y estimación de ovas fértiles.</p>
         </div>
 
-        <div class="project-card" onclick="window.location.href='index.php?controller=Ovas&action=bpa4'">
+        <div class="project-card" onclick="window.location.href='index.php?controller=Ovas&action=bpa_2'">
           <i class="fas fa-skull-crossbones fa-3x"></i>
           <h3>FORMATO N°04 - MORTALIDAD DIARIA - OVAS</h3>
           <p>Control diario de la mortalidad de ovas en cada batea y observaciones correspondientes.</p>
         </div>
 
-        <div class="project-card" onclick="window.location.href='index.php?controller=Ovas&action=bpa5'">
+        <div class="project-card" onclick="window.location.href='index.php?controller=Ovas&action=bpa_3'">
           <i class="fas fa-fish fa-3x"></i>
           <h3>FORMATO N°05 - MORTALIDAD DIARIA - LARVAS</h3>
           <p>Registro y control del número de larvas vivas y muertas en los lotes de cultivo.</p>
         </div>
 
-        <div class="project-card" onclick="window.location.href='index.php?controller=Ovas&action=bpa12'">
+        <div class="project-card" onclick="window.location.href='index.php?controller=Ovas&action=bpa_4'">
           <i class="fas fa-temperature-high fa-3x"></i>
           <h3>FORMATO N°12 - CONTROL DIARIO DE PARÁMETROS</h3>
           <p>Monitoreo de temperatura, oxígeno y pH en diferentes horarios de control diario.</p>
