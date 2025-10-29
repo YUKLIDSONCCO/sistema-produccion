@@ -1,33 +1,104 @@
 <?php
-require_once __DIR__ . '/BaseController.php';
+require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../models/OvasModel.php';
 
-class OvasController extends BaseController {
+class OvasController {
 
-    public function __construct() {
-        // Puedes inicializar modelos aquí si más adelante trabajas con base de datos
-    }
-
-    // ✅ Dashboard principal de Ovas
-    public function dashboard() {
-        $this->checkAuth();
-        $usuario = $_SESSION['usuario'];
-
-        $this->view('jefeplanta/modulos-jefeplanta/ovas/dashboard', [
-            'usuario' => $usuario
-        ]);
-    }
-
-    // ✅ Formato BPA N°9 - Selección, Pesaje y Traslado
-    public function bpa9() {
-        $this->checkAuth();
-        require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/bpa-9.php';
-    }
-
-    // ✅ Seguridad (validar sesión)
-    private function checkAuth() {
-        if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'JefePlanta') {
-            $this->redirect("index.php?controller=Auth&action=login");
+    public function bpa1() {
+        if (isset($_GET['success'])) {
+            echo "<script>alert('Se guardaron " . $_GET['success'] . " registros correctamente');</script>";
         }
+        if (isset($_GET['error'])) {
+            echo "<script>alert('Error al guardar los registros');</script>";
+        }
+
+        include __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/bpa-1.php';
+    }
+
+    public function listarBPA1() {
+        $fecha = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
+        $database = new Database();
+        $conn = $database->getConnection();
+        $model = new OvasModel($conn);
+        $stmt = $model->obtenerListadoBPA1PorFecha($fecha);
+
+        $datos = [];
+        if ($stmt) {
+            $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        $fechaBusqueda = $fecha;
+        include __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/lista-1.php';
+    }
+
+    public function bpa2() {
+        if (isset($_GET['success'])) {
+            echo "<script>alert('Se guardaron " . $_GET['success'] . " registros correctamente');</script>";
+        }
+        if (isset($_GET['error'])) {
+            echo "<script>alert('Error al guardar los registros');</script>";
+        }
+
+        include __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/bpa-2.php';
+    }
+
+    public function listarBPA2() {
+        $fecha = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
+        $database = new Database();
+        $conn = $database->getConnection();
+        $model = new OvasModel($conn);
+        $stmt = $model->obtenerListadoBPA2PorFecha($fecha);
+
+        $datos = [];
+        if ($stmt) {
+            $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        $fechaBusqueda = $fecha;
+        include __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/lista-2.php';
+    }
+
+    public function listarBPA3() {
+        $fecha = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
+        $database = new Database();
+        $conn = $database->getConnection();
+        $model = new OvasModel($conn);
+        $stmt = $model->obtenerListadoBPA3PorFecha($fecha);
+
+        $datos = [];
+        if ($stmt) {
+            $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        $fechaBusqueda = $fecha;
+        include __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/lista-3.php';
+    }
+
+    public function bpa4() {
+        if (isset($_GET['success'])) {
+            echo "<script>alert('Se guardaron " . $_GET['success'] . " registros correctamente');</script>";
+        }
+        if (isset($_GET['error'])) {
+            echo "<script>alert('Error al guardar los registros');</script>";
+        }
+
+        include __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/bpa-4.php';
+    }
+
+    public function listarBPA4() {
+        $fecha = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
+        $database = new Database();
+        $conn = $database->getConnection();
+        $model = new OvasModel($conn);
+        $stmt = $model->obtenerListadoBPA4PorFecha($fecha);
+
+        $datos = [];
+        if ($stmt) {
+            $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        $fechaBusqueda = $fecha;
+        include __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/lista-4.php';
     }
 }
 ?>

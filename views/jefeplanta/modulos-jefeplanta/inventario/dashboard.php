@@ -5,7 +5,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CORAQUA</title>
+  <title>CORAQUA-PERÚ</title>
 
   <link rel="stylesheet" href="/sistema-produccion/public/css/style_inventarios.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -116,22 +116,22 @@
       </div>
 
       <div class="bpa-grid">
-        <div class="project-card" onclick="window.location.href='lista1.php'">
+        <div class="project-card" onclick="window.location.href='index.php?controller=Inventario&action=listarBPA1'">
           <i class="fas fa-box fa-3x"></i>
           <h3>CONTROL DE ALIMENTO EN ALMACÉN</h3>
           <p>Listado de registros de control semanal de alimentos.</p>
         </div>
-        <div class="project-card" onclick="window.location.href='lista2.php'">
+          <div class="project-card" onclick="window.location.href='index.php?controller=Inventario&action=listarBPA2'">
           <i class="fas fa-clipboard-list fa-3x"></i>
           <h3>CONTROL DE SAL EN ALMACÉN</h3>
           <p>Listado de inventario diario de sal utilizada.</p>
         </div>
-        <div class="project-card" onclick="window.location.href='lista3.php'">
+        <div class="project-card" onclick="window.location.href='index.php?controller=Inventario&action=listarBPA3'">
           <i class="fas fa-prescription-bottle-medical fa-3x"></i>
           <h3>CONTROL DE MEDICAMENTO</h3>
           <p>Listado general de medicamentos registrados.</p>
         </div>
-        <div class="project-card" onclick="window.location.href='lista4.php'">
+          <div class="project-card" onclick="window.location.href='index.php?controller=Inventario&action=listarBPA4'">
           <i class="fas fa-flask fa-3x"></i>
           <h3>DOSIFICACIÓN DE SUPLEMENTOS Y MEDICAMENTOS</h3>
           <p>Listado de registros de dosificación y aplicación.</p>
