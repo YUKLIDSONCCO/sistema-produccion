@@ -1,271 +1,174 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CORAQUA BPA 15 - Control Sanitario en Alevines</title>
-  <link rel="stylesheet" href="/sistema-produccion/public/css/style_inventario.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FORMATO N°15 - CONTROL SANITARIO EN ALEVINES (CORAQUA BPA 15)</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
+    * { box-sizing: border-box; font-family: "Poppins", "Segoe UI", sans-serif; }
+    :root {
+      --orange: #ff7b00;
+      --orange-dark: #e66e00;
+      --bg-start: #fffaf2;
+      --bg-end: #ffd9b3;
+      --muted: #666;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #f9f9f9;
       margin: 0;
-      padding: 0;
-      display: flex;
+      min-height: 100vh;
+      background: linear-gradient(135deg,var(--bg-start),var(--bg-end) 60%);
+      color: #222;
+      padding: 30px 16px;
     }
 
-    /* === SIDEBAR === */
-    .sidebar {
-      width: 240px;
-      background: #fff;
-      border-right: 1px solid #ccc;
-      height: 100vh;
-      position: fixed;
-      left: 0;
-      top: 0;
-      overflow-y: auto;
-      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
-      z-index: 100;
-    }
-
-    .sidebar-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 15px 20px;
-      border-bottom: 1px solid #eee;
-    }
-
-    .sidebar-header .logo {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: bold;
-      font-size: 16px;
-    }
-
-    .sidebar-header .logo i {
-      color: #007bff;
-    }
-
-    .sidebar-nav ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .sidebar-nav ul li a {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 20px;
-      text-decoration: none;
-      color: #333;
-      font-size: 15px;
-      transition: 0.3s;
-    }
-
-    .sidebar-nav ul li a:hover,
-    .sidebar-nav ul li a.active {
-      background: #007bff;
-      color: #fff;
-    }
-
-    /* === CONTENIDO === */
     .container {
-      background: #fff;
       max-width: 1200px;
-      margin: 30px auto;
-      padding: 20px 30px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      margin-left: 270px;
+      margin: 18px auto;
+      background: #fff;
+      border-radius: 14px;
+      padding: 28px 32px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      border-top: 7px solid var(--orange);
+      animation: fadeIn 0.6s ease;
     }
+    @keyframes fadeIn { from {opacity:0; transform:translateY(8px)} to {opacity:1; transform:none} }
 
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
-
-    header .logo img {
-      width: 80px;
-    }
-
-    header .info {
-      text-align: center;
-      flex: 1;
-    }
-
-    header .info h2 {
-      margin: 0;
-      font-size: 16px;
-    }
-
-    header .info h3 {
-      margin: 5px 0 0;
-      font-size: 14px;
-    }
-
-    header .details {
-      font-size: 13px;
-      border: 1px solid #ccc;
-      padding: 8px 12px;
-      border-radius: 4px;
-      background: #f4f4f4;
-    }
-
-    .meta {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      font-size: 14px;
-      margin-bottom: 15px;
-      background: #fffcaa;
-      border: 1px solid #ccc;
-      padding: 10px;
-      border-radius: 4px;
-    }
-
-    .meta div {
-      flex: 1 1 45%;
-      margin-bottom: 8px;
-    }
-
-    .meta textarea {
-      width: 100%;
-      height: 70px;
-      resize: none;
-      padding: 5px;
-      border-radius: 3px;
-      border: 1px solid #aaa;
-    }
-
-    .table-container {
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 900px;
-    }
-
-    th, td {
-      border: 1px solid #555;
-      text-align: center;
-      padding: 6px;
-      font-size: 13px;
-    }
-
-    th {
-      background: #e6e6e6;
-    }
-
-    input[type="text"], input[type="number"], input[type="date"] {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 4px;
-      border: 1px solid #aaa;
-      border-radius: 3px;
-    }
-
-    button {
-      margin-top: 15px;
-      padding: 8px 16px;
-      background: #007bff;
-      border: none;
-      color: white;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #0056b3;
-    }
-
-    .botones-panel {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 15px;
-    }
-
-    .botones-panel button {
+    .header-row {
       display: flex;
       align-items: center;
-      gap: 6px;
+      justify-content: center;
+      flex-direction: column;
+      gap: 10px;
+      text-align: center;
     }
+    .logo {
+      width: 85px; height: 85px;
+      background: #fff;
+      border-radius: 8px;
+      padding: 8px;
+      display:flex; align-items:center; justify-content:center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .logo img { width:100%; height:auto; object-fit:contain; }
+
+    .title-block h1 {
+      margin: 8px 0 0;
+      font-size: 1.25rem;
+      color: #0f2b2b;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+    .meta {
+      margin-top:6px;
+      color:var(--muted);
+      font-size:0.9rem;
+    }
+    .meta strong { color:var(--orange); }
+
+    .info-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:14px;
+      margin-top:18px;
+    }
+    label { display:block; font-weight:600; color:#333; margin-bottom:6px; font-size:0.92rem; }
+    input[type="text"], input[type="date"], textarea {
+      width:100%; padding:9px 10px; border-radius:8px; border:1px solid #d8d8d8; font-size:0.95rem;
+      transition: box-shadow .15s, border-color .15s;
+      background:transparent; resize: none;
+    }
+    input:focus, textarea:focus { outline:none; border-color:var(--orange); box-shadow:0 0 6px rgba(255,123,0,0.12); }
+
+    .section-title {
+      background:#ffeedb; color:var(--orange); padding:8px 12px; border-radius:8px; font-weight:700; margin-top:22px;
+    }
+    .table-container { overflow:auto; margin-top:10px; }
+    table { width:100%; border-collapse:collapse; min-width:840px; }
+    th, td { padding:8px 6px; border:1px solid #e6e6e6; text-align:center; font-size:0.92rem; vertical-align:middle; }
+    th { background:var(--orange); color:#fff; position:sticky; top:0; z-index:2; }
+    tbody tr { background: #fffaf0; }
+    tbody tr:nth-child(even) { background: #fff6ea; }
+    td input { width:100%; border:none; background:transparent; padding:6px; text-align:center; font-size:0.92rem; }
+    td input:focus { background:#fff7f0; outline:none; border-radius:6px; box-shadow: 0 6px 18px rgba(255,123,0,0.06); }
+
+    .actions { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-top:18px; }
+    .left-actions, .right-actions { display:flex; gap:10px; align-items:center; flex-wrap: wrap; }
+    .btn { background:var(--orange); color:#fff; border:none; padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:700; }
+    .btn:hover { background:var(--orange-dark); transform:translateY(-2px); }
+    .btn.secondary { background:#fff; color:var(--orange); border:2px solid var(--orange); }
+    .btn.secondary:hover { background:var(--orange); color:#fff; }
+    .btn.ghost { background:transparent; color:#444; border:1px solid #eee; }
+
+    .download-panel {
+      margin-top: 28px;
+      background: #fff8f0;
+      border: 2px dashed var(--orange);
+      padding: 16px;
+      border-radius: 12px;
+      text-align: center;
+      animation: fadeIn 0.5s ease;
+    }
+    .download-panel h3 {
+      color: var(--orange-dark);
+      margin: 0 0 10px;
+      font-weight: 700;
+    }
+    .download-panel .btn {
+      margin: 4px;
+    }
+
+    footer { text-align:center; color:var(--muted); font-size:0.88rem; margin-top:24px; }
   </style>
 </head>
 <body>
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <div class="logo">
-        <i class="fas fa-fish"></i>
-        <span>Panel Peces</span>
-      </div>
-    </div>
-
-    <nav class="sidebar-nav">
-      <ul>
-        <li><a href="index.php?controller=JefePlanta&action=dashboard"><i class="fas fa-th-large"></i> Dashboard</a></li>
-        <li><a href="index.php?controller=JefePlanta&action=moduloPeces"><i class="fas fa-fish"></i> Panel Peces</a></li>
-        <li class="active"><a href="#"><i class="fas fa-vial"></i> BPA 15 - Control Sanitario</a></li>
-        <li><a href="#"><i class="fas fa-sign-out-alt"></i> Salir</a></li>
-      </ul>
-    </nav>
-  </aside>
-
   <div class="container">
-    <header>
+
+    <div class="header-row">
       <div class="logo">
-        <img src="/ruta/a/logo_coraqua.png" alt="Logo Coraqua">
+        <img src="img/logo-coraqua.png" alt="Logo CORAQUA" onerror="this.style.display='none'"/>
       </div>
-
-      <div class="info">
-        <h2>FORMATO N°15</h2>
-        <h3>CONTROL SANITARIO EN ALEVINES<br>TRATAMIENTO EN BAÑO SALINO</h3>
-      </div>
-
-      <div class="details">
-        <p><strong>CÓDIGO:</strong> CORAQUA BPA</p>
-        <p><strong>VERSIÓN:</strong> 2.0</p>
-        <p><strong>FECHA:</strong> 03/08/2020</p>
-      </div>
-    </header>
-
-    <div class="meta">
-      <div><strong>Fecha:</strong> <input type="date" name="fecha"></div>
-      <div><strong>Encargado:</strong> <input type="text" name="encargado"></div>
-      <div><strong>Lote:</strong> <input type="text" name="lote"></div>
-      <div><strong>Sede:</strong> <input type="text" name="sede"></div>
-      <div style="flex: 1 1 100%;"><strong>Actividad:</strong> 
-        <textarea name="actividad" placeholder="Describa la actividad realizada..."></textarea>
+      <div class="title-block">
+        <h1>FORMATO N°15 - CONTROL SANITARIO EN ALEVINES<br>TRATAMIENTO EN BAÑO SALINO</h1>
+        <div class="meta">
+          <span><strong>CÓDIGO:</strong> CORAQUA BPA 15</span>
+          &nbsp;&nbsp;|&nbsp;&nbsp;
+          <span><strong>VERSIÓN:</strong> 2.0</span>
+        </div>
       </div>
     </div>
 
-    <div class="botones-panel">
-      <button class="excel" id="btnExcelSemana">
-        📅 <i class="fas fa-calendar-week"></i> Semana (Excel)
-      </button>
-      <button class="excel" id="btnExcelMes">
-        🗓️ <i class="fas fa-calendar-alt"></i> Mes (Excel)
-      </button>
-      <button class="excel" id="btnExcelAnio">
-        📆 <i class="fas fa-calendar"></i> Año (Excel)
-      </button>
-
-      <button class="pdf" id="btnPDF">
-        🧾 <i class="fas fa-file-pdf"></i> PDF
-      </button>
+    <!-- Datos Generales -->
+    <div class="info-grid">
+      <div>
+        <label for="fecha">Fecha</label>
+        <input id="fecha" type="date">
+      </div>
+      <div>
+        <label for="encargado">Encargado</label>
+        <input id="encargado" type="text" placeholder="Ej. Juan Pérez">
+      </div>
+      <div>
+        <label for="lote">Lote</label>
+        <input id="lote" type="text" placeholder="Ej. L-01">
+      </div>
+      <div>
+        <label for="sede">Sede / Estanque</label>
+        <input id="sede" type="text" placeholder="Ej. Estanque 03">
+      </div>
+      <div style="grid-column: 1 / -1;">
+        <label for="actividad">Actividad</label>
+        <textarea id="actividad" placeholder="Describa la actividad realizada..."></textarea>
+      </div>
     </div>
 
+    <!-- Tabla -->
+    <div class="section-title">Detalle - Control Sanitario en Alevines</div>
     <div class="table-container">
-      <table>
+      <table id="tablaControl">
         <thead>
           <tr>
             <th>N°</th>
@@ -284,31 +187,102 @@
             <th></th>
           </tr>
         </thead>
-        <tbody>
-          <!-- Filas de ejemplo -->
+        <tbody id="bodyControl">
           <tr>
-            <td>1</td>
-            <td><input type="text" name="origen_1"></td>
+            <td class="index">1</td>
+            <td><input type="text" placeholder="UP-01"></td>
             <td></td>
-            <td><input type="text" name="destino_1"></td>
+            <td><input type="text" placeholder="UP-02"></td>
             <td></td>
-            <td><input type="text" name="concentracion_1"></td>
-            <td><input type="text" name="observacion_1"></td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td><input type="text" name="origen_2"></td>
-            <td></td>
-            <td><input type="text" name="destino_2"></td>
-            <td></td>
-            <td><input type="text" name="concentracion_2"></td>
-            <td><input type="text" name="observacion_2"></td>
+            <td><input type="text" placeholder="%"></td>
+            <td><input type="text" placeholder="Observaciones..."></td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <button type="submit">Guardar</button>
+    <!-- Botones -->
+    <div class="actions">
+      <div class="left-actions">
+        <button type="button" class="btn" onclick="agregarFila()">➕ Agregar fila</button>
+        <button type="button" class="btn ghost" onclick="eliminarFila()">➖ Quitar fila</button>
+        <button type="button" class="btn secondary" onclick="verListado()">📖 Ver Listado Diario</button>
+      </div>
+
+      <div class="right-actions">
+        <button type="button" class="btn secondary" onclick="volverAtras()">⬅️ Volver Atrás</button>
+        <button id="guardarBtn" type="button" class="btn" onclick="guardarDatos()">💾 Guardar</button>
+      </div>
+    </div>
+
+    <!-- Panel de Descargas -->
+    <div class="download-panel">
+      <h3>📊 Descarga de Reportes</h3>
+      <button class="btn secondary">📅 Reporte Semanal</button>
+      <button class="btn secondary">📆 Reporte Mensual</button>
+      <button class="btn secondary">🗓️ Reporte Anual</button>
+    </div>
+
+    <footer> CORAQUA © 2025 — Control Sanitario en Alevines (BPA 15) </footer>
   </div>
+
+  <script>
+    function agregarFila(){
+      const tbody = document.getElementById('bodyControl');
+      const num = tbody.querySelectorAll('tr').length + 1;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="index">${num}</td>
+        <td><input type="text" placeholder="UP-${String(num).padStart(2,'0')}"></td>
+        <td></td>
+        <td><input type="text" placeholder="UP-${String(num+1).padStart(2,'0')}"></td>
+        <td></td>
+        <td><input type="text" placeholder="%"></td>
+        <td><input type="text" placeholder="Observaciones..."></td>
+      `;
+      tbody.appendChild(tr);
+      tr.scrollIntoView({behavior:"smooth", block:"center"});
+    }
+
+    function eliminarFila(){
+      const tbody = document.getElementById('bodyControl');
+      const rows = tbody.querySelectorAll('tr');
+      if(rows.length > 1) tbody.removeChild(rows[rows.length-1]);
+      else alert("Debe quedar al menos una fila.");
+    }
+
+    function verListado(){
+      const rows = document.querySelectorAll('#bodyControl tr').length;
+      alert(`📋 Listado de registros: ${rows} fila(s).`);
+    }
+
+    function volverAtras(){
+      if(window.history.length > 1) window.history.back();
+      else alert("No hay historial de navegación.");
+    }
+
+    function guardarDatos(){
+      const fecha = document.getElementById('fecha').value;
+      const encargado = document.getElementById('encargado').value;
+      const lote = document.getElementById('lote').value;
+      const sede = document.getElementById('sede').value;
+      const actividad = document.getElementById('actividad').value;
+
+      if(!fecha || !encargado || !lote || !sede){
+        alert("⚠️ Complete todos los campos principales antes de guardar.");
+        return;
+      }
+
+      const filas = Array.from(document.querySelectorAll('#bodyControl tr')).map(tr => ({
+        origen: tr.children[1].querySelector('input')?.value,
+        destino: tr.children[3].querySelector('input')?.value,
+        concentracion: tr.children[5].querySelector('input')?.value,
+        observacion: tr.children[6].querySelector('input')?.value
+      }));
+
+      console.log({fecha, encargado, lote, sede, actividad, filas});
+      alert("✅ Datos guardados (simulado). Revisa la consola para ver los detalles.");
+    }
+  </script>
 </body>
 </html>
