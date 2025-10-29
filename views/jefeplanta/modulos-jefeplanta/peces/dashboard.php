@@ -70,12 +70,6 @@
         <p>Monitoreo térmico diario</p>
       </a>
 
-      <a href="index.php?controller=JefePlanta&action=bpa11" class="card color4">
-        <i class="fas fa-utensils icon"></i>
-        <h3>BPA 11 - Registro de Alimentación</h3>
-        <p>Plan de alimentación y consumo</p>
-      </a>
-
       <a href="index.php?controller=JefePlanta&action=bpa12" class="card color5">
         <i class="fas fa-chart-line icon"></i>
         <h3>BPA 12 - Control de Crecimiento</h3>
