@@ -1,6 +1,6 @@
 <?php
-//require_once "../../../config/conexion.php"; // Ajusta la ruta según tu estructura
-
+// Verificar si hay datos y definir $fechaBusqueda
+$fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -76,8 +76,8 @@
       </tr>
     </thead>
     <tbody>
-      <?php if ($result && $result->num_rows > 0): ?>
-        <?php $i=1; while ($row = $result->fetch_assoc()): ?>
+      <?php if (!empty($datos)): ?>
+        <?php $i=1; foreach ($datos as $row): ?>
           <tr>
             <td><?php echo $i++; ?></td>
             <td><?php echo htmlspecialchars($row['fecha']); ?></td>
@@ -87,7 +87,7 @@
             <td><?php echo htmlspecialchars($row['nombre']); ?></td>
             <td><?php echo htmlspecialchars($row['obs']); ?></td>
           </tr>
-        <?php endwhile; ?>
+        <?php endforeach; ?>
       <?php else: ?>
         <tr><td colspan="7">❌ No hay registros para esta fecha.</td></tr>
       <?php endif; ?>

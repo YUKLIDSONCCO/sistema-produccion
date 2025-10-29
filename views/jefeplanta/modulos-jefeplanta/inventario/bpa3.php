@@ -280,8 +280,141 @@
 
   <footer>CORAQUA © 2025 — Control de Medicamento</footer>
 </div>
+<!-- Formulario oculto para enviar datos -->
+ <!-- Formulario oculto para enviar datos -->
+<form id="formBPA3" style="display: none;" method="POST" action="/sistema-produccion/public/Inventario/guardarBPA3">
+    <input type="hidden" name="fecha" id="hiddenFecha">
+    <input type="hidden" name="sede" id="hiddenSede">
+    <input type="hidden" name="encargado" id="hiddenEncargado">
+    <input type="hidden" name="mes" id="hiddenMes">
+</form>
+<!-- Todo el código HTML permanece igual hasta el final -->
 
 <script>
+// Función para guardar los datos - VERSIÓN CORREGIDA
+function guardarDatos() {
+    // Obtener datos del formulario principal
+    const fecha = document.getElementById('fecha').value;
+    const sede = document.getElementById('sede').value;
+    const encargado = document.getElementById('encargado').value;
+    const mes = document.getElementById('mes').value;
+    
+    // Validar campos obligatorios
+    if (!fecha || !sede || !encargado || !mes) {
+        alert('Por favor complete todos los campos del formulario');
+        return;
+    }
+    
+    // Obtener datos de la tabla
+    const filas = document.querySelectorAll('#bodyMed tr');
+    const medicamentos = [];
+    const cantidades = [];
+    const nombres_empleado = [];
+    const observaciones = [];
+    
+    let datosValidos = false;
+    
+    filas.forEach(fila => {
+        const inputs = fila.querySelectorAll('input');
+        
+        const medicamento = inputs[1]?.value || '';
+        const cantidad = inputs[2]?.value || '';
+        const nombre_empleado = inputs[3]?.value || '';
+        const obs = inputs[4]?.value || '';
+        
+        medicamentos.push(medicamento);
+        cantidades.push(cantidad);
+        nombres_empleado.push(nombre_empleado);
+        observaciones.push(obs);
+        
+        if (medicamento && cantidad) {
+            datosValidos = true;
+        }
+    });
+    
+    if (!datosValidos) {
+        alert('Por favor ingrese al menos un medicamento y cantidad en la tabla');
+        return;
+    }
+    
+    // Crear formulario dinámico para enviar todos los datos
+    const form = document.getElementById('formBPA3');
+    document.getElementById('hiddenFecha').value = fecha;
+    document.getElementById('hiddenSede').value = sede;
+    document.getElementById('hiddenEncargado').value = encargado;
+    document.getElementById('hiddenMes').value = mes;
+    
+    // Limpiar formulario antes de agregar nuevos campos
+    const existingArrays = form.querySelectorAll('input[name="medicamento_suplemento[]"], input[name="cantidad[]"], input[name="nombre_empleado[]"], input[name="observaciones[]"]');
+    existingArrays.forEach(input => input.remove());
+    
+    // Agregar arrays como campos hidden
+    medicamentos.forEach((medicamento, index) => {
+        if (medicamento) {
+            let input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'medicamento_suplemento[]';
+            input.value = medicamento;
+            form.appendChild(input);
+        }
+    });
+    
+    cantidades.forEach((cantidad, index) => {
+        if (cantidad) {
+            let input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'cantidad[]';
+            input.value = cantidad;
+            form.appendChild(input);
+        }
+    });
+    
+    nombres_empleado.forEach((nombre_empleado, index) => {
+        let input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'nombre_empleado[]';
+        input.value = nombre_empleado;
+        form.appendChild(input);
+    });
+    
+    observaciones.forEach((obs, index) => {
+        let input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'observaciones[]';
+        input.value = obs;
+        form.appendChild(input);
+    });
+    
+    // Enviar formulario
+    form.submit();
+}
+
+// Agregar botón de guardar en la sección de acciones
+function agregarBotonGuardar() {
+    const leftActions = document.querySelector('.left-actions');
+    const botonGuardar = document.createElement('button');
+    botonGuardar.type = 'button';
+    botonGuardar.className = 'btn';
+    botonGuardar.innerHTML = '💾 Guardar';
+    botonGuardar.onclick = guardarDatos;
+    leftActions.appendChild(botonGuardar);
+}
+
+// Función para sincronizar fechas de la tabla
+function sincronizarFechasTabla() {
+    const fechaPrincipal = document.getElementById('fecha').value;
+    const inputsFecha = document.querySelectorAll('#bodyMed input[type="date"]');
+    inputsFecha.forEach(input => {
+        input.value = fechaPrincipal;
+    });
+}
+
+// Actualizar función verListado
+function verListado() {
+    window.location.href = "/sistema-produccion/public/Inventario/listarBPA3";
+}
+
+// Wizard functions
 function mostrarPaso(n){
   const steps=document.querySelectorAll('.step');
   const contents=document.querySelectorAll('.wizard-content');
@@ -290,28 +423,52 @@ function mostrarPaso(n){
 }
 
 function agregarFila(){
-  const tbody=document.getElementById('bodyMed');
-  const n=tbody.rows.length+1;
-  const tr=document.createElement('tr');
-  tr.innerHTML=`
+  const tbody = document.getElementById('bodyMed');
+  const n = tbody.rows.length + 1;
+  const fechaPrincipal = document.getElementById('fecha').value;
+  
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
     <td>${n}</td>
-    <td><input type="date" /></td>
+    <td><input type="date" value="${fechaPrincipal}" /></td>
     <td><input type="text" placeholder="Nombre del medicamento o suplemento" /></td>
     <td><input type="number" step="0.01" placeholder="Cantidad" /></td>
     <td><input type="text" placeholder="Nombre del responsable" /></td>
     <td><input type="text" placeholder="Observaciones" /></td>`;
   tbody.appendChild(tr);
 }
+
 function eliminarFila(){
   const tbody=document.getElementById('bodyMed');
   if(tbody.rows.length>1){tbody.deleteRow(-1);}
   else{alert('Debe quedar al menos una fila.');}
 }
+
 function descargarExcel(tipo){
   alert('📁 Se generará el archivo Excel: ControlMedicamento_'+tipo+'.xlsx (simulado)');
 }
-function verListado(){alert('📅 Mostrando listado diario (simulado).');}
-function volverAtras(){window.history.back();}
+
+function volverAtras(){
+    window.history.back();
+}
+
+// Ejecutar cuando se cargue la página
+document.addEventListener('DOMContentLoaded', function() {
+    agregarBotonGuardar();
+    
+    // Establecer fecha actual por defecto
+    const fechaInput = document.getElementById('fecha');
+    if (fechaInput && !fechaInput.value) {
+        const today = new Date().toISOString().split('T')[0];
+        fechaInput.value = today;
+    }
+    
+    // Sincronizar fecha inicial
+    sincronizarFechasTabla();
+    
+    // Escuchar cambios en la fecha principal
+    fechaInput.addEventListener('change', sincronizarFechasTabla);
+});
 </script>
 </body>
 </html>

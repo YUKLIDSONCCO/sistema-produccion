@@ -293,7 +293,134 @@
 
   <footer> CORAQUA © 2025 — Control de Alimento en Almacén </footer>
 </div>
+<!-- CAMBIAR ESTA LÍNEA -->
+<form id="formBPA1" style="display: none;" method="POST" action="/sistema-produccion/public/Inventario/guardarBPA1">
+    <input type="hidden" name="fecha" id="hiddenFecha">
+    <input type="hidden" name="sede" id="hiddenSede">
+    <input type="hidden" name="encargado" id="hiddenEncargado">
+    <input type="hidden" name="mes" id="hiddenMes">
+</form>
+<script>
+// Función para guardar los datos
+function guardarDatos() {
+    // Obtener datos del formulario principal
+    const fecha = document.getElementById('fecha').value;
+    const sede = document.getElementById('sede').value;
+    const encargado = document.getElementById('encargado').value;
+    const mes = document.getElementById('mes').value;
+    
+    // Validar campos obligatorios
+    if (!fecha || !sede || !encargado || !mes) {
+        alert('Por favor complete todos los campos del formulario');
+        return;
+    }
+    
+    // Obtener datos de la tabla
+    const filas = document.querySelectorAll('#bodyAlimentos tr');
+    const marcas = [];
+    const calibres = [];
+    const cantidades = [];
+    const nombres = [];
+    const observaciones = [];
+    
+    let datosValidos = false;
+    
+    filas.forEach(fila => {
+        const inputs = fila.querySelectorAll('input');
+        const marca = inputs[1]?.value || '';
+        const cantidad = inputs[3]?.value || '';
+        
+        marcas.push(marca);
+        calibres.push(inputs[2]?.value || '');
+        cantidades.push(cantidad);
+        nombres.push(inputs[4]?.value || '');
+        observaciones.push(inputs[5]?.value || '');
+        
+        if (marca && cantidad) {
+            datosValidos = true;
+        }
+    });
+    
+    if (!datosValidos) {
+        alert('Por favor ingrese al menos una marca y cantidad en la tabla');
+        return;
+    }
+    
+    // Crear formulario dinámico para enviar todos los datos
+    const form = document.getElementById('formBPA1');
+    document.getElementById('hiddenFecha').value = fecha;
+    document.getElementById('hiddenSede').value = sede;
+    document.getElementById('hiddenEncargado').value = encargado;
+    document.getElementById('hiddenMes').value = mes;
+    
+    // Agregar arrays como campos hidden
+    marcas.forEach((marca, index) => {
+        let input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'marca[]';
+        input.value = marca;
+        form.appendChild(input);
+    });
+    
+    calibres.forEach((calibre, index) => {
+        let input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'calibre[]';
+        input.value = calibre;
+        form.appendChild(input);
+    });
+    
+    cantidades.forEach((cantidad, index) => {
+        let input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'cantidad[]';
+        input.value = cantidad;
+        form.appendChild(input);
+    });
+    
+    nombres.forEach((nombre, index) => {
+        let input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'nombre_alimento[]';
+        input.value = nombre;
+        form.appendChild(input);
+    });
+    
+    observaciones.forEach((obs, index) => {
+        let input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'observaciones[]';
+        input.value = obs;
+        form.appendChild(input);
+    });
+    
+    // Enviar formulario
+    form.submit();
+}
 
+// Agregar botón de guardar en la sección de acciones
+function agregarBotonGuardar() {
+    const leftActions = document.querySelector('.left-actions');
+    const botonGuardar = document.createElement('button');
+    botonGuardar.type = 'button';
+    botonGuardar.className = 'btn';
+    botonGuardar.innerHTML = '💾 Guardar';
+    botonGuardar.onclick = guardarDatos;
+    leftActions.appendChild(botonGuardar);
+}
+
+// Ejecutar cuando se cargue la página
+document.addEventListener('DOMContentLoaded', function() {
+    agregarBotonGuardar();
+    
+    // Establecer fecha actual por defecto
+    const fechaInput = document.getElementById('fecha');
+    if (fechaInput && !fechaInput.value) {
+        const today = new Date().toISOString().split('T')[0];
+        fechaInput.value = today;
+    }
+});
+</script>
 <script>
   function mostrarPaso(n){
     const steps=document.querySelectorAll('.step');
@@ -325,7 +452,7 @@
   }
   function verListado() {
   // Redirige al método listarBPA1 del controlador
-  window.location.href = "?url=lista1";
+  window.location.href = "/sistema-produccion/public/Inventario/listarBPA1";
 }
 
   function volverAtras(){ window.history.back(); }

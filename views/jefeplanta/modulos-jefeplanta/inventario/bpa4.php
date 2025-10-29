@@ -284,7 +284,179 @@
 
   <footer>CORAQUA © 2025 — Control de Dosificación de Suplementos y Medicamentos</footer>
 </div>
+<!-- Agregar esto antes del cierre del </body> en bpa4.php -->
 
+<!-- Formulario oculto para enviar datos -->
+<form id="formBPA4" style="display: none;" method="POST" action="/sistema-produccion/public/Inventario/guardarBPA4">
+    <input type="hidden" name="fecha" id="hiddenFecha">
+</form>
+
+<script>
+// Función para guardar los datos
+function guardarDatos() {
+    // Obtener datos del formulario principal
+    const fecha = document.getElementById('fecha').value;
+    
+    // Validar campos obligatorios
+    if (!fecha) {
+        alert('Por favor complete la fecha');
+        return;
+    }
+    
+    // Obtener datos de la tabla
+    const filas = document.querySelectorAll('#bodyDosificacion tr');
+    const medicamentos = [];
+    const dosis_gr = [];
+    const dias_tratamiento = [];
+    const lotes_alevines = [];
+    const salas = [];
+    const responsables = [];
+    const observaciones = [];
+    
+    let datosValidos = false;
+    
+    filas.forEach(fila => {
+        const inputs = fila.querySelectorAll('input');
+        
+        // CORRECCIÓN: Índices basados en la estructura de la tabla
+        const medicamento = inputs[1]?.value || '';
+        const dosis = inputs[2]?.value || '';
+        const dias = inputs[3]?.value || '';
+        const lote_alevines = inputs[4]?.value || '';
+        const sala = inputs[5]?.value || '';
+        const responsable = inputs[6]?.value || '';
+        const obs = inputs[7]?.value || ''; // Agregar campo de observaciones
+        
+        medicamentos.push(medicamento);
+        dosis_gr.push(dosis);
+        dias_tratamiento.push(dias);
+        lotes_alevines.push(lote_alevines);
+        salas.push(sala);
+        responsables.push(responsable);
+        observaciones.push(obs);
+        
+        if (medicamento && dosis) {
+            datosValidos = true;
+        }
+    });
+    
+    if (!datosValidos) {
+        alert('Por favor ingrese al menos un medicamento y dosis en la tabla');
+        return;
+    }
+    
+    // Crear formulario dinámico para enviar todos los datos
+    const form = document.getElementById('formBPA4');
+    document.getElementById('hiddenFecha').value = fecha;
+    
+    // Limpiar formulario antes de agregar nuevos campos
+    const existingArrays = form.querySelectorAll('input[name="medicamento_suplemento[]"], input[name="dosis_gr[]"], input[name="dias_tratamiento[]"], input[name="lote_alevines[]"], input[name="sala[]"], input[name="responsable[]"], input[name="observaciones[]"]');
+    existingArrays.forEach(input => input.remove());
+    
+    // Agregar arrays como campos hidden
+    medicamentos.forEach((medicamento, index) => {
+        let input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'medicamento_suplemento[]';
+        input.value = medicamento;
+        form.appendChild(input);
+    });
+    
+    dosis_gr.forEach((dosis, index) => {
+        let input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'dosis_gr[]';
+        input.value = dosis;
+        form.appendChild(input);
+    });
+    
+    dias_tratamiento.forEach((dias, index) => {
+        let input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'dias_tratamiento[]';
+        input.value = dias;
+        form.appendChild(input);
+    });
+    
+    lotes_alevines.forEach((lote_alevines, index) => {
+        let input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'lote_alevines[]';
+        input.value = lote_alevines;
+        form.appendChild(input);
+    });
+    
+    salas.forEach((sala, index) => {
+        let input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'sala[]';
+        input.value = sala;
+        form.appendChild(input);
+    });
+    
+    responsables.forEach((responsable, index) => {
+        let input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'responsable[]';
+        input.value = responsable;
+        form.appendChild(input);
+    });
+    
+    observaciones.forEach((obs, index) => {
+        let input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'observaciones[]';
+        input.value = obs;
+        form.appendChild(input);
+    });
+    
+    // Enviar formulario
+    form.submit();
+}
+
+// Agregar botón de guardar en la sección de acciones
+function agregarBotonGuardar() {
+    const leftActions = document.querySelector('.left-actions');
+    const botonGuardar = document.createElement('button');
+    botonGuardar.type = 'button';
+    botonGuardar.className = 'btn';
+    botonGuardar.innerHTML = '💾 Guardar';
+    botonGuardar.onclick = guardarDatos;
+    leftActions.appendChild(botonGuardar);
+}
+
+// Función para sincronizar fechas de la tabla
+function sincronizarFechasTabla() {
+    const fechaPrincipal = document.getElementById('fecha').value;
+    const inputsFecha = document.querySelectorAll('#bodyDosificacion input[type="date"]');
+    inputsFecha.forEach(input => {
+        input.value = fechaPrincipal;
+    });
+}
+
+// Actualizar función verListado
+function verListado() {
+    window.location.href = "/sistema-produccion/public/Inventario/listarBPA4";
+}
+
+// Ejecutar cuando se cargue la página
+document.addEventListener('DOMContentLoaded', function() {
+    agregarBotonGuardar();
+    
+    // Establecer fecha actual por defecto
+    const fechaInput = document.getElementById('fecha');
+    if (fechaInput && !fechaInput.value) {
+        const today = new Date().toISOString().split('T')[0];
+        fechaInput.value = today;
+    }
+    
+    // Sincronizar fecha inicial
+    sincronizarFechasTabla();
+    
+    // Escuchar cambios en la fecha principal
+    fechaInput.addEventListener('change', sincronizarFechasTabla);
+});
+</script>
 <script>
 function mostrarPaso(n){
   const steps=document.querySelectorAll('.step');
@@ -294,12 +466,14 @@ function mostrarPaso(n){
 }
 
 function agregarFila(){
-  const tbody=document.getElementById('bodyDosificacion');
-  const n=tbody.rows.length+1;
-  const tr=document.createElement('tr');
-  tr.innerHTML=`
+  const tbody = document.getElementById('bodyDosificacion');
+  const n = tbody.rows.length + 1;
+  const fechaPrincipal = document.getElementById('fecha').value;
+  
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
     <td>${n}</td>
-    <td><input type="date" /></td>
+    <td><input type="date" value="${fechaPrincipal}" /></td>
     <td><input type="text" placeholder="Nombre del medicamento o suplemento" /></td>
     <td><input type="number" step="0.01" placeholder="gr" /></td>
     <td><input type="number" step="1" placeholder="Días" /></td>
@@ -308,15 +482,17 @@ function agregarFila(){
     <td><input type="text" placeholder="Responsable" /></td>`;
   tbody.appendChild(tr);
 }
+
 function eliminarFila(){
   const tbody=document.getElementById('bodyDosificacion');
   if(tbody.rows.length>1){tbody.deleteRow(-1);}
   else{alert('Debe quedar al menos una fila.');}
 }
+
 function descargarExcel(tipo){
   alert('📁 Se generará el archivo Excel: Dosificacion_'+tipo+'.xlsx (simulado)');
 }
-function verListado(){alert('📅 Mostrando listado diario (simulado).');}
+
 function volverAtras(){window.history.back();}
 </script>
 </body>
