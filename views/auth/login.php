@@ -76,8 +76,7 @@ ob_end_flush();
 <body>
   <div class="container" id="container">
     <div class="sign-up">
-      <form method="POST" action="index.php?controller=Auth&action=register" id="registroForm">
-        <h1>Crear Cuenta</h1>
+      <form method="POST" action="index.php?controller=Auth&action=register" id="registroForm" enctype="multipart/form-data">
         <span>Usa tu correo para registrarte</span>
         <input type="text" name="nombre" placeholder="Nombre completo" required />
         <input type="email" name="correo" placeholder="Correo" required />
