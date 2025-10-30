@@ -4,7 +4,7 @@ require_once __DIR__ . '/../models/OvasModel.php';
 
 class OvasController {
 
-    public function bpa_1() {
+    public function bpa1() {
         if (isset($_GET['success'])) {
             echo "<script>alert('Se guardaron " . $_GET['success'] . " registros correctamente');</script>";
         }
@@ -12,7 +12,7 @@ class OvasController {
             echo "<script>alert('Error al guardar los registros');</script>";
         }
 
-        include __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/bpa-1.php';
+        include __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/bpa1.php';
     }
 
     public function listarBPA1() {
@@ -28,10 +28,10 @@ class OvasController {
         }
 
         $fechaBusqueda = $fecha;
-        include __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/lista-1.php';
+        include __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/lista1.php';
     }
 
-    public function bpa_2() {
+    public function bpa2() {
         if (isset($_GET['success'])) {
             echo "<script>alert('Se guardaron " . $_GET['success'] . " registros correctamente');</script>";
         }
@@ -39,7 +39,7 @@ class OvasController {
             echo "<script>alert('Error al guardar los registros');</script>";
         }
 
-        include __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/bpa-2.php';
+        include __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/bpa2.php';
     }
 
     public function listarBPA2() {
@@ -55,10 +55,10 @@ class OvasController {
         }
 
         $fechaBusqueda = $fecha;
-        include __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/lista-2.php';
+        include __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/lista2.php';
     }
 
-    public function bpa_3() {
+    public function bpa3() {
         if (isset($_GET['success'])) {
             echo "<script>alert('Se guardaron " . $_GET['success'] . " registros correctamente');</script>";
         }
@@ -66,7 +66,7 @@ class OvasController {
             echo "<script>alert('Error al guardar los registros');</script>";
         }
 
-        include __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/bpa-3.php';
+        include __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/bpa3.php';
     }
 
     public function listarBPA3() {
@@ -82,10 +82,10 @@ class OvasController {
         }
 
         $fechaBusqueda = $fecha;
-        include __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/lista-3.php';
+        include __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/lista3.php';
     }
 
-    public function bpa_4() {
+    public function bpa4() {
         if (isset($_GET['success'])) {
             echo "<script>alert('Se guardaron " . $_GET['success'] . " registros correctamente');</script>";
         }
@@ -93,7 +93,7 @@ class OvasController {
             echo "<script>alert('Error al guardar los registros');</script>";
         }
 
-        include __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/bpa-4.php';
+        include __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/bpa4.php';
     }
 
     public function listarBPA4() {
@@ -109,7 +109,7 @@ class OvasController {
         }
 
         $fechaBusqueda = $fecha;
-        include __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/lista-4.php';
+        include __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/lista4.php';
     }
 }
 ?>
