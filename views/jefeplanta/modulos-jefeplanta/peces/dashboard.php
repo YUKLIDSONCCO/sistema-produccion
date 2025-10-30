@@ -68,42 +68,42 @@
       </div>
 
       <div class="bpa-grid">
-        <div class="project-card color1" onclick="window.location.href='index.php?controller=JefePlanta&action=bpa6'">
+        <div class="project-card color1" onclick="window.location.href='index.php?controller=Peces&action=bpa6'">
           <i class="fas fa-skull-crossbones fa-3x"></i>
           <h3>BPA 06 - Mortalidad Diaria</h3>
           <p>Registro de alevines fallecidos</p>
         </div>
 
-        <div class="project-card color2" onclick="window.location.href='index.php?controller=JefePlanta&action=bpa7'">
+  <div class="project-card color2" onclick="window.location.href='index.php?controller=Peces&action=bpa7'">
           <i class="fas fa-water fa-3x"></i>
           <h3>BPA 07 - Control de Tanques</h3>
           <p>Supervisa los tanques de cultivo</p>
         </div>
 
-        <div class="project-card color3" onclick="window.location.href='index.php?controller=JefePlanta&action=bpa10'">
+  <div class="project-card color3" onclick="window.location.href='index.php?controller=Peces&action=bpa10'">
           <i class="fas fa-thermometer-half fa-3x"></i>
           <h3>BPA 10 - Control de Temperatura</h3>
           <p>Monitoreo térmico diario</p>
         </div>
+        <div class="project-card color3" onclick="window.location.href='index.php?controller=Peces&action=bpa11'">
+          <i class="fas fa-thermometer-half fa-3x"></i>
+          <h3>BPA 11 - Conteo de Peces</h3>
+          <p>Monitoreo de la población de peces</p>
+        </div>
 
-        <div class="project-card color5" onclick="window.location.href='index.php?controller=JefePlanta&action=bpa12'">
+        <div class="project-card color5" onclick="window.location.href='index.php?controller=Peces&action=bpa12'">
           <i class="fas fa-chart-line fa-3x"></i>
           <h3>BPA 12 - Control de Crecimiento</h3>
           <p>Peso y tamaño de peces</p>
         </div>
 
-        <div class="project-card color6" onclick="window.location.href='index.php?controller=JefePlanta&action=bpa15'">
+  <div class="project-card color6" onclick="window.location.href='index.php?controller=Peces&action=bpa15'">
           <i class="fas fa-map-marked-alt fa-3x"></i>
           <h3>BPA 15 - Registro de Áreas</h3>
           <p>Zonas de producción y control</p>
         </div>
 
-        <div class="project-card color7" onclick="window.location.href='index.php?controller=JefePlanta&action=mortproducc'">
-          <i class="fas fa-skull-crossbones fa-3x"></i>
-          <h3>Reporte de Mortalidad</h3>
-          <p>Resumen de muertes por etapa</p>
-        </div>
-      </div>
+  
     </section>
   </main>
 
