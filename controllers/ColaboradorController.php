@@ -34,4 +34,32 @@ class ColaboradorController extends BaseController {
             $this->view("colaborador/registrar_produccion", compact("usuario"));
         }
     }
+
+    // Nuevos métodos para los módulos
+    public function inventario() {
+        if (!isset($_SESSION['usuario'])) {
+            $this->redirect("index.php?controller=Auth&action=login");
+        }
+        
+        $usuario = $_SESSION['usuario'];
+        $this->view("colaborador/modulos-colaborador/inventario/dashboard", compact("usuario"));
+    }
+
+    public function ovas() {
+        if (!isset($_SESSION['usuario'])) {
+            $this->redirect("index.php?controller=Auth&action=login");
+        }
+        
+        $usuario = $_SESSION['usuario'];
+        $this->view("colaborador/modulos-colaborador/ovas/dashboard", compact("usuario"));
+    }
+
+    public function peces() {
+        if (!isset($_SESSION['usuario'])) {
+            $this->redirect("index.php?controller=Auth&action=login");
+        }
+        
+        $usuario = $_SESSION['usuario'];
+        $this->view("colaborador/modulos-colaborador/peces/dashboard", compact("usuario"));
+    }
 }
