@@ -410,10 +410,10 @@
                             </div>
                             <div class="species-info">
                                 <h3>Tilapia del Nilo</h3>
-                                <p>Tanque: A-1 • Temperatura: 28°C</p>
+                                <p>Tanque:</p>
                                 <div class="health-info">
                                     <span class="health-status excellent">Salud Excelente</span>
-                                    <span style="font-size: 0.875rem; color: var(--text-secondary);">45 ejemplares</span>
+                                    <span style="font-size: 0.875rem; color: var(--text-secondary);"></span>
                                 </div>
                             </div>
                             <div class="actions">
@@ -429,10 +429,10 @@
                             </div>
                             <div class="species-info">
                                 <h3>Carpa Común</h3>
-                                <p>Tanque: B-2 • Temperatura: 26°C</p>
+                                <p>Tanque:</p>
                                 <div class="health-info">
                                     <span class="health-status good">Salud Buena</span>
-                                    <span style="font-size: 0.875rem; color: var(--text-secondary);">32 ejemplares</span>
+                                    <span style="font-size: 0.875rem; color: var(--text-secondary);"></span>
                                 </div>
                             </div>
                             <div class="actions">
@@ -448,10 +448,10 @@
                             </div>
                             <div class="species-info">
                                 <h3>Trucha Arcoíris</h3>
-                                <p>Tanque: C-3 • Temperatura: 18°C</p>
+                                <p>Tanque:</p>
                                 <div class="health-info">
                                     <span class="health-status critical">Atención Requerida</span>
-                                    <span style="font-size: 0.875rem; color: var(--text-secondary);">18 ejemplares</span>
+                                    <span style="font-size: 0.875rem; color: var(--text-secondary);"></span>
                                 </div>
                             </div>
                             <div class="actions">
@@ -465,7 +465,7 @@
                         <!-- Stats Card -->
                         <div class="stats-hero-card">
                             <i data-lucide="activity" class="icon" style="width:48px; height:48px;"></i>
-                            <h3>92% Salud</h3>
+                            <h3>?% Salud</h3>
                             <p>Promedio de las especies</p>
                         </div>
 
@@ -487,11 +487,11 @@
                             </div>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                                 <div style="text-align: center;">
-                                    <h3 style="font-size: 1.5rem; color: var(--accent-teal);">356</h3>
+                                    <h3 style="font-size: 1.5rem; color: var(--accent-teal);"></h3>
                                     <p style="font-size: 0.875rem; color: var(--text-secondary);">Total Ejemplares</p>
                                 </div>
                                 <div style="text-align: center;">
-                                    <h3 style="font-size: 1.5rem; color: var(--accent-green);">12</h3>
+                                    <h3 style="font-size: 1.5rem; color: var(--accent-green);"></h3>
                                     <p style="font-size: 0.875rem; color: var(--text-secondary);">Especies</p>
                                 </div>
                             </div>
@@ -509,19 +509,19 @@
 
                 <div class="profile-stats-grid">
                     <div class="stat-box">
-                        <h4>356</h4>
+                        <h4></h4>
                         <p>Total Peces</p>
                     </div>
                     <div class="stat-box">
-                        <h4>12</h4>
+                        <h4></h4>
                         <p>Especies</p>
                     </div>
                     <div class="stat-box">
-                        <h4>92%</h4>
+                        <h4></h4>
                         <p>Salud Promedio</p>
                     </div>
                     <div class="stat-box">
-                        <h4>8</h4>
+                        <h4></h4>
                         <p>Tanques Activos</p>
                     </div>
                 </div>
@@ -537,7 +537,7 @@
                             </div>
                             <div>
                                 <p style="font-size: 0.875rem; font-weight: 500;">Alimentación Matutina</p>
-                                <p style="font-size: 0.75rem; color: var(--text-secondary);">08:00 AM</p>
+                                <p style="font-size: 0.75rem; color: var(--text-secondary);"></p>
                             </div>
                         </div>
                         <div style="display: flex; align-items: center; gap: 0.75rem;">
@@ -546,7 +546,7 @@
                             </div>
                             <div>
                                 <p style="font-size: 0.875rem; font-weight: 500;">Control de Calidad Agua</p>
-                                <p style="font-size: 0.75rem; color: var(--text-secondary);">10:00 AM</p>
+                                <p style="font-size: 0.75rem; color: var(--text-secondary);"></p>
                             </div>
                         </div>
                     </div>

@@ -66,6 +66,46 @@
             <?php endif; ?>
         </div>
     </div>
+        <!-- Formularios BPA-1 recibidos -->
+    <div class="card shadow-sm border-0 rounded-lg mb-4">
+        <div class="card-body">
+            <h5 class="card-title text-warning">📄 Formularios BPA-1 Recibidos</h5>
+
+            <?php if (!empty($bpa1_pendientes)): ?>
+                <table class="table table-hover align-middle">
+                    <thead class="table-warning">
+                        <tr>
+                            <th>#</th>
+                            <th>Fecha</th>
+                            <th>Sede</th>
+                            <th>Encargado</th>
+                            <th>Mes</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($bpa1_pendientes as $i => $b): ?>
+                            <tr>
+                                <td><?php echo $i + 1; ?></td>
+                                <td><?php echo htmlspecialchars($b['fecha']); ?></td>
+                                <td><?php echo htmlspecialchars($b['sede']); ?></td>
+                                <td><?php echo htmlspecialchars($b['encargado']); ?></td>
+                                <td><?php echo htmlspecialchars($b['mes']); ?></td>
+                                <td>
+                                    <a href="index.php?controller=Supervisor&action=revisarBPA1&id=<?php echo $b['id']; ?>" class="btn btn-outline-warning btn-sm">
+                                        🔍 Revisar
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <p class="text-muted">No hay formularios BPA-1 pendientes de revisión.</p>
+            <?php endif; ?>
+        </div>
+    </div>
+
 
     <!-- Reportes -->
     <div class="text-end">

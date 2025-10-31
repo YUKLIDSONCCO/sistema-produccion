@@ -488,6 +488,27 @@
                 grid-column: auto;
             }
         }
+                .form-bpa-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+        .form-bpa-links a {
+            padding: 0.6rem 1rem;
+            background-color: var(--accent-green-light);
+            color: var(--accent-green);
+            font-weight: 600;
+            font-size: 0.875rem;
+            border-radius: var(--radius-small);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: 1px solid var(--accent-green);
+        }
+        .form-bpa-links a:hover {
+            background-color: var(--accent-green);
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -502,15 +523,22 @@
             
             <div class="header-right-section">
                 <a href="index.php?controller=Colaborador&action=dashboard" class="back-button">
-                    <i data-lucide="arrow-left" style="width:16px; height:16px;"></i>
-                    Volver al Dashboard
-                </a>
+    <i data-lucide="arrow-left" style="width:16px; height:16px;"></i>
+    Volver al Dashboard
+</a>
             </div>
         </header>
 
         <div class="dashboard-content">
             <main class="content-main">
                 <h1 class="page-title">Gestión de Inventario</h1>
+                 <!-- ✅ NUEVO BLOQUE: Acceso a Formularios BPA -->
+                <div class="form-bpa-links">
+                    <a href="/sistema-produccion/public/Inventario/bpa1">📘 FORMULARIO BPA-1</a>
+                    <a href="/sistema-produccion/public/Inventario/bpa2">📗 FORMULARIO BPA-2</a>
+                    <a href="/sistema-produccion/public/Inventario/bpa3">📙 FORMULARIO BPA-3</a>
+                    <a href="/sistema-produccion/public/Inventario/bpa4">📕 FORMULARIO BPA-4</a>
+                </div>
 
                 <nav class="tab-nav">
                     <span class="tab-nav-item active" data-tab="all">TODOS LOS ITEMS</span>
@@ -528,10 +556,10 @@
                             </div>
                             <div class="item-info">
                                 <h3>Material Base A</h3>
-                                <p>Categoría: Materia Prima • Código: MAT-001</p>
+                                <p></p>
                                 <div class="stock-info">
                                     <span class="stock-level high">Stock Alto</span>
-                                    <span style="font-size: 0.875rem; color: var(--text-secondary);">142 unidades</span>
+                                    <span style="font-size: 0.875rem; color: var(--text-secondary);"></span>
                                 </div>
                             </div>
                             <div class="actions">
@@ -547,10 +575,10 @@
                             </div>
                             <div class="item-info">
                                 <h3>Herramientas Manuales</h3>
-                                <p>Categoría: Equipamiento • Código: EQP-015</p>
+                                <p></p>
                                 <div class="stock-info">
                                     <span class="stock-level medium">Stock Medio</span>
-                                    <span style="font-size: 0.875rem; color: var(--text-secondary);">28 unidades</span>
+                                    <span style="font-size: 0.875rem; color: var(--text-secondary);"></span>
                                 </div>
                             </div>
                             <div class="actions">
@@ -566,10 +594,10 @@
                             </div>
                             <div class="item-info">
                                 <h3>Componentes Electrónicos</h3>
-                                <p>Categoría: Electrónica • Código: ELEC-023</p>
+                                <p></p>
                                 <div class="stock-info">
                                     <span class="stock-level low">Stock Bajo</span>
-                                    <span style="font-size: 0.875claro; color: var(--text-secondary);">5 unidades</span>
+                                    <span style="font-size: 0.875claro; color: var(--text-secondary);"></span>
                                 </div>
                             </div>
                             <div class="actions">
@@ -583,7 +611,7 @@
                         <!-- Stats Card -->
                         <div class="stats-hero-card">
                             <i data-lucide="trending-up" class="icon" style="width:48px; height:48px;"></i>
-                            <h3>85% Disponibilidad</h3>
+                            <h3></h3>
                             <p>Total del inventario</p>
                         </div>
 
@@ -593,8 +621,8 @@
                                 <i data-lucide="alert-triangle" class="icon" style="width:32px; height:32px;"></i>
                             </div>
                             <div class="info">
-                                <h4>Stock Crítico</h4>
-                                <p>3 items necesitan reabastecimiento urgente</p>
+                                <h4>Stock Críco?</h4>
+                                <p></p>
                             </div>
                         </div>
 
@@ -605,11 +633,11 @@
                             </div>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                                 <div style="text-align: center;">
-                                    <h3 style="font-size: 1.5rem; color: var(--accent-green);">142</h3>
+                                    <h3 style="font-size: 1.5rem; color: var(--accent-green);"></h3>
                                     <p style="font-size: 0.875rem; color: var(--text-secondary);">Items Totales</p>
                                 </div>
                                 <div style="text-align: center;">
-                                    <h3 style="font-size: 1.5rem; color: var(--accent-orange);">8</h3>
+                                    <h3 style="font-size: 1.5rem; color: var(--accent-orange);"></h3>
                                     <p style="font-size: 0.875rem; color: var(--text-secondary);">Stock Bajo</p>
                                 </div>
                             </div>
@@ -627,19 +655,19 @@
 
                 <div class="profile-stats-grid">
                     <div class="stat-box">
-                        <h4>142</h4>
+                        <h4></h4>
                         <p>Items Totales</p>
                     </div>
                     <div class="stat-box">
-                        <h4>28</h4>
+                        <h4></h4>
                         <p>Categorías</p>
                     </div>
                     <div class="stat-box">
-                        <h4>85%</h4>
+                        <h4></h4>
                         <p>Disponibilidad</p>
                     </div>
                     <div class="stat-box">
-                        <h4>12</h4>
+                        <h4></h4>
                         <p>Proveedores</p>
                     </div>
                 </div>
@@ -657,8 +685,8 @@
                                 <div class="activity-header">
                                     <h5>Actualización de Stock</h5>
                                 </div>
-                                <p class="activity-text">Material Base A +20 unidades</p>
-                                <span class="activity-time">Hace 2 horas</span>
+                                <p class="activity-text"></p>
+                                <span class="activity-time"></span>
                             </div>
                         </div>
                         <hr style="margin: 1rem 0;">
@@ -671,7 +699,7 @@
                                     <h5>Alerta de Stock</h5>
                                 </div>
                                 <p class="activity-text">Componentes Bajo Mínimo</p>
-                                <span class="activity-time">Hace 5 horas</span>
+                                <span class="activity-time"></span>
                             </div>
                         </div>
                     </div>
@@ -697,5 +725,8 @@
             console.log("Dashboard de Inventario inicializado.");
         });
     </script>
+    <script>
+    lucide.createIcons();
+</script>
 </body>
 </html>

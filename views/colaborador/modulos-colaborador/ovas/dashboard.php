@@ -402,12 +402,12 @@
                             </div>
                             <div class="course-info">
                                 <h3>Seguridad en el Trabajo</h3>
-                                <p>Duración: 2 horas • Nivel: Básico</p>
+                                <p></p>
                                 <div class="progress-info">
                                     <div class="progress-bar">
                                         <div class="progress-fill" style="width: 75%"></div>
                                     </div>
-                                    <span class="progress-text">75%</span>
+                                    <span class="progress-text"></span>
                                 </div>
                             </div>
                             <div class="actions">
@@ -422,16 +422,16 @@
                             </div>
                             <div class="course-info">
                                 <h3>Protocolos de Calidad</h3>
-                                <p>Duración: 1.5 horas • Nivel: Intermedio</p>
+                                <p></p>
                                 <div class="progress-info">
                                     <div class="progress-bar">
                                         <div class="progress-fill" style="width: 100%"></div>
                                     </div>
-                                    <span class="progress-text">100%</span>
+                                    <span class="progress-text"></span>
                                 </div>
                             </div>
                             <div class="actions">
-                                <button class="button continue">CERTIFICADO</button>
+                                <button class="button continue">CONTINUAR</button>
                             </div>
                         </div>
 
@@ -442,12 +442,12 @@
                             </div>
                             <div class="course-info">
                                 <h3>Manejo de Equipos</h3>
-                                <p>Duración: 3 horas • Nivel: Avanzado</p>
+                                <p></p>
                                 <div class="progress-info">
                                     <div class="progress-bar">
                                         <div class="progress-fill" style="width: 25%"></div>
                                     </div>
-                                    <span class="progress-text">25%</span>
+                                    <span class="progress-text"></span>
                                 </div>
                             </div>
                             <div class="actions">
@@ -460,26 +460,11 @@
                         <!-- Stats Card -->
                         <div class="stats-hero-card">
                             <i data-lucide="award" class="icon" style="width:48px; height:48px;"></i>
-                            <h3>73% Progreso</h3>
+                            <h3></h3>
                             <p>Promedio de completación</p>
                         </div>
 
                         <!-- New Course Card -->
-                        <div class="card">
-                            <div class="card-header">
-                                <h2>Nuevo Curso Disponible</h2>
-                            </div>
-                            <div class="ova-card">
-                                <div class="icon-wrapper" style="background-color: var(--accent-green-light);">
-                                    <i data-lucide="zap" class="icon" style="color: var(--accent-green);"></i>
-                                </div>
-                                <div class="course-info">
-                                    <h3>Innovación en Procesos</h3>
-                                    <p>Duración: 1 hora • Nuevo</p>
-                                </div>
-                            </div>
-                            <button class="button start" style="width: 100%; margin-top: 1rem;">COMENZAR CURSO</button>
-                        </div>
 
                         <!-- Quick Stats -->
                         <div class="card">
@@ -505,52 +490,7 @@
                 <div class="profile-sidebar-card">
                     <img src="https://placehold.co/80x80/B3E5FC/03A9F4?text=<?php echo substr($usuario['nombre'], 0, 1); ?>" class="avatar" alt="<?php echo $usuario['nombre']; ?>">
                     <h3><?php echo $usuario['nombre']; ?></h3>
-                    <p>ESTUDIANTE OVAs</p>
-                </div>
-
-                <div class="profile-stats-grid">
-                    <div class="stat-box">
-                        <h4>15</h4>
-                        <p>Cursos Totales</p>
-                    </div>
-                    <div class="stat-box">
-                        <h4>8</h4>
-                        <p>Completados</p>
-                    </div>
-                    <div class="stat-box">
-                        <h4>73%</h4>
-                        <p>Progreso</p>
-                    </div>
-                    <div class="stat-box">
-                        <h4>12h</h4>
-                        <p>Total Estudiado</p>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h2>Próximos Cursos</h2>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 1rem;">
-                        <div style="display: flex; align-items: center; gap: 0.75rem;">
-                            <div class="icon-wrapper" style="padding: 0.5rem;">
-                                <i data-lucide="trending-up" style="width:16px; height:16px;"></i>
-                            </div>
-                            <div>
-                                <p style="font-size: 0.875rem; font-weight: 500;">Gestión de Proyectos</p>
-                                <p style="font-size: 0.75rem; color: var(--text-secondary);">Disponible: 15 Mar</p>
-                            </div>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 0.75rem;">
-                            <div class="icon-wrapper" style="padding: 0.5rem;">
-                                <i data-lucide="users" style="width:16px; height:16px;"></i>
-                            </div>
-                            <div>
-                                <p style="font-size: 0.875rem; font-weight: 500;">Trabajo en Equipo</p>
-                                <p style="font-size: 0.75rem; color: var(--text-secondary);">Disponible: 22 Mar</p>
-                            </div>
-                        </div>
-                    </div>
+                    <p>PERSONAL DE TRABAJO OVAS</p>
                 </div>
             </aside>
         </div>

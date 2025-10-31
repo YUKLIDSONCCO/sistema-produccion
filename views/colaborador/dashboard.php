@@ -5,12 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel del Colaborador - Sistema de Producción</title>
     
-    <!-- Carga de la fuente Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Carga de la biblioteca de iconos Lucide -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
@@ -779,18 +777,14 @@
 </head>
 <body>
 
-    <!-- Contenedor principal del Dashboard -->
     <div class="dashboard-container">
         
-        <!-- 1. Encabezado / Barra de Navegación -->
         <header class="dashboard-header">
-            <!-- Sección Izquierda: Logo y Menú -->
             <div class="header-left">
                 <h1 class="logo">
                     <i data-lucide="factory" class="icon"></i>
                     Sistema Producción
                 </h1>
-                <!-- Menú -->
                 <nav class="main-nav hidden-mobile">
                     <a href="#" class="nav-link active">Dashboard</a>
                     <a href="#" class="nav-link">Tareas</a>
@@ -801,25 +795,23 @@
                 </nav>
             </div>
             
-            <!-- Sección Derecha: Iconos y Perfil -->
             <div class="header-right">
                 <div class="header-icons">
                     <i data-lucide="search" class="icon"></i>
                     <i data-lucide="bell" class="icon"></i>
                     <i data-lucide="settings" class="icon"></i>
-                </div>
+                    <a href="index.php?controller=Auth&action=logout" title="Cerrar Sesión">
+                        <i data-lucide="log-out" class="icon"></i>
+                    </a>
+                    </div>
                 <img src="https://placehold.co/32x32/E0E0E0/B0B0B0?text=<?php echo substr($usuario['nombre'], 0, 1); ?>" class="avatar" alt="User Avatar">
             </div>
         </header>
 
-        <!-- 2. Contenido Principal -->
-        <!-- Layout de Grid: 1 columna en móvil, 2 en escritorio (Main | Sidebar) -->
         <main class="dashboard-main">
 
-            <!-- Columna de Contenido Principal (Izquierda y Centro) -->
             <div class="main-content">
                 
-                <!-- Módulos del Sistema -->
                 <section class="modules-section">
                     <div class="section-header">
                         <h2>🚀 Módulos del Sistema</h2>
@@ -828,7 +820,6 @@
                         </div>
                     </div>
                     <div class="modules-grid">
-                        <!-- Módulo de Inventario -->
                         <div class="module-card" data-module="inventario">
                             <div class="module-header">
                                 <div class="module-icon" style="background-color: #EFF6FF; color: #1E40AF;">
@@ -841,21 +832,20 @@
                             </div>
                             <div class="module-stats">
                                 <div class="stat">
-                                    <span class="value">142</span>
+                                    <span class="value"></span>
                                     <span class="label">Items</span>
                                 </div>
                                 <div class="stat">
-                                    <span class="value">28</span>
+                                    <span class="value"></span>
                                     <span class="label">Categorías</span>
                                 </div>
                                 <div class="stat">
-                                    <span class="value">85%</span>
+                                    <span class="value"></span>
                                     <span class="label">Disponible</span>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Módulo de OVAs -->
                         <div class="module-card" data-module="ovas">
                             <div class="module-header">
                                 <div class="module-icon" style="background-color: #FEF3C7; color: #D97706;">
@@ -868,21 +858,20 @@
                             </div>
                             <div class="module-stats">
                                 <div class="stat">
-                                    <span class="value">15</span>
+                                    <span class="value"></span>
                                     <span class="label">Cursos</span>
                                 </div>
                                 <div class="stat">
-                                    <span class="value">8</span>
+                                    <span class="value"></span>
                                     <span class="label">Completados</span>
                                 </div>
                                 <div class="stat">
-                                    <span class="value">73%</span>
+                                    <span class="value"></span>
                                     <span class="label">Progreso</span>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Módulo de Peces -->
                         <div class="module-card" data-module="peces">
                             <div class="module-header">
                                 <div class="module-icon" style="background-color: #D1FAE5; color: #065F46;">
@@ -895,15 +884,15 @@
                             </div>
                             <div class="module-stats">
                                 <div class="stat">
-                                    <span class="value">356</span>
+                                    <span class="value"></span>
                                     <span class="label">Ejemplares</span>
                                 </div>
                                 <div class="stat">
-                                    <span class="value">12</span>
+                                    <span class="value"></span>
                                     <span class="label">Especies</span>
                                 </div>
                                 <div class="stat">
-                                    <span class="value">92%</span>
+                                    <span class="value"></span>
                                     <span class="label">Salud</span>
                                 </div>
                             </div>
@@ -911,7 +900,6 @@
                     </div>
                 </section>
 
-                <!-- Tareas Asignadas -->
                 <section class="tasks-info">
                     <div class="section-header">
                         <h2>📋 Tareas Asignadas</h2>
@@ -956,7 +944,6 @@
                     <?php endif; ?>
                 </section>
 
-                <!-- Resumen de Producción -->
                 <section class="production-summary">
                     <div class="section-header">
                         <h2>Resumen de Producción</h2>
@@ -966,62 +953,53 @@
                         </div>
                     </div>
                     <div class="production-summary-grid">
-                        <!-- Tarjeta 1 -->
                         <div class="stat-card orange">
                             <i data-lucide="clipboard-check" class="icon"></i>
                             <p class="label">Tareas Completadas</p>
-                            <p class="value">12</p>
-                            <p class="change positive">+25% esta semana</p>
+                            <p class="value"></p>
+                            <p class="change positive"></p>
                         </div>
-                        <!-- Tarjeta 2 -->
                         <div class="stat-card blue">
                             <i data-lucide="clock" class="icon"></i>
                             <p class="label">Horas Trabajadas</p>
-                            <p class="value">38.5</p>
-                            <p class="change">+5% vs. semana anterior</p>
+                            <p class="value"></p>
+                            <p class="change"></p>
                         </div>
-                        <!-- Tarjeta 3 -->
                         <div class="stat-card purple">
                             <i data-lucide="target" class="icon"></i>
                             <p class="label">Eficiencia</p>
-                            <p class="value">94%</p>
-                            <p class="change positive">+3% desde ayer</p>
+                            <p class="value"></p>
+                            <p class="change positive"></p>
                         </div>
-                        <!-- Tarjeta 4 -->
                         <div class="stat-card red">
                             <i data-lucide="alert-triangle" class="icon"></i>
                             <p class="label">Tareas Pendientes</p>
-                            <p class="value">5</p>
-                            <p class="change negative">+2 desde ayer</p>
+                            <p class="value"></p>
+                            <p class="change negative"></p>
                         </div>
-                        <!-- Tarjeta 5 -->
                         <div class="stat-card yellow">
                             <i data-lucide="trending-up" class="icon"></i>
                             <p class="label">Productividad</p>
-                            <p class="value">87%</p>
-                            <p class="change positive">+7% este mes</p>
+                            <p class="value"></p>
+                            <p class="change positive"></p>
                         </div>
-                        <!-- Tarjeta 6 -->
                         <div class="stat-card green">
                             <i data-lucide="award" class="icon"></i>
                             <p class="label">Calificación</p>
-                            <p class="value">4.8/5</p>
-                            <p class="change positive">+0.2 este trimestre</p>
+                            <p class="value"></p>
+                            <p class="change positive"></p>
                         </div>
                     </div>
                 </section>
 
-                <!-- Sección Inferior: Insumos y Progreso -->
                 <section class="content-bottom">
                 
-                    <!-- Insumos Disponibles -->
                     <div class="supplies-available">
                         <div class="section-header">
                             <h2>📦 Insumos Disponibles</h2>
                             <i data-lucide="more-horizontal" class="icon" style="width:16px; height:16px;"></i>
                         </div>
                         <div class="supplies-grid">
-                            <!-- Insumo 1 -->
                             <div class="supply-card">
                                 <div class="supply-icon" style="background-color: #EFF6FF; color: #1E40AF;">
                                     <i data-lucide="package"></i>
@@ -1030,9 +1008,8 @@
                                     <h4>Material Base</h4>
                                     <p>Unidades disponibles</p>
                                 </div>
-                                <div class="supply-quantity">142</div>
+                                <div class="supply-quantity"></div>
                             </div>
-                            <!-- Insumo 2 -->
                             <div class="supply-card">
                                 <div class="supply-icon" style="background-color: #FEF3C7; color: #D97706;">
                                     <i data-lucide="tool"></i>
@@ -1041,9 +1018,8 @@
                                     <h4>Herramientas</h4>
                                     <p>En buen estado</p>
                                 </div>
-                                <div class="supply-quantity">28</div>
+                                <div class="supply-quantity"></div>
                             </div>
-                            <!-- Insumo 3 -->
                             <div class="supply-card">
                                 <div class="supply-icon" style="background-color: #D1FAE5; color: #065F46;">
                                     <i data-lucide="cpu"></i>
@@ -1052,35 +1028,32 @@
                                     <h4>Componentes</h4>
                                     <p>En inventario</p>
                                 </div>
-                                <div class="supply-quantity">356</div>
+                                <div class="supply-quantity"></div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Progreso de Producción -->
                     <div class="production-progress">
                         <div class="section-header">
                             <h2>Progreso de Producción</h2>
                             <i data-lucide="more-horizontal" class="icon" style="width:16px; height:16px;"></i>
                         </div>
                         <div class="card-content">
-                            <!-- Barra de Progreso -->
                             <div class="progress-bar-container">
                                 <div class="progress-bar-header">
                                     <p>Progreso Semanal</p>
-                                    <p>72%</p>
+                                    <p></p>
                                 </div>
                                 <div class="progress-bar-track">
                                     <div class="progress-bar-fill" style="width: 72%"></div>
                                 </div>
                             </div>
-                            <!-- Lista de Tareas -->
                             <ul class="task-list">
                                 <li class="task-item">
                                     <div class="task-info">
                                         <i data-lucide="clipboard-list" class="icon"></i>
                                         <div>
-                                            <h4>Ensamblaje Producto A - Lote #245</h4>
+                                            <h4></h4>
                                             <p>Hoy - Prioridad Alta</p>
                                         </div>
                                     </div>
@@ -1090,7 +1063,7 @@
                                     <div class="task-info">
                                         <i data-lucide="clipboard-check" class="icon done"></i>
                                         <div>
-                                            <h4>Control Calidad - Componentes B</h4>
+                                            <h4></h4>
                                             <p>Completado ayer</p>
                                         </div>
                                     </div>
@@ -1112,10 +1085,8 @@
                 </section>
             </div>
 
-            <!-- Columna de Barra Lateral (Derecha) -->
             <aside class="sidebar-content">
                 
-                <!-- Tarjeta de Perfil -->
                 <div class="profile-card">
                     <div class="profile-header">
                         <i data-lucide="more-horizontal" class="icon"></i>
@@ -1125,7 +1096,6 @@
                     <img src="https://placehold.co/80x80/B3E5FC/03A9F4?text=<?php echo substr($usuario['nombre'], 0, 1); ?>" class="avatar" alt="<?php echo $usuario['nombre']; ?>">
                     <h3><?php echo $usuario['nombre']; ?></h3>
                     <p>Colaborador de Producción - Sistema de Manufactura</p>
-                    <!-- Iconos de Acción -->
                     <div class="profile-actions">
                         <button class="action-button"><i data-lucide="user" class="icon"></i></button>
                         <button class="action-button"><i data-lucide="message-square" class="icon"></i></button>
@@ -1134,50 +1104,44 @@
                     </div>
                 </div>
 
-                <!-- Tarjeta de Información Detallada -->
                 <div class="detailed-info">
                     <div class="section-header" style="margin-bottom: 0;">
                         <h2>Información del Turno</h2>
                         <i data-lucide="settings-2" class="icon"></i>
                     </div>
                     
-                    <!-- Campo de Información -->
                     <div class="info-item">
                         <div>
                             <p class="label">Turno Actual</p>
-                            <p class="value">Matutino (7:00 - 15:00)</p>
+                            <p class="value"></p>
                         </div>
                         <i data-lucide="clock" class="icon"></i>
                     </div>
-                    <!-- Campo de Información -->
                     <div class="info-item">
                         <div>
                             <p class="label">Supervisor</p>
-                            <p class="value">María González</p>
+                            <p class="value"></p>
                         </div>
                         <i data-lucide="user-check" class="icon"></i>
                     </div>
-                    <!-- Campo de Información -->
                     <div class="info-item">
                         <div>
                             <p class="label">Área de Trabajo</p>
-                            <p class="value">Línea de Ensamblaje B</p>
+                            <p class="value"></p>
                         </div>
                         <i data-lucide="map-pin" class="icon"></i>
                     </div>
-                    <!-- Campo de Información -->
                     <div class="info-item">
                         <div>
                             <p class="label">Horas Extras</p>
-                            <p class="value">3.5 esta semana</p>
+                            <p class="value"></p>
                         </div>
                         <i data-lucide="watch" class="icon"></i>
                     </div>
-                    <!-- Campo de Información -->
                     <div class="info-item">
                         <div>
                             <p class="label">Próximo Descanso</p>
-                            <p class="value">10:30 - 10:45</p>
+                            <p class="value"></p>
                         </div>
                         <i data-lucide="coffee" class="icon"></i>
                     </div>

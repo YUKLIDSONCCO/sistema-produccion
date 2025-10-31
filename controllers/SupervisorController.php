@@ -32,4 +32,47 @@ class SupervisorController extends BaseController {
 
         $this->view("supervisor/reportes", compact("usuario", "reportes"));
     }
+    public function recibirBPA1() {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Datos generales
+        $fecha = $_POST['fecha'] ?? '';
+        $sede = $_POST['sede'] ?? '';
+        $encargado = $_POST['encargado'] ?? '';
+        $mes = $_POST['mes'] ?? '';
+
+        // Datos de alimentos (arrays)
+        $marcas = $_POST['marca'] ?? [];
+        $calibres = $_POST['calibre'] ?? [];
+        $cantidades = $_POST['cantidad'] ?? [];
+        $nombres = $_POST['nombre_alimento'] ?? [];
+        $observaciones = $_POST['observaciones'] ?? [];
+
+        $alimentos = [];
+        for ($i = 0; $i < count($marcas); $i++) {
+            $alimentos[] = [
+                'marca' => $marcas[$i] ?? '',
+                'calibre' => $calibres[$i] ?? '',
+                'cantidad' => $cantidades[$i] ?? '',
+                'nombre' => $nombres[$i] ?? '',
+                'observacion' => $observaciones[$i] ?? ''
+            ];
+        }
+
+        // Enviar datos a la vista de revisión
+        $data = [
+            'fecha' => $fecha,
+            'sede' => $sede,
+            'encargado' => $encargado,
+            'mes' => $mes,
+            'alimentos' => $alimentos
+        ];
+
+        // Mostrar vista de revisión directamente
+        $this->view("supervisor/revision_bpa1", ["data" => $data]);
+    } else {
+        $this->redirect("index.php?controller=Supervisor&action=dashboard");
+    }
+}
+
+
 }
