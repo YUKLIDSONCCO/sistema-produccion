@@ -5,11 +5,71 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CORAQUA-PERÚ | Panel de Peces</title>
+  <title>CORAQUA-PERÚ</title>
 
-  <!-- Estilos -->
-  <link rel="stylesheet" href="/sistema-produccion/public/css/style_inventarios.css" />
+  <link rel="stylesheet" href="/sistema-produccion/public/css/style_ovas.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    /* 🌊 Fondo marino */
+body {
+  background: linear-gradient(to bottom, #b3ecff, #0066cc);
+  overflow: hidden;
+  margin: 0;
+}
+
+/* ====== PECES ====== */
+.fish {
+  position: absolute;
+  width: 60px;
+  height: auto;
+  opacity: 0.9;
+  transform: scaleX(-1); /* Miran hacia la derecha */
+  animation: swimRight linear infinite, floatUpDown ease-in-out infinite;
+}
+
+/* ====== ANIMACIÓN — de izquierda a derecha ====== */
+@keyframes swimRight {
+  0% {
+    left: -120px;
+    transform: translateX(0) scaleX(-1);
+  }
+  100% {
+    left: 110%;
+    transform: translateX(120vw) scaleX(-1);
+  }
+}
+
+/* ====== ANIMACIÓN — leve movimiento vertical ====== */
+@keyframes floatUpDown {
+  0%, 100% { transform: translateY(0) scaleX(-1); }
+  50% { transform: translateY(10px) scaleX(-1); }
+}
+
+/* ====== VARIACIÓN ENTRE PECES ====== */
+.fish:nth-child(1) { top: 5%;  animation-duration: 18s, 3s; animation-delay: 0s, 1s; width: 70px; }
+.fish:nth-child(2) { top: 12%; animation-duration: s, 3s; animation-delay: 0s, 1s; width: 70px; }
+.fish:nth-child(3) { top: 20%; animation-duration: 22s, 5s; animation-delay: 5s, 3s; width: 50px; }
+.fish:nth-child(4) { top: 28%; animation-duration: 20s, 3s; animation-delay: 2s, 2s; width: 80px; }
+.fish:nth-child(5) { top: 35%; animation-duration: 35s, 4s; animation-delay: 7s, 1s; width: 65px; }
+.fish:nth-child(6) { top: 42%; animation-duration: 25s, 5s; animation-delay: 4s, 3s; width: 55px; }
+.fish:nth-child(7) { top: 48%; animation-duration: 27s, 3s; animation-delay: 6s, 2s; width: 70px; }
+.fish:nth-child(8) { top: 55%; animation-duration: 30s, 6s; animation-delay: 8s, 1s; width: 60px; }
+.fish:nth-child(9) { top: 62%; animation-duration: 21s, 4s; animation-delay: 1s, 3s; width: 50px; }
+.fish:nth-child(10){ top: 69%; animation-duration: 33s, 3s; animation-delay: 9s, 2s; width: 75px; }
+.fish:nth-child(11){ top: 76%; animation-duration: 29s, 5s; animation-delay: 10s, 3s; width: 65px; }
+.fish:nth-child(12){ top: 83%; animation-duration: 26s, 4s; animation-delay: 12s, 1s; width: 55px; }
+.fish:nth-child(13){ top: 10%; animation-duration: 24s, 3s; animation-delay: 14s, 2s; width: 80px; }
+.fish:nth-child(14){ top: 50%; animation-duration: 28s, 5s; animation-delay: 11s, 1s; width: 60px; }
+.fish:nth-child(15){ top: 75%; animation-duration: 32s, 4s; animation-delay: 16s, 2s; width: 75px; }
+.fish:nth-child(16){ top: 30%; animation-duration: 20s, 5s; animation-delay: 6s, 1s; width: 65px; }
+.fish:nth-child(17){ top: 60%; animation-duration: 27s, 4s; animation-delay: 13s, 3s; width: 55px; }
+.fish:nth-child(18){ top: 40%; animation-duration: 31s, 3s; animation-delay: 17s, 2s; width: 70px; }
+.fish:nth-child(19){ top: 15%; animation-duration: 30s, 5s; animation-delay: 19s, 1s; width: 60px; }
+.fish:nth-child(20){ top: 90%; animation-duration: 34s, 6s; animation-delay: 15s, 3s; width: 85px; }
+
+  </style>
 </head>
 
 <body>
@@ -17,7 +77,7 @@
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <div class="logo">
-        <i class="fas fa-fish"></i>
+        <i class="fas fa-chart-line"></i>
         <span>CORAQUA</span>
       </div>
       <button class="toggle-btn" id="toggleSidebar">
@@ -28,10 +88,10 @@
     <nav class="sidebar-nav">
       <ul>
         <li><a href="javascript:history.back()"><i class="fas fa-circle-arrow-left"></i> Volver atrás</a></li>
-        <li><a href="index.php?controller=JefePlanta&action=dashboard"><i class="fas fa-th-large"></i> Dashboard</a></li>
-        <li><a href="#" id="inicioBtn" class="active"><i class="fas fa-fish"></i> Panel Peces</a></li>
-        <li><a href="#" id="produccionBtn"><i class="fas fa-chart-line"></i> Producción</a></li>
-        <li><a href="#" id="configBtn"><i class="fas fa-cogs"></i> Configuración</a></li>
+        <li><a href="#" id="inicioBtn" class="active"><i class="fas fa-house-chimney"></i> Inicio</a></li>
+        <li><a href="#" id="formatosBtn"><i class="fas fa-folder-open"></i> Formatos PECES</a></li>
+        <li><a href="#" id="listadoBtn"><i class="fas fa-list-check"></i> Listado PECES</a></li>
+        <li><a href="#" id="reportesBtn"><i class="fas fa-chart-line"></i> Reportes PECES</a></li>
         <li><a href="index.php?controller=Login&action=cerrarSesion"><i class="fas fa-door-open"></i> Cerrar sesión</a></li>
       </ul>
     </nav>
@@ -42,12 +102,12 @@
     <header class="header">
       <div class="search-bar">
         <i class="fas fa-search"></i>
-        <input type="text" placeholder="Buscar BPA..." />
+        <input type="text" placeholder="Buscar formato..." />
       </div>
       <div class="header-right">
         <div class="notification">
           <i class="far fa-bell"></i>
-          <span class="badge">3</span>
+          <span class="badge">1</span>
         </div>
         <div class="user-profile">
           <img src="https://via.placeholder.com/40" alt="User" />
@@ -60,59 +120,111 @@
       </div>
     </header>
 
-    <!-- PANEL DE PECES -->
+    <!-- INICIO -->
     <section class="dashboard" id="inicioSection">
+      <div class="welcome">
+        <h1>🐟 Bienvenido al Panel de Control de PECES</h1>
+        <p>Aquí podrás acceder a todos los formatos de control de peces, registrar información y mantener actualizados los procesos de la planta.</p>
+      </div>
+
+      <!-- 🐠 Peces animados con diferentes GIFs -->
+      <img src="https://fondolunaria.org/informe2021/assets/GIFs/Personajes/pez-2.gif" class="fish fish1 small" alt="pez emoji">
+      <img src="https://i.gifer.com/origin/b4/b4e3a0c856b18e134d175aa49f406bb1_w200.gif" class="fish fish2 medium" alt="pez azul">
+      <img src="https://images.emojiterra.com/google/noto-emoji/animated-emoji/1f41f.gif" class="fish fish3 large" alt="pez naranja">
+      <img src="https://fondolunaria.org/informe2021/assets/GIFs/Personajes/pez-2.gif" class="fish fish4 medium" alt="pez emoji">
+      <img src="https://i.gifer.com/origin/b4/b4e3a0c856b18e134d175aa49f406bb1_w200.gif" class="fish fish5 small" alt="pez azul">
+      <img src="https://images.emojiterra.com/google/noto-emoji/animated-emoji/1f41f.gif" class="fish fish6 large" alt="pez naranja">
+    </section>
+
+    <!-- FORMATOS PECES -->
+    <section class="dashboard" id="formatosSection" style="display:none;">
       <div class="section-header">
-        <h2>Panel de Peces (BPAs)</h2>
-        <p>Selecciona un BPA para gestionar los controles de producción acuícola</p>
+        <h2>FORMATOS DE CONTROL DE PECES</h2>
+      </div>
+
+      <div class="project-card color1" onclick="window.location.href='index.php?controller=Peces&action=bpa6'">
+        <i class="fas fa-skull-crossbones fa-3x"></i>
+        <h3>BPA 06 - Mortalidad Diaria</h3>
+        <p>Registro de alevines fallecidos</p>
+      </div>
+
+      <div class="project-card color2" onclick="window.location.href='index.php?controller=Peces&action=bpa7'">
+        <i class="fas fa-water fa-3x"></i>
+        <h3>BPA 07 - Control de Tanques</h3>
+        <p>Supervisa los tanques de cultivo</p>
+      </div>
+
+      <div class="project-card color3" onclick="window.location.href='index.php?controller=Peces&action=bpa10'">
+        <i class="fas fa-thermometer-half fa-3x"></i>
+        <h3>BPA 10 - Control de Temperatura</h3>
+        <p>Monitoreo térmico diario</p>
+      </div>
+
+      <div class="project-card color3" onclick="window.location.href='index.php?controller=Peces&action=bpa11'">
+        <i class="fas fa-thermometer-half fa-3x"></i>
+        <h3>BPA 11 - Conteo de Peces</h3>
+        <p>Monitoreo de la población de peces</p>
+      </div>
+
+      <div class="project-card color5" onclick="window.location.href='index.php?controller=Peces&action=bpa12'">
+        <i class="fas fa-chart-line fa-3x"></i>
+        <h3>BPA 12 - Control de Crecimiento</h3>
+        <p>Peso y tamaño de peces</p>
+      </div>
+
+      <div class="project-card color6" onclick="window.location.href='index.php?controller=Peces&action=bpa15'">
+        <i class="fas fa-map-marked-alt fa-3x"></i>
+        <h3>BPA 15 - Registro de Áreas</h3>
+        <p>Zonas de producción y control</p>
+      </div>
+    </section>
+
+    <!-- LISTADO -->
+    <section class="dashboard" id="listadoSection" style="display:none;">
+      <div class="section-header">
+        <h2>LISTADO DE FORMATOS DE PECES</h2>
       </div>
 
       <div class="bpa-grid">
-        <div class="project-card color1" onclick="window.location.href='index.php?controller=Peces&action=bpa6'">
-          <i class="fas fa-skull-crossbones fa-3x"></i>
+        <div class="project-card" onclick="window.location.href='/sistema-produccion/views/jefeplanta/modulos-jefeplanta/peces/bpa6-listado.php'">
+          <i class="fas fa-egg fa-3x"></i>
           <h3>BPA 06 - Mortalidad Diaria</h3>
-          <p>Registro de alevines fallecidos</p>
+          <p>Visualiza los registro de alevines fallecidos</p>
         </div>
 
-  <div class="project-card color2" onclick="window.location.href='index.php?controller=Peces&action=bpa7'">
-          <i class="fas fa-water fa-3x"></i>
+        <div class="project-card" onclick="window.location.href='/sistema-produccion/views/jefeplanta/modulos-jefeplanta/peces/bpa7-listado.php'">
+          <i class="fas fa-skull-crossbones fa-3x"></i>
           <h3>BPA 07 - Control de Tanques</h3>
-          <p>Supervisa los tanques de cultivo</p>
+          <p>Listado general de tanques de cultivo y su estado actual.</p>
         </div>
 
-  <div class="project-card color3" onclick="window.location.href='index.php?controller=Peces&action=bpa10'">
-          <i class="fas fa-thermometer-half fa-3x"></i>
+        <div class="project-card" onclick="window.location.href='/sistema-produccion/views/jefeplanta/modulos-jefeplanta/peces/bpa10-listado.php'">
+          <i class="fas fa-fish fa-3x"></i>
           <h3>BPA 10 - Control de Temperatura</h3>
-          <p>Monitoreo térmico diario</p>
-        </div>
-        <div class="project-card color3" onclick="window.location.href='index.php?controller=Peces&action=bpa11'">
-          <i class="fas fa-thermometer-half fa-3x"></i>
-          <h3>BPA 11 - Conteo de Peces</h3>
-          <p>Monitoreo de la población de peces</p>
+          <p>Listado de registros diarios de temperatura con detalle de muertes y observaciones.</p>
         </div>
 
-        <div class="project-card color5" onclick="window.location.href='index.php?controller=Peces&action=bpa12'">
-          <i class="fas fa-chart-line fa-3x"></i>
+        <div class="project-card" onclick="window.location.href='/sistema-produccion/views/jefeplanta/modulos-jefeplanta/peces/bpa12-listado.php'">
+          <i class="fas fa-temperature-high fa-3x"></i>
           <h3>BPA 12 - Control de Crecimiento</h3>
-          <p>Peso y tamaño de peces</p>
+          <p>Visualización de los registros de temperatura, oxígeno y pH registrados diariamente.</p>
         </div>
+      </div>
+    </section>
 
-  <div class="project-card color6" onclick="window.location.href='index.php?controller=Peces&action=bpa15'">
-          <i class="fas fa-map-marked-alt fa-3x"></i>
-          <h3>BPA 15 - Registro de Áreas</h3>
-          <p>Zonas de producción y control</p>
-        </div>
-
-  
+    <!-- REPORTES -->
+    <section class="dashboard" id="reportesSection" style="display:none;">
+      <div class="section-header">
+        <h2>Reportes PECES</h2>
+        <p>Visualiza el estado actual del proceso reproductivo, mortalidad y parámetros de agua.</p>
+      </div>
+      <div class="charts-grid">
+        <canvas id="graficoAlimento" height="120"></canvas>
+        <canvas id="graficoStock" height="120"></canvas>
+      </div>
     </section>
   </main>
 
-  <!-- Script general -->
-  <script>
-    // Toggle Sidebar
-    document.getElementById("toggleSidebar").addEventListener("click", () => {
-      document.getElementById("sidebar").classList.toggle("collapsed");
-    });
-  </script>
+  <script src="/sistema-produccion/public/js/script_ovas.js"></script>
 </body>
 </html>
