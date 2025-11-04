@@ -329,62 +329,60 @@
               <span>⬆️ 8% vs mes anterior</span>
             </div>
           </div>
-
           <div class="card" style="color:#333; padding:20px;">
-            <div class="space-between">
-              <h4 style="margin:0;font-size:16px;font-weight:600;"> Inventario</h4>
-              <div style="font-size:20px;background:rgba(0,0,0,0.05);width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#555">📦</div>
-            </div>
-            <div style="font-size:36px;font-weight:800;margin:10px 0;">
-              <?php echo $produccion['insumos'] ?? 0; ?>
-            </div>
-            <div class="meta" style="font-size:13px;opacity:1;color:#666;">
-              <span>⬇️ 5% vs mes anterior</span>
-            </div>
-          </div>
+  <div class="space-between" style="display:flex;justify-content:space-between;align-items:center;">
+    <h4 style="margin:0;font-size:16px;font-weight:600;">Inventario</h4>
+    <div style="font-size:20px;background:rgba(0,0,0,0.05);width:36px;height:36px;
+                border-radius:10px;display:flex;align-items:center;justify-content:center;color:#555;">
+      📦
+    </div>
+  </div>
+
+  <!-- Total general -->
+  <div style="font-size:36px;font-weight:800;margin:10px 0;">
+    <?= number_format($inventarioResumen['total_cantidad'] ?? 0, 2) ?>
+  </div>
+
+  <div class="meta" style="font-size:13px;opacity:1;color:#666;">
+    <span>⬇️ 5% vs mes anterior</span>
+  </div>
+
+  <!-- 🔹 Detalle interno -->
+  <div style="margin-top:12px;font-size:14px;line-height:1.6;color:#444;">
+    <div style="display:flex;justify-content:space-between;">
+      <span>🍽️ Alimento:</span>
+      <strong><?= number_format($inventarioResumen['alimento'] ?? 0, 2) ?></strong>
+    </div>
+    <div style="display:flex;justify-content:space-between;">
+      <span>🧂 Sal:</span>
+      <strong><?= number_format($inventarioResumen['sal'] ?? 0, 2) ?></strong>
+    </div>
+    <div style="display:flex;justify-content:space-between;">
+      <span>💊 Medicamento:</span>
+      <strong><?= number_format($inventarioResumen['medicamento'] ?? 0, 2) ?></strong>
+    </div>
+    <div style="display:flex;justify-content:space-between;">
+      <span>⚗️ Dosificación:</span>
+      <strong><?= number_format($inventarioResumen['dosificacion'] ?? 0, 2) ?></strong>
+    </div>
+  </div>
+</div>
+
+
+
         </div>
 
         <div>
           <h3 style="margin:0 0 6px 4px">Actividad</h3>
-          
-          <div class="card" style="padding:18px;height:auto;display:block;">
-             <div class="card-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-                <h5 style="margin:0;font-size:15px;font-weight:700;">📊 Resumen de Producción</h5>
-                <div class="chart-actions" style="display:flex;gap:6px;">
-                    <button class="icon-btn" style="padding:6px 10px;font-size:12px;background:#f49340;color:white;border:0;">Semanal</button>
-                    <button class="icon-btn" style="padding:6px 10px;font-size:12px;border:0;">Mensual</button>
-                    <button class="icon-btn" style="padding:6px 10px;font-size:12px;border:0;">Anual</button>
-                </div>
-            </div>
-            <div class="card-body" style="height:250px;">
-                <canvas id="productionChart" style="width:100%;height:100%;"></canvas>
-            </div>
-          </div>
-
-          <div style="margin-top:18px" class="card">
-            <h4 style="margin:0 0 10px 0">Nuevo Mensaje</h4>
-            <div style="display:flex;gap:10px;margin-bottom:12px">
-              <button class="icon-btn" style="background:#fff;border-radius:12px;border:0;">All</button>
-              <button class="icon-btn" style="background:linear-gradient(90deg,#f49340,#fbdcaf);color:#fff;border-radius:12px;border:0;">Teammate</button>
-              <button class="icon-btn" style="border:0;">Customer</button>
-            </div>
-            <div class="messages">
-              <div class="msg">
-                <div class="m-avatar"><img src="  https://images.unsplash.com/photo-1607746882042-944635dfe10e?q=80&w=200&auto=format&fit=crop" alt=""></div>
-                <div class="m-body">
-                  <div class="name">Barak <span class="muted" style="font-weight:400">• Hew How Are You</span></div>
-                </div>
-                <div class="m-time">12:30</div>
-              </div>
-              <div class="msg">
-                <div class="m-avatar"><img src="  https://images.unsplash.com/photo-1542204165-6e5a7f6a13b6?q=80&w=200&auto=format&fit=crop" alt=""></div>
-                <div class="m-body">
-                  <div class="name">Nikole <span class="muted" style="font-weight:400">• Hew How Are You</span></div>
-                </div>
-                <div class="m-time">12:36</div>
-              </div>
-            </div>
-          </div>
+        
+          <div class="card" style="padding:18px;">
+  <h4 style="margin:0 0 10px 0;font-size:16px;font-weight:600;">Distribución del Inventario</h4>
+  <canvas id="inventarioPieChart" style="width:100%;height:220px;"></canvas>
+</div>
+<div class="card" style="padding:18px;">
+  <h4 style="margin:0 0 10px 0;font-size:16px;font-weight:600;">Cantidad por Tipo de Insumo</h4>
+  <canvas id="inventarioBarChart" style="width:100%;height:220px;"></canvas>
+</div>
         </div>
 
         <div>
@@ -441,6 +439,7 @@
 
     <div class="overlay" id="overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:40"></div>
   </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
   (function(){
@@ -509,5 +508,84 @@
     });
   })();
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const dataInventario = {
+    labels: ["Alimento", "Sal", "Medicamento", "Dosificación"],
+    values: [
+      <?= $inventarioResumen['alimento'] ?? 0 ?>,
+      <?= $inventarioResumen['sal'] ?? 0 ?>,
+      <?= $inventarioResumen['medicamento'] ?? 0 ?>,
+      <?= $inventarioResumen['dosificacion'] ?? 0 ?>
+    ]
+  };
+
+  // 🎨 Colores suaves en línea con tu paleta
+  const colors = ["#f49340", "#fbdcaf", "#96b9b9", "#eaf4f4"];
+
+  // 🥧 Pie chart
+  const ctxPie = document.getElementById("inventarioPieChart").getContext("2d");
+  new Chart(ctxPie, {
+    type: "pie",
+    data: {
+      labels: dataInventario.labels,
+      datasets: [{
+        data: dataInventario.values,
+        backgroundColor: colors,
+        borderColor: "#fff",
+        borderWidth: 2
+      }]
+    },
+    options: {
+      plugins: {
+        legend: { position: "bottom" },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              return ctx.label + ": " + ctx.formattedValue;
+            }
+          }
+        }
+      }
+    }
+  });
+
+  // 📊 Bar chart
+  const ctxBar = document.getElementById("inventarioBarChart").getContext("2d");
+  new Chart(ctxBar, {
+    type: "bar",
+    data: {
+      labels: dataInventario.labels,
+      datasets: [{
+        label: "Cantidad",
+        data: dataInventario.values,
+        backgroundColor: colors,
+        borderRadius: 8,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { stepSize: 100 }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              return ctx.dataset.label + ": " + ctx.formattedValue;
+            }
+          }
+        }
+      }
+    }
+  });
+});
+</script>
+
 </body>
 </html>

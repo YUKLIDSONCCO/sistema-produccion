@@ -283,6 +283,7 @@
     <div class="left-actions">
       <button class="btn" onclick="agregarFilaAlimentos()">➕ Agregar fila</button>
       <button class="btn" onclick="eliminarFilaAlimentos()">➖ Quitar fila</button>
+      <button class="btn" onclick="guardarDatos()">💾 Guardar y Enviar Reporte</button>
     </div>
 
     <div class="right-actions">
@@ -293,15 +294,18 @@
 
   <footer> CORAQUA © 2025 — Control de Alimento en Almacén </footer>
 </div>
-<!-- CAMBIAR ESTA LÍNEA -->
+
+<!-- Formulario oculto para guardar datos -->
 <form id="formBPA1" style="display: none;" method="POST" action="/sistema-produccion/public/Inventario/guardarBPA1">
     <input type="hidden" name="fecha" id="hiddenFecha">
     <input type="hidden" name="sede" id="hiddenSede">
     <input type="hidden" name="encargado" id="hiddenEncargado">
     <input type="hidden" name="mes" id="hiddenMes">
+    <input type="hidden" name="enviar_reporte" value="1">
 </form>
+
 <script>
-// Función para guardar los datos
+// Función para guardar los datos y enviar reporte
 function guardarDatos() {
     // Obtener datos del formulario principal
     const fecha = document.getElementById('fecha').value;
@@ -353,6 +357,10 @@ function guardarDatos() {
     document.getElementById('hiddenEncargado').value = encargado;
     document.getElementById('hiddenMes').value = mes;
     
+    // Limpiar campos anteriores
+    const camposExistentes = form.querySelectorAll('input[name="marca[]"], input[name="calibre[]"], input[name="cantidad[]"], input[name="nombre_alimento[]"], input[name="observaciones[]"]');
+    camposExistentes.forEach(campo => campo.remove());
+    
     // Agregar arrays como campos hidden
     marcas.forEach((marca, index) => {
         let input = document.createElement('input');
@@ -394,26 +402,15 @@ function guardarDatos() {
         form.appendChild(input);
     });
     
-    // Enviar formulario
-    form.submit();
+    // Mostrar confirmación
+    if (confirm('¿Desea guardar los datos y enviar el reporte al supervisor?')) {
+        // Enviar formulario
+        form.submit();
+    }
 }
 
-// Agregar botón de guardar en la sección de acciones
-function agregarBotonGuardar() {
-    const leftActions = document.querySelector('.left-actions');
-    const botonGuardar = document.createElement('button');
-    botonGuardar.type = 'button';
-    botonGuardar.className = 'btn';
-    botonGuardar.innerHTML = '💾 Guardar';
-    botonGuardar.onclick = guardarDatos;
-    leftActions.appendChild(botonGuardar);
-}
-
-// Ejecutar cuando se cargue la página
+// Establecer fecha actual por defecto
 document.addEventListener('DOMContentLoaded', function() {
-    agregarBotonGuardar();
-    
-    // Establecer fecha actual por defecto
     const fechaInput = document.getElementById('fecha');
     if (fechaInput && !fechaInput.value) {
         const today = new Date().toISOString().split('T')[0];
@@ -421,6 +418,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+
 <script>
   function mostrarPaso(n){
     const steps=document.querySelectorAll('.step');
@@ -451,10 +449,8 @@ document.addEventListener('DOMContentLoaded', function() {
     alert('📁 Se generará el archivo: '+nombre+' (simulado).');
   }
   function verListado() {
-  // Redirige al método listarBPA1 del controlador
-  window.location.href = "/sistema-produccion/public/Inventario/listarBPA1";
-}
-
+    window.location.href = "/sistema-produccion/public/Inventario/listarBPA1";
+  }
   function volverAtras(){ window.history.back(); }
 </script>
 </body>

@@ -35,11 +35,11 @@ $fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
   input[type="date"]{
     padding:8px 10px;border-radius:8px;border:1px solid #ccc;font-size:1rem;
   }
-  button{
+  button, .btn{
     background:#ff7b00;color:#fff;border:none;padding:10px 16px;border-radius:8px;
-    cursor:pointer;font-weight:600;transition:all .2s;
+    cursor:pointer;font-weight:600;transition:all .2s;text-decoration:none;display:inline-block;
   }
-  button:hover{background:#e66e00;transform:translateY(-2px);}
+  button:hover, .btn:hover{background:#e66e00;transform:translateY(-2px);}
   table{width:100%;border-collapse:collapse;margin-top:20px;}
   th,td{border:1px solid #e6e6e6;padding:8px;text-align:center;font-size:0.95rem;}
   th{background:#ff7b00;color:#fff;}
@@ -56,10 +56,16 @@ $fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
   <h1>📅 Listado Diario — Control de Sal en Almacén</h1>
 
   <!-- Buscador por fecha -->
-  <form method="GET" class="search-bar">
+  <form method="GET" class="search-bar" action="/sistema-produccion/public/index.php">
+    <input type="hidden" name="controller" value="Inventario">
+    <input type="hidden" name="action" value="listarBPA2">
+
     <label for="fecha"><strong>Seleccionar fecha:</strong></label>
     <input type="date" id="fecha" name="fecha" value="<?php echo htmlspecialchars($fechaBusqueda); ?>" required>
     <button type="submit">🔍 Buscar</button>
+
+    <!-- ✅ Botón "Ver todo" que muestra todos los registros -->
+    <a href="/sistema-produccion/public/index.php?controller=Inventario&action=listarBPA2&ver_todo=1" class="btn">📋 Ver todo</a>
   </form>
 
   <!-- Tabla de registros -->
@@ -90,7 +96,8 @@ $fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
     </tbody>
   </table>
 
-  <a href="javascript:history.back()" class="back-btn">⬅️ Volver Atrás</a>
+  <!-- ✅ Este botón ahora lleva correctamente al formulario principal -->
+  <a href="/sistema-produccion/public/index.php?controller=Inventario&action=bpa2" class="back-btn">⬅️ Volver Atrás</a>
 
   <footer>CORAQUA © 2025 — Listado Diario de Control de Sal</footer>
 </div>

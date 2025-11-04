@@ -32,85 +32,88 @@ class InventarioController {
 
         return $datos;
     }
-    public function guardarBPA1() {
+    public function guardarBPA1()
+{
     require_once "../config/database.php";
-    
+    session_start(); // Para acceder al usuario logueado
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $fecha = $_POST['fecha'] ?? '';
         $sede = $_POST['sede'] ?? '';
         $encargado = $_POST['encargado'] ?? '';
         $mes = $_POST['mes'] ?? '';
-        
-        // Obtener los arrays de datos de la tabla
+        $id_usuario = $_SESSION['id_usuario'] ?? null; // ID del usuario logueado
+
         $marcas = $_POST['marca'] ?? [];
         $calibres = $_POST['calibre'] ?? [];
         $cantidades = $_POST['cantidad'] ?? [];
         $nombres = $_POST['nombre_alimento'] ?? [];
         $observaciones = $_POST['observaciones'] ?? [];
-        
-        // Crear conexión PDO
+
         $database = new Database();
         $conn = $database->getConnection();
-        $successCount = 0;
-        
-        // Insertar cada fila de la tabla
+
+        $sql = "INSERT INTO control_alimento_almacen 
+                (fecha, sede, encargado, mes, marca, calibre, cantidad, nombre_alimento, observaciones, id_usuario)
+                VALUES (:fecha, :sede, :encargado, :mes, :marca, :calibre, :cantidad, :nombre_alimento, :observaciones, :id_usuario)";
+        $stmt = $conn->prepare($sql);
+
         for ($i = 0; $i < count($marcas); $i++) {
-            $marca = $marcas[$i] ?? '';
-            $calibre = $calibres[$i] ?? '';
-            $cantidad = $cantidades[$i] ?? 0;
-            $nombre_alimento = $nombres[$i] ?? '';
-            $obs = $observaciones[$i] ?? '';
-            
-            if (!empty($marca) && !empty($cantidad)) {
-                $sql = "INSERT INTO control_alimento_almacen 
-                        (fecha, sede, encargado, mes, marca, calibre, cantidad, nombre_alimento, observaciones) 
-                        VALUES (:fecha, :sede, :encargado, :mes, :marca, :calibre, :cantidad, :nombre_alimento, :observaciones)";
-                
-                $stmt = $conn->prepare($sql);
-                $stmt->bindParam(":fecha", $fecha);
-                $stmt->bindParam(":sede", $sede);
-                $stmt->bindParam(":encargado", $encargado);
-                $stmt->bindParam(":mes", $mes);
-                $stmt->bindParam(":marca", $marca);
-                $stmt->bindParam(":calibre", $calibre);
-                $stmt->bindParam(":cantidad", $cantidad);
-                $stmt->bindParam(":nombre_alimento", $nombre_alimento);
-                $stmt->bindParam(":observaciones", $obs);
-                
-                if ($stmt->execute()) {
-                    $successCount++;
-                }
+            $marca = trim($marcas[$i] ?? '');
+            $calibre = trim($calibres[$i] ?? '');
+            $cantidad = (float) ($cantidades[$i] ?? 0);
+            $nombre_alimento = trim($nombres[$i] ?? '');
+            $obs = trim($observaciones[$i] ?? '');
+
+            if ($marca !== '' && $cantidad > 0) {
+                $stmt->execute([
+                    ':fecha' => $fecha,
+                    ':sede' => $sede,
+                    ':encargado' => $encargado,
+                    ':mes' => $mes,
+                    ':marca' => $marca,
+                    ':calibre' => $calibre,
+                    ':cantidad' => $cantidad,
+                    ':nombre_alimento' => $nombre_alimento,
+                    ':observaciones' => $obs,
+                    ':id_usuario' => $id_usuario
+                ]);
             }
         }
-        
-        // Redirigir después de guardar
-        if ($successCount > 0) {
-            header("Location: /sistema-produccion/public/Inventario/bpa1?success=" . $successCount);
-        } else {
-            header("Location: /sistema-produccion/public/Inventario/bpa1?error=1");
-        }
+
+        header("Location: /sistema-produccion/public/Inventario/bpa1?success=1");
         exit;
     }
 }
+
 public function listarBPA1() {
     require_once "../config/database.php";
     $fecha = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
-    
+
     $database = new Database();
     $conn = $database->getConnection();
-    $model = new InventarioModel($conn);
-    $stmt = $model->obtenerListadoBPA1PorFecha($fecha);
-    
-    $datos = [];
-    if ($stmt) {
-        $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+    $sql = "SELECT 
+            id,
+            fecha,
+            marca,
+            calibre,
+            cantidad,
+            nombre_alimento AS nombre,
+            observaciones AS obs
+        FROM control_alimento_almacen
+        WHERE estado = 'pendiente'
+        ORDER BY fecha DESC";
 
-    // Pasar la fecha de búsqueda a la vista
+
+
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
     $fechaBusqueda = $fecha;
-    
     include "../views/jefeplanta/modulos-jefeplanta/inventario/lista1.php";
 }
+
 // Agregar estos métodos en la clase InventarioController
 
 public function bpa2() {
@@ -124,7 +127,6 @@ public function bpa2() {
     
     include "../views/jefeplanta/modulos-jefeplanta/inventario/bpa2.php";
 }
-
 public function guardarBPA2() {
     require_once "../config/database.php";
     
@@ -133,6 +135,7 @@ public function guardarBPA2() {
         $sede = $_POST['sede'] ?? '';
         $encargado = $_POST['encargado'] ?? '';
         $mes = $_POST['mes'] ?? '';
+        $id_usuario = $_SESSION['id_usuario'] ?? null;  // Agregado: Capturar ID del usuario logueado
         
         // Obtener los arrays de datos de la tabla
         $cantidades = $_POST['cantidad'] ?? [];
@@ -152,7 +155,8 @@ public function guardarBPA2() {
             $obs = $observaciones[$i] ?? '';
             
             if (!empty($cantidad) && !empty($nombre_sal)) {
-                if ($model->guardarBPA2($fecha, $sede, $encargado, $mes, $cantidad, $nombre_sal, $obs)) {
+                // Pasar id_usuario al modelo (actualiza InventarioModel::guardarBPA2 si es necesario)
+                if ($model->guardarBPA2($fecha, $sede, $encargado, $mes, $cantidad, $nombre_sal, $obs, $id_usuario)) {
                     $successCount++;
                 }
             }
@@ -167,26 +171,26 @@ public function guardarBPA2() {
         exit;
     }
 }
-
 public function listarBPA2() {
-    require_once "../config/database.php";
-    $fecha = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
-    
     $database = new Database();
     $conn = $database->getConnection();
     $model = new InventarioModel($conn);
-    $stmt = $model->obtenerListadoBPA2PorFecha($fecha);
-    
+
+    $fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
     $datos = [];
-    if ($stmt) {
-        $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if (isset($_GET['ver_todo'])) {
+        $stmt = $model->obtenerTodosBPA2();
+    } else {
+        $stmt = $model->obtenerListadoBPA2PorFecha($fechaBusqueda);
     }
 
-    // Pasar la fecha de búsqueda a la vista
-    $fechaBusqueda = $fecha;
-    
+    if ($stmt) $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
     include "../views/jefeplanta/modulos-jefeplanta/inventario/lista2.php";
 }
+
+
 
     public function obtenerDatosBPA2() {
         global $conexion;
@@ -219,78 +223,66 @@ public function bpa3() {
     
     include "../views/jefeplanta/modulos-jefeplanta/inventario/bpa3.php";
 }
+// ==============================
+// 🧾 GUARDAR BPA-3 (CONTROL DE MEDICAMENTOS)
+// ==============================
 
+
+
+public function listarBPA3() {
+    $database = new Database();
+    $conn = $database->getConnection();
+    $model = new InventarioModel($conn);
+
+    $fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
+    $datos = [];
+
+    if (isset($_GET['ver_todo'])) {
+        $stmt = $model->obtenerTodosBPA3();
+    } else {
+        $stmt = $model->obtenerListadoBPA3PorFecha($fechaBusqueda);
+    }
+
+    if ($stmt) $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    include "../views/jefeplanta/modulos-jefeplanta/inventario/lista3.php";
+}
 public function guardarBPA3() {
     require_once "../config/database.php";
-    
+    require_once __DIR__ . '/../models/InventarioModel.php';
+
+    $database = new Database();
+    $conn = $database->getConnection();
+    $model = new InventarioModel($conn); // ✅ Se pasa la conexión correctamente
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $fecha = $_POST['fecha'] ?? '';
         $sede = $_POST['sede'] ?? '';
         $encargado = $_POST['encargado'] ?? '';
         $mes = $_POST['mes'] ?? '';
-        
-        // Obtener los arrays de datos de la tabla
-        $medicamentos = $_POST['medicamento_suplemento'] ?? [];
         $cantidades = $_POST['cantidad'] ?? [];
-        $nombres_empleado = $_POST['nombre_empleado'] ?? [];
+        $medicamentos = $_POST['medicamento'] ?? [];
         $observaciones = $_POST['observaciones'] ?? [];
-        
-        // Crear conexión PDO
-        $database = new Database();
-        $conn = $database->getConnection();
-        $model = new InventarioModel($conn);
-        $successCount = 0;
-        
-        // Insertar cada fila de la tabla
-        for ($i = 0; $i < count($medicamentos); $i++) {
-            $medicamento_suplemento = $medicamentos[$i] ?? '';
-            $cantidad = $cantidades[$i] ?? 0;
-            $nombre_empleado = $nombres_empleado[$i] ?? '';
-            $obs = $observaciones[$i] ?? '';
-            
-            if (!empty($medicamento_suplemento) && !empty($cantidad)) {
-                if ($model->guardarBPA3($fecha, $sede, $encargado, $mes, $medicamento_suplemento, $cantidad, $nombre_empleado, $obs)) {
-                    $successCount++;
-                }
-            }
-        }
-        
-        // Redirigir después de guardar
-        if ($successCount > 0) {
-            header("Location: /sistema-produccion/public/Inventario/bpa3?success=" . $successCount);
+
+        $guardado = $model->guardarBPA3($fecha, $sede, $encargado, $mes, $cantidades, $medicamentos, $observaciones);
+
+        if ($guardado) {
+            header("Location: /sistema-produccion/public/Inventario/bpa3?success=1");
+            exit;
         } else {
             header("Location: /sistema-produccion/public/Inventario/bpa3?error=1");
+            exit;
         }
-        exit;
     }
 }
 
-public function listarBPA3() {
-    require_once "../config/database.php";
-    $fecha = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
-    
-    $database = new Database();
-    $conn = $database->getConnection();
-    $model = new InventarioModel($conn);
-    $stmt = $model->obtenerListadoBPA3PorFecha($fecha);
-    
-    $datos = [];
-    if ($stmt) {
-        $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+public function obtenerDatosBPA3() {
+    global $conexion;
 
-    // Pasar la fecha de búsqueda a la vista
-    $fechaBusqueda = $fecha;
-    
-    include "../views/jefeplanta/modulos-jefeplanta/inventario/lista3.php";
-}
+    $sql = "SELECT fecha, sede, encargado, mes, medicamento_suplemento, cantidad, nombre_empleado, observaciones 
+            FROM control_medicamento 
+            ORDER BY id DESC";
 
-    public function obtenerDatosBPA3() {
-        global $conexion;
-
-        $sql = "SELECT fecha, medicamento, cantidad, nombre, observaciones 
-                FROM control_medicamento 
-                ORDER BY id DESC";
         $result = $conexion->query($sql);
 
         $datos = [];

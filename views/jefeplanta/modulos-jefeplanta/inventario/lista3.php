@@ -63,34 +63,33 @@ $fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
   </form>
 
   <!-- Tabla de registros -->
-  <table>
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>FECHA</th>
-        <th>MEDICAMENTO</th>
-        <th>CANTIDAD</th>
-        <th>NOMBRE</th>
-        <th>OBS</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php if (!empty($datos)): ?>
-        <?php $i=1; foreach ($datos as $row): ?>
-          <tr>
-            <td><?php echo $i++; ?></td>
-            <td><?php echo htmlspecialchars($row['fecha']); ?></td>
-            <td><?php echo htmlspecialchars($row['medicamento_suplemento']); ?></td>
-            <td><?php echo htmlspecialchars($row['cantidad']); ?></td>
-            <td><?php echo htmlspecialchars($row['nombre']); ?></td>
-            <td><?php echo htmlspecialchars($row['obs']); ?></td>
-          </tr>
-        <?php endforeach; ?>
-      <?php else: ?>
-        <tr><td colspan="6">❌ No hay registros para esta fecha.</td></tr>
-      <?php endif; ?>
-    </tbody>
-  </table>
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>FECHA</th>
+      <th>CANTIDAD</th>
+      <th>MEDICAMENTO</th>
+      <th>OBS</th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php if (!empty($datos)): ?>
+      <?php $i = 1; foreach ($datos as $row): ?>
+        <tr>
+          <td><?php echo $i++; ?></td>
+          <td><?php echo htmlspecialchars(date('d/m/Y', strtotime($row['fecha']))); ?></td>
+          <td><?php echo htmlspecialchars($row['cantidad']); ?></td>
+          <td><?php echo htmlspecialchars($row['medicamento_suplemento']); ?></td>
+          <td><?php echo htmlspecialchars($row['observaciones']); ?></td>
+        </tr>
+      <?php endforeach; ?>
+    <?php else: ?>
+      <tr><td colspan="5">❌ No hay registros para esta fecha.</td></tr>
+    <?php endif; ?>
+  </tbody>
+</table>
+
 
   <a href="javascript:history.back()" class="back-btn">⬅️ Volver Atrás</a>
 

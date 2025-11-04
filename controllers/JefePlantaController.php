@@ -1,6 +1,11 @@
 <?php
+
 require_once __DIR__ . '/../models/JefePlantaModel.php';
+require_once __DIR__ . '/../models/InventarioModel.php';
+require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/BaseController.php';
+
+
 
 class JefePlantaController extends BaseController {
     private $model;
@@ -11,17 +16,34 @@ class JefePlantaController extends BaseController {
 
     // ✅ Dashboard
     public function dashboard() {
-        $this->checkAuth();
-        $usuario = $_SESSION['usuario'];
-        $produccion = $this->model->getResumenProduccion();
-        $insumos = $this->model->getEstadoInsumos();
+        if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-        $this->view('jefeplanta/dashboard', [
-            'usuario' => $usuario,
-            'produccion' => $produccion,
-            'insumos' => $insumos
-        ]);
-    }
+
+    $usuario = $_SESSION['usuario'] ?? ['nombre' => 'Invitado'];
+
+    // Crear conexión
+    $database = new Database();
+    $conn = $database->getConnection();
+
+    // Instanciar el modelo de inventario
+    $inventarioModel = new InventarioModel($conn);
+
+    // Obtener resumen del inventario
+    $inventarioResumen = $inventarioModel->obtenerResumenInventario();
+
+    // Asignar datos al dashboard
+    $produccion = [
+        'ovas' => 3200,  // Ejemplo temporal
+        'peces' => 14500,
+        'insumos' => $inventarioResumen['total_cantidad'] ?? 0
+    ];
+    
+
+    include "../views/jefeplanta/dashboard.php";
+}
+
 
     // ✅ Módulo Inventario (Vista con los BPAs)
     public function moduloInventario() {
