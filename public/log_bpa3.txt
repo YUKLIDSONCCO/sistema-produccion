@@ -1,0 +1,110 @@
+Array
+(
+    [encargado] => 4
+    [lote] => 4
+    [sede] => 4
+    [cantidad_siembra] => 74
+    [id_lote] => 1
+    [id_sede] => 1
+    [id_especie] => 1
+    [responsable_area] => Responsable Area
+    [jefe_planta] => Jefe Planta
+    [jefe_produccion] => Jefe Produccion
+    [codigo_formato] => CORAQUA-BPA3
+    [version] => 2.0
+    [observacion] => Array
+        (
+            [0] => f
+        )
+
+    [fecha_control] => Array
+        (
+            [0] => 2025-11-05
+        )
+
+    [bateria] => Array
+        (
+            [0] => f
+        )
+
+    [batea] => Array
+        (
+            [0] => f
+        )
+
+    [c1_lm] => Array
+        (
+            [0] => 440
+        )
+
+    [c1_ld] => Array
+        (
+            [0] => 0
+        )
+
+    [c2_lm] => Array
+        (
+            [0] => 1
+        )
+
+    [c2_ld] => Array
+        (
+            [0] => 1
+        )
+
+    [c3_lm] => Array
+        (
+            [0] => 1
+        )
+
+    [c3_ld] => Array
+        (
+            [0] => 1
+        )
+
+    [c4_lm] => Array
+        (
+            [0] => 1
+        )
+
+    [c4_ld] => Array
+        (
+            [0] => 40
+        )
+
+    [c5_lm] => Array
+        (
+            [0] => 40
+        )
+
+    [c5_ld] => Array
+        (
+            [0] => 40
+        )
+
+    [c6_lm] => Array
+        (
+            [0] => 40
+        )
+
+    [c6_ld] => Array
+        (
+            [0] => 40
+        )
+
+    [c7_lm] => Array
+        (
+            [0] => 40
+        )
+
+    [c7_ld] => Array
+        (
+            [0] => 440
+        )
+
+    [total] => Array
+        (
+            [0] => 1125
+        )
+
+)

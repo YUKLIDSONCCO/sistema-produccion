@@ -58,9 +58,9 @@ class OvasController {
         'volumen_ovulos_fertilizados' => $_POST['sec_volumen_valor'][0] ?? 0,
         'cantidad_ovas_fertiles' => $_POST['sec_ovas_valor'][0] ?? 0,
         'observaciones' => $_POST['observaciones'] ?? '',
-        'id_lote' => !empty($_POST['id_lote']) ? $_POST['id_lote'] : null,
-        'id_especie' => !empty($_POST['id_especie']) ? $_POST['id_especie'] : null,
-        'id_sede' => !empty($_POST['id_sede']) ? $_POST['id_sede'] : null
+        'id_lote' => (!empty($_POST['id_lote']) && is_numeric($_POST['id_lote'])) ? $_POST['id_lote'] : null,
+        'id_sede' => (!empty($_POST['id_sede']) && is_numeric($_POST['id_sede'])) ? $_POST['id_sede'] : null,
+        'id_especie' => (!empty($_POST['id_especie']) && is_numeric($_POST['id_especie'])) ? $_POST['id_especie'] : null,
     ];
 
     $result = $this->model->guardarSeleccionFertilizacion($data);
@@ -142,7 +142,7 @@ class OvasController {
             'id_lote' => $_POST['id_lote'] ?? 0,
             'id_sede' => $_POST['id_sede'] ?? 0,
             'id_especie' => $_POST['id_especie'] ?? 0,
-            'fecha_control' => $_POST['fecha_control'] ?? date('Y-m-d'),
+            'fecha_registro' => $_POST['fecha_control'] ?? date('Y-m-d'),
             'bateria' => $_POST['bateria'] ?? '',
             'batea' => $_POST['batea'] ?? '',
             'c1' => $_POST['c1'] ?? 0,
@@ -203,106 +203,164 @@ class OvasController {
     // =========================================
 // BPA3 - PROCESAR FORMULARIO (VARIAS FILAS)
 // =========================================
-public function procesarBPA3() {
-    // DEPURACIÓN EXTENDIDA
-    error_log("=== INICIO PROCESARBPA3 ===");
-    error_log("Método: " . $_SERVER['REQUEST_METHOD']);
-    error_log("Todos los POST: " . print_r($_POST, true));
-    error_log("Headers: " . print_r(getallheaders(), true));
-
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        echo json_encode(['success' => false, 'error' => 'Método no permitido']);
-        exit;
-    }
-
+public function procesarBPA3()
+{
     try {
-        $registrosGuardados = 0;
-
-        // VERIFICAR SI EXISTEN LOS ARRAYS
-        error_log("¿Existe fecha_control? " . (isset($_POST['fecha_control']) ? 'SÍ' : 'NO'));
-        if (isset($_POST['fecha_control'])) {
-            error_log("fecha_control es array? " . (is_array($_POST['fecha_control']) ? 'SÍ' : 'NO'));
-            error_log("Contenido de fecha_control: " . print_r($_POST['fecha_control'], true));
-            error_log("Número de elementos en fecha_control: " . count($_POST['fecha_control']));
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false, 'error' => 'Método no permitido']);
+            return;
         }
 
-        if (isset($_POST['fecha_control']) && is_array($_POST['fecha_control'])) {
-            $filas = count($_POST['fecha_control']);
-            error_log("Procesando $filas filas");
+        // 🔹 Log para depuración
 
-            for ($i = 0; $i < $filas; $i++) {
-                $data = [
-                    'codigo_formato' => 'CORAQUA-BPA3',
-                    'version' => '2.0',
-                    'fecha_registro' => date('Y-m-d'),
-                    'encargado' => $_POST['encargado'] ?? '',
-                    'cantidad_siembra' => $_POST['cantidad_siembra'] ?? 0,
-                    'lote' => $_POST['lote'] ?? '',
-                    'sede' => $_POST['sede'] ?? '',
-                    'id_lote' => $_POST['id_lote'] ?? 0,
-                    'id_sede' => $_POST['id_sede'] ?? 0,
-                    'id_especie' => $_POST['id_especie'] ?? 0,
-                    'fecha_control' => $_POST['fecha_control'][$i] ?? date('Y-m-d'),
-                    'c1_lm' => $_POST['c1_lm'][$i] ?? 0,
-                    'c1_ld' => $_POST['c1_ld'][$i] ?? 0,
-                    'c2_lm' => $_POST['c2_lm'][$i] ?? 0,
-                    'c2_ld' => $_POST['c2_ld'][$i] ?? 0,
-                    'c3_lm' => $_POST['c3_lm'][$i] ?? 0,
-                    'c3_ld' => $_POST['c3_ld'][$i] ?? 0,
-                    'c4_lm' => $_POST['c4_lm'][$i] ?? 0,
-                    'c4_ld' => $_POST['c4_ld'][$i] ?? 0,
-                    'c5_lm' => $_POST['c5_lm'][$i] ?? 0,
-                    'c5_ld' => $_POST['c5_ld'][$i] ?? 0,
-                    'c6_lm' => $_POST['c6_lm'][$i] ?? 0,
-                    'c6_ld' => $_POST['c6_ld'][$i] ?? 0,
-                    'c7_lm' => $_POST['c7_lm'][$i] ?? 0,
-                    'c7_ld' => $_POST['c7_ld'][$i] ?? 0,
-                    'total' => $_POST['total'][$i] ?? 0,
-                    'observacion' => $_POST['observacion'][$i] ?? '',
-                    'responsable_area' => $_POST['responsable_area'] ?? '',
-                    'jefe_planta' => $_POST['jefe_planta'] ?? '',
-                    'jefe_produccion' => $_POST['jefe_produccion'] ?? '',
-                    'creado_en' => date('Y-m-d H:i:s')
-                ];
+        // Conexión PDO
+        $pdo = new PDO("mysql:host=localhost;dbname=coraqua_produccion;charset=utf8", "root", "");
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $pdo->beginTransaction();
 
-                error_log("Datos para fila $i: " . print_r($data, true));
-                
-                // VERIFICAR SI HAY DATOS VÁLIDOS EN LA FILA
-                $filaVacia = true;
-                foreach ($data as $key => $value) {
-                    if (!in_array($key, ['codigo_formato', 'version', 'fecha_registro', 'creado_en']) && !empty($value)) {
-                        $filaVacia = false;
-                        break;
-                    }
-                }
+        // =============================
+        // 1️⃣ DATOS GENERALES
+        // =============================
+        $encargado          = $_POST['encargado'] ?? null;
+        $id_sede            = $_POST['id_sede'] ?? null;
+        $id_especie         = $_POST['id_especie'] ?? null;
+        $cantidad_siembra   = $_POST['cantidad_siembra'] ?? null;
+        $responsable_area   = $_POST['responsable_area'] ?? null;
+        $jefe_planta        = $_POST['jefe_planta'] ?? null;
+        $jefe_produccion    = $_POST['jefe_produccion'] ?? null;
+        $codigo_formato     = $_POST['codigo_formato'] ?? null;
+        $version            = $_POST['version'] ?? null;
+        $observacion_general= $_POST['observacion_general'] ?? null;
 
-                if (!$filaVacia) {
-                    if ($this->model->guardarBPA3($data)) {
-                        $registrosGuardados++;
-                        error_log("✅ Fila $i guardada correctamente");
-                    } else {
-                        error_log("❌ ERROR al guardar fila $i");
-                    }
-                } else {
-                    error_log("⏭️ Fila $i vacía, omitiendo");
-                }
+        // =============================
+        // 2️⃣ VALIDAR RELACIONES (pasar NULL si no existen)
+        // =============================
+
+        // 🔹 Validar lote
+        $idLote = !empty($_POST['id_lote']) ? $_POST['id_lote'] : null;
+        if ($idLote !== null) {
+            $stmtCheckLote = $pdo->prepare("SELECT COUNT(*) FROM lotes WHERE id_lote = ?");
+            $stmtCheckLote->execute([$idLote]);
+            if ($stmtCheckLote->fetchColumn() == 0) {
+                error_log("⚠️ Lote no válido ($idLote), se pasará como NULL");
+                $idLote = null;
             }
-
-            error_log("=== RESULTADO FINAL: $registrosGuardados registros guardados ===");
-            echo json_encode(['success' => true, 'message' => "Se guardaron {$registrosGuardados} registros correctamente."]);
-            exit;
-        } else {
-            error_log("❌ No se encontró fecha_control o no es array");
-            echo json_encode(['success' => false, 'error' => 'No se enviaron datos válidos en formato de array.']);
-            exit;
         }
 
+        // 🔹 Validar sede
+        if (!empty($id_sede)) {
+            $stmtCheckSede = $pdo->prepare("SELECT COUNT(*) FROM sedes WHERE id_sede = ?");
+            $stmtCheckSede->execute([$id_sede]);
+            if ($stmtCheckSede->fetchColumn() == 0) {
+                error_log("⚠️ Sede no válida ($id_sede), se pasará como NULL");
+                $id_sede = null;
+            }
+        } else {
+            $id_sede = null;
+        }
+
+        // 🔹 Validar especie
+        if (!empty($id_especie)) {
+            $stmtCheckEspecie = $pdo->prepare("SELECT COUNT(*) FROM especies WHERE id_especie = ?");
+            $stmtCheckEspecie->execute([$id_especie]);
+            if ($stmtCheckEspecie->fetchColumn() == 0) {
+                error_log("⚠️ Especie no válida ($id_especie), se pasará como NULL");
+                $id_especie = null;
+            }
+        } else {
+            $id_especie = null;
+        }
+
+        // =============================
+        // 3️⃣ ARRAYS DE REGISTROS
+        // =============================
+        $fecha_control = $_POST['fecha_control'] ?? [];
+        $bateria       = $_POST['bateria'] ?? [];
+        $batea         = $_POST['batea'] ?? [];
+        $c1_lm         = $_POST['c1_lm'] ?? [];
+        $c1_ld         = $_POST['c1_ld'] ?? [];
+        $c2_lm         = $_POST['c2_lm'] ?? [];
+        $c2_ld         = $_POST['c2_ld'] ?? [];
+        $c3_lm         = $_POST['c3_lm'] ?? [];
+        $c3_ld         = $_POST['c3_ld'] ?? [];
+        $c4_lm         = $_POST['c4_lm'] ?? [];
+        $c4_ld         = $_POST['c4_ld'] ?? [];
+        $c5_lm         = $_POST['c5_lm'] ?? [];
+        $c5_ld         = $_POST['c5_ld'] ?? [];
+        $c6_lm         = $_POST['c6_lm'] ?? [];
+        $c6_ld         = $_POST['c6_ld'] ?? [];
+        $c7_lm         = $_POST['c7_lm'] ?? [];
+        $c7_ld         = $_POST['c7_ld'] ?? [];
+        $total         = $_POST['total'] ?? [];
+        $observacion   = $_POST['observacion'] ?? [];
+
+        // =============================
+        // 4️⃣ PREPARAR INSERT
+        // =============================
+        $stmt = $pdo->prepare("
+            INSERT INTO mortalidad_diaria_larvas (
+                id_lote, id_sede, id_especie, fecha_control,
+                bateria, batea, c1_lm, c1_ld, c2_lm, c2_ld,
+                c3_lm, c3_ld, c4_lm, c4_ld, c5_lm, c5_ld,
+                c6_lm, c6_ld, c7_lm, c7_ld, total, observacion
+            ) VALUES (
+                :id_lote, :id_sede, :id_especie, :fecha_control,
+                :bateria, :batea, :c1_lm, :c1_ld, :c2_lm, :c2_ld,
+                :c3_lm, :c3_ld, :c4_lm, :c4_ld, :c5_lm, :c5_ld,
+                :c6_lm, :c6_ld, :c7_lm, :c7_ld, :total, :observacion
+            )
+        ");
+
+        // =============================
+        // 5️⃣ GUARDAR FILAS
+        // =============================
+        $totalInsertados = 0;
+
+        for ($i = 0; $i < count($fecha_control); $i++) {
+            $stmt->execute([
+                ':id_lote' => $idLote,
+                ':id_sede' => $id_sede,
+                ':id_especie' => $id_especie,
+                ':fecha_control' => $fecha_control[$i] ?? null,
+                ':bateria' => $bateria[$i] ?? null,
+                ':batea' => $batea[$i] ?? null,
+                ':c1_lm' => $c1_lm[$i] ?? 0,
+                ':c1_ld' => $c1_ld[$i] ?? 0,
+                ':c2_lm' => $c2_lm[$i] ?? 0,
+                ':c2_ld' => $c2_ld[$i] ?? 0,
+                ':c3_lm' => $c3_lm[$i] ?? 0,
+                ':c3_ld' => $c3_ld[$i] ?? 0,
+                ':c4_lm' => $c4_lm[$i] ?? 0,
+                ':c4_ld' => $c4_ld[$i] ?? 0,
+                ':c5_lm' => $c5_lm[$i] ?? 0,
+                ':c5_ld' => $c5_ld[$i] ?? 0,
+                ':c6_lm' => $c6_lm[$i] ?? 0,
+                ':c6_ld' => $c6_ld[$i] ?? 0,
+                ':c7_lm' => $c7_lm[$i] ?? 0,
+                ':c7_ld' => $c7_ld[$i] ?? 0,
+                ':total' => $total[$i] ?? 0,
+                ':observacion' => $observacion[$i] ?? null
+            ]);
+            $totalInsertados++;
+        }
+
+        $pdo->commit();
+
+        echo json_encode([
+            'success' => true,
+            'message' => "Se guardaron $totalInsertados registros correctamente."
+        ]);
     } catch (Exception $e) {
-        error_log("💥 EXCEPCIÓN en procesarBPA3: " . $e->getMessage());
-        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
-        exit;
+        if ($pdo->inTransaction()) $pdo->rollBack();
+        error_log("Error al guardar BPA3: " . $e->getMessage());
+        echo json_encode([
+            'success' => false,
+            'error' => 'Error al guardar los datos: ' . $e->getMessage()
+        ]);
     }
 }
+
+
 public function listarBPA3() {
     $fecha = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
     $registros = $this->model->obtenerListadoBPA3PorFecha($fecha);

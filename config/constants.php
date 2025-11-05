@@ -1,7 +1,7 @@
 <?php
 // Cambia localhost por tu IP local
-define('BASE_URL', 'http://192.168.18.32/sistema-produccion/public/');
-//define('BASE_URL', 'http://localhost/sistema-produccion/public/');
+//define('BASE_URL', 'http://172.40.15.34/sistema-produccion/public/');
+define('BASE_URL', 'http://localhost/sistema-produccion/public/');
 
 
 // Nombre de la aplicación
