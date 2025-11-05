@@ -14,6 +14,10 @@ class Database {
                 $this->username,
                 $this->password
             );
+
+            // ✅ Mostrar errores reales
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
             $this->conn->exec("set names utf8");
         } catch(PDOException $exception) {
             echo "Error de conexión: " . $exception->getMessage();
@@ -21,4 +25,3 @@ class Database {
         return $this->conn;
     }
 }
-?>

@@ -1,50 +1,35 @@
 <?php
-
 require_once __DIR__ . '/../models/JefePlantaModel.php';
 require_once __DIR__ . '/../models/InventarioModel.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/BaseController.php';
-
-
-
 class JefePlantaController extends BaseController {
     private $model;
 
     public function __construct() {
         $this->model = new JefePlantaModel();
     }
-
     // ✅ Dashboard
     public function dashboard() {
         if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-
-
     $usuario = $_SESSION['usuario'] ?? ['nombre' => 'Invitado'];
-
     // Crear conexión
     $database = new Database();
     $conn = $database->getConnection();
-
     // Instanciar el modelo de inventario
     $inventarioModel = new InventarioModel($conn);
-
     // Obtener resumen del inventario
     $inventarioResumen = $inventarioModel->obtenerResumenInventario();
-
     // Asignar datos al dashboard
     $produccion = [
         'ovas' => 3200,  // Ejemplo temporal
         'peces' => 14500,
         'insumos' => $inventarioResumen['total_cantidad'] ?? 0
     ];
-    
-
     include "../views/jefeplanta/dashboard.php";
 }
-
-
     // ✅ Módulo Inventario (Vista con los BPAs)
     public function moduloInventario() {
         $this->checkAuth();
@@ -55,7 +40,6 @@ class JefePlantaController extends BaseController {
             'usuario' => $usuario
         ]);
     }
-
         // ✅ Módulo Ovas (Vista con los BPAs)
     public function moduloOvas() {
         $this->checkAuth();
@@ -65,7 +49,6 @@ class JefePlantaController extends BaseController {
             'usuario' => $usuario
         ]);
     }
-
     // ✅ Módulo Peces (Vista con los BPAs)
     public function moduloPeces() {
         $this->checkAuth();
@@ -75,14 +58,12 @@ class JefePlantaController extends BaseController {
             'usuario' => $usuario
         ]);
     }
-
     // ✅ Listar reportes
     public function reportes() {
         $this->checkAuth();
         $reportes = $this->model->getReportes();
         $this->view('jefeplanta/reportes', ['reportes' => $reportes]);
     }
-
     // ✅ Crear nuevo reporte
     public function crearReporte() {
         $this->checkAuth();
@@ -97,7 +78,6 @@ class JefePlantaController extends BaseController {
             $this->view('jefeplanta/crear_reporte');
         }
     }
-
     // ✅ Editar reporte
     public function editarReporte() {
         $this->checkAuth();
@@ -116,7 +96,6 @@ class JefePlantaController extends BaseController {
             $this->view('jefeplanta/editar_reporte', ['reporte' => $reporte]);
         }
     }
-
     // ✅ Eliminar reporte
     public function eliminarReporte() {
         $this->checkAuth();
@@ -124,13 +103,11 @@ class JefePlantaController extends BaseController {
         if ($id) $this->model->deleteReporte($id);
         $this->redirect("index.php?controller=JefePlanta&action=reportes");
     }
-
     // ✅ Seguridad (validar sesión)
     private function checkAuth() {
         if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'JefePlanta') {
             $this->redirect("index.php?controller=Auth&action=login");
         }
     }
-
 }
 ?>

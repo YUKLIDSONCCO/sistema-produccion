@@ -3,9 +3,7 @@ require_once "BaseModel.php";
 
 class SupervisorModel extends BaseModel {
 
-    // ==============================
-    // 1️⃣ Resumen general de producción
-    // ==============================
+
     public function getResumenProduccion() {
         $sql = "SELECT COUNT(*) AS total_lotes, SUM(cantidad) AS total_producido 
                 FROM produccion 
@@ -14,9 +12,7 @@ class SupervisorModel extends BaseModel {
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: ["total_lotes" => 0, "total_producido" => 0];
     }
 
-    // ==============================
-    // 2️⃣ Insumos activos
-    // ==============================
+
     public function getInsumosAsignados() {
         $sql = "SELECT nombre, stock, unidad_medida 
                 FROM insumos 
@@ -325,9 +321,6 @@ public function getNuevosReportesBPA2($ultimoId) {
     }
 }
 
-// ==============================
-// 📊 Obtener todos los reportes BPA-3 (Control de Medicamentos)
-// ==============================
 public function getTodosReportesBPA3() {
     try {
         $sql = "SELECT 
@@ -341,9 +334,12 @@ public function getTodosReportesBPA3() {
                     nombre_empleado,
                     observaciones,
                     estado,
+                    revisado,
+                    fecha_revision,
                     fecha_registro
                 FROM control_medicamento
                 ORDER BY fecha_registro DESC, id DESC";
+
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -354,10 +350,6 @@ public function getTodosReportesBPA3() {
 }
 
 
-
-// ==============================
-// ⚡ Nuevos reportes BPA-3 (para AJAX)
-// ==============================
 public function getNuevosReportesBPA3($ultimoId) {
     try {
         $sql = "SELECT 
@@ -377,15 +369,18 @@ public function getNuevosReportesBPA3($ultimoId) {
                 FROM control_medicamento
                 WHERE id > :ultimoId
                 ORDER BY id DESC";
+
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':ultimoId', $ultimoId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
     } catch (PDOException $e) {
         error_log('Error en getNuevosReportesBPA3: ' . $e->getMessage());
         return [];
     }
 }
+
 // ==============================
 // 📊 Obtener todos los reportes BPA-4 (Control de Dosificación)
 // ==============================
@@ -443,6 +438,141 @@ public function getNuevosReportesBPA4($ultimoId) {
         return [];
     }
 }
+// ==============================
+// 🥚 Listar selección y fertilización de OVAS
+// ==============================
+public function getTodosReportesOvas() {
+    $sql = "SELECT 
+                id,
+                codigo_formato,
+                version,
+                fecha_registro,
+                ambito_aplicacion,
+                responsable,
+                hora_inicio,
+                hora_final,
+                cantidad_hembras_aptas,
+                cantidad_machos_aptos,
+                cantidad_hembras_desovadas,
+                cantidad_machos_desovados,
+                relacion_hembras_machos,
+                volumen_ovulos_fertilizados,
+                cantidad_ovas_fertiles,
+                observaciones,
+                id_lote,
+                id_especie,
+                id_sede,
+                creado_en
+            FROM seleccion_fertilizacion_ovas
+            ORDER BY fecha_registro DESC, id DESC";
+    
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+// Obtener todos los reportes BPA-1 (OVAS)
+public function getBPA1_OVAS()
+{
+    try {
+        $sql = "SELECT *
+                FROM seleccion_fertilizacion_ovas
+                ORDER BY fecha_registro DESC, id DESC";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Error en getBPA1_OVAS: " . $e->getMessage());
+        return [];
+    }
+}
 
+// Obtener detalle de un BPA-1 OVAS por id
+public function getDetalleBPA1_OVAS($id)
+{
+    try {
+        $sql = "SELECT * FROM seleccion_fertilizacion_ovas WHERE id = :id LIMIT 1";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(':id', (int)$id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Error en getDetalleBPA1_OVAS: " . $e->getMessage());
+        return null;
+    }
+}
+public function getBPA2_OVAS()
+{
+    $sql = "SELECT * FROM mortalidad_diaria_ovas ORDER BY fecha_registro DESC, id DESC";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+public function getDetalleBPA2_OVAS($id)
+{
+    $sql = "SELECT * FROM mortalidad_diaria_ovas WHERE id = :id LIMIT 1";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+// Obtener todos los reportes BPA-3 (OVAS Larvas)
+public function getBPA3_OVAS()
+{
+    try {
+        $sql = "SELECT *
+                FROM mortalidad_diaria_larvas
+                ORDER BY fecha_registro DESC, id DESC";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Error getBPA3_OVAS: " . $e->getMessage());
+        return [];
+    }
+}
+
+// Obtener detalle BPA-3 OVAS
+public function getDetalleBPA3_OVAS($id)
+{
+    try {
+        $sql = "SELECT * FROM mortalidad_diaria_larvas WHERE id = :id LIMIT 1";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(':id', (int)$id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Error getDetalleBPA3_OVAS: " . $e->getMessage());
+        return null;
+    }
+}
+// Obtener BPA-4 OVAS
+public function getBPA4_OVAS()
+{
+    try {
+        $sql = "SELECT * FROM control_diario_parametros_ovas ORDER BY fecha_registro DESC, id DESC";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Error getBPA4_OVAS: " . $e->getMessage());
+        return [];
+    }
+}
+
+// Obtener detalle por ID
+public function getDetalleBPA4_OVAS($id)
+{
+    try {
+        $sql = "SELECT * FROM control_diario_parametros_ovas WHERE id = :id LIMIT 1";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(':id', (int)$id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Error getDetalleBPA4_OVAS: " . $e->getMessage());
+        return null;
+    }
+}
 
 }

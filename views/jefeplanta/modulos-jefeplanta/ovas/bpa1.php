@@ -232,6 +232,7 @@
 
     <div class="header-actions" role="group" aria-label="Acciones principales">
       <button class="btn ghost" id="volverBtn">◀️ Volver atrás</button>
+        <button class="btn" id="verListaBtn">📄 Ver Lista</button>
     </div>
   </div>
 
@@ -532,6 +533,10 @@
       addRow('aptos');
     }
   });
+  document.getElementById('verListaBtn').addEventListener('click', function(){
+  window.location.href = '/sistema-produccion/views/jefeplanta/modulos-jefeplanta/ovas/lista1.php';
+});
+
 </script>
 </body>
 </html>

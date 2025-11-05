@@ -1,21 +1,14 @@
 <?php
 ini_set('display_errors', 0);
 error_reporting(E_ERROR | E_PARSE);
-
 require_once "BaseController.php";
 require_once __DIR__ . "/../models/SupervisorModel.php";
 require_once __DIR__ . "/../config/database.php";
-
 class SupervisorController extends BaseController {
     private $model;
-
     public function __construct() {
         $this->model = new SupervisorModel();
     }
-
-    // ==============================
-    // 🏠 DASHBOARD PRINCIPAL
-    // ==============================
     public function dashboard() {
     if (!isset($_SESSION['usuario'])) {
         $this->redirect("index.php?controller=Auth&action=login");
@@ -319,6 +312,134 @@ public function listarBpa4Ajax() {
         echo json_encode(['error' => $e->getMessage()]);
     }
     exit;
+}
+// ==============================
+// 🥚 MÓDULO OVAS
+// ==============================
+public function ovas()
+{
+    require_once __DIR__ . '/../views/supervisor/ovas_general.php';
+}
+// ==============================
+// 📋 Listar OVAS
+// ==============================
+public function listarOvas() {
+    $reportes = $this->model->getTodosReportesOvas();
+    require_once __DIR__ . '/../views/supervisor/listar_ovas.php';
+}
+// Lista BPA-1 (OVAS)
+public function listarBPA1_OVAS()
+{
+    try {
+        $reportes = $this->model->getBPA1_OVAS();
+        require_once __DIR__ . '/../views/supervisor/listarbpa1_ovas.php';
+    } catch (Exception $e) {
+        error_log("Error listarBPA1_OVAS: " . $e->getMessage());
+        echo "Error al cargar reportes BPA-1 OVAS.";
+    }
+}
+
+// Ver detalle BPA-1 OVAS
+public function bpa1Ovas()
+{
+    $id = $_GET['id'] ?? null;
+    if (!$id) {
+        echo "<script>alert('ID no especificado'); window.history.back();</script>";
+        exit;
+    }
+
+    $detalle = $this->model->getDetalleBPA1_OVAS($id);
+    if (!$detalle) {
+        echo "<script>alert('Reporte no encontrado'); window.location.href='index.php?controller=Supervisor&action=listarBPA1_OVAS';</script>";
+        exit;
+    }
+
+    require_once __DIR__ . '/../views/supervisor/detalle_bpa1_ovas.php';
+}
+public function listarBPA2_OVAS()
+{
+    $reportes = $this->model->getBPA2_OVAS();
+    require_once __DIR__ . '/../views/supervisor/listarbpa2_ovas.php';
+}
+
+public function bpa2Ovas()
+{
+    $id = $_GET['id'] ?? null;
+
+    if (!$id) {
+        echo "<script>alert('ID no enviado'); window.history.back();</script>";
+        exit;
+    }
+
+    $detalle = $this->model->getDetalleBPA2_OVAS($id);
+
+    if (!$detalle) {
+        echo "<script>alert('Reporte no encontrado'); window.location.href='index.php?controller=Supervisor&action=listarBPA2_OVAS';</script>";
+        exit;
+    }
+
+    require_once __DIR__ . '/../views/supervisor/detalle_bpa2_ovas.php';
+}
+// LISTAR BPA-3 OVAS
+public function listarBPA3_OVAS()
+{
+    try {
+        $reportes = $this->model->getBPA3_OVAS();
+        require_once __DIR__ . '/../views/supervisor/listarbpa3_ovas.php';
+    } catch (Exception $e) {
+        error_log("Error listarBPA3_OVAS: ".$e->getMessage());
+        echo "Error al cargar reportes BPA-3 OVAS.";
+    }
+}
+
+// DETALLE BPA-3 OVAS
+public function bpa3Ovas()
+{
+    $id = $_GET['id'] ?? null;
+
+    if (!$id) {
+        echo "<script>alert('ID no especificado'); window.history.back();</script>";
+        exit;
+    }
+
+    $detalle = $this->model->getDetalleBPA3_OVAS($id);
+
+    if (!$detalle) {
+        echo "<script>alert('Reporte no encontrado'); window.location.href='index.php?controller=Supervisor&action=listarBPA3_OVAS';</script>";
+        exit;
+    }
+
+    require_once __DIR__ . '/../views/supervisor/detalle_bpa3_ovas.php';
+}
+// Listar BPA-4 OVAS
+public function listarBPA4_OVAS()
+{
+    try {
+        $reportes = $this->model->getBPA4_OVAS();
+        require_once __DIR__ . '/../views/supervisor/listarbpa4_ovas.php';
+    } catch (Exception $e) {
+        error_log("Error listarBPA4_OVAS: " . $e->getMessage());
+        echo "Error al cargar reportes BPA-4 OVAS.";
+    }
+}
+
+// Ver detalle BPA-4 OVAS
+public function bpa4Ovas()
+{
+    $id = $_GET['id'] ?? null;
+    if (!$id) {
+        echo "<script>alert('ID no especificado'); history.back();</script>";
+        exit;
+    }
+
+    $detalle = $this->model->getDetalleBPA4_OVAS($id);
+
+    if (!$detalle) {
+        echo "<script>alert('Registro no encontrado'); window.location.href='index.php?controller=Supervisor&action=listarBPA4_OVAS';</script>";
+        exit;
+    }
+
+    require_once __DIR__ . '/../views/supervisor/detalle_bpa4_ovas.php';
 }
 
 

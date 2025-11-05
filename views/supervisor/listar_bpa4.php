@@ -13,7 +13,7 @@
   <div class="max-w-7xl mx-auto p-4 sm:p-6">
     <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
       <h1 class="text-2xl sm:text-3xl font-bold text-blue-800 flex items-center gap-2 text-center sm:text-left">
-        🍽️ Reportes BPA-4 — <span class="text-gray-700">Control de Alimentos</span>
+        🧪 Reportes BPA-4 — <span class="text-gray-700">Control de Dosificación</span>
       </h1>
       <a href="index.php?controller=Supervisor&action=inventarioGeneral"
         class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition w-full sm:w-auto text-center">
@@ -26,47 +26,39 @@
         <table class="min-w-full border-collapse text-sm" id="tablaBpa4">
           <thead class="bg-gradient-to-r from-blue-700 to-blue-800 text-white">
             <tr>
-              <th class="px-4 py-3 text-left whitespace-nowrap">ID</th>
-              <th class="px-4 py-3 text-left whitespace-nowrap">Fecha</th>
-              <th class="px-4 py-3 text-left whitespace-nowrap">Sede</th>
-              <th class="px-4 py-3 text-left whitespace-nowrap">Encargado</th>
-              <th class="px-4 py-3 text-left whitespace-nowrap">Mes</th>
-              <th class="px-4 py-3 text-left whitespace-nowrap">Nombre alimento</th>
-              <th class="px-4 py-3 text-left whitespace-nowrap">Marca</th>
-              <th class="px-4 py-3 text-left whitespace-nowrap">Calibre</th>
-              <th class="px-4 py-3 text-left whitespace-nowrap">Cantidad</th>
-              <th class="px-4 py-3 text-left whitespace-nowrap">Observaciones</th>
-              <th class="px-4 py-3 text-left whitespace-nowrap">Estado</th>
-              <th class="px-4 py-3 text-left whitespace-nowrap">Revisado</th>
-              <th class="px-4 py-3 text-left whitespace-nowrap">Fecha revisión</th>
-              <th class="px-4 py-3 text-left whitespace-nowrap">Fecha registro</th>
-              <th class="px-4 py-3 text-center whitespace-nowrap">Acción</th>
+              <th class="px-4 py-3">ID</th>
+              <th class="px-4 py-3">Fecha</th>
+              <th class="px-4 py-3">Medicamento/Suplemento</th>
+              <th class="px-4 py-3">Dosis (gr)</th>
+              <th class="px-4 py-3">Días</th>
+              <th class="px-4 py-3">Lote Alevines</th>
+              <th class="px-4 py-3">Sala</th>
+              <th class="px-4 py-3">Responsable</th>
+              <th class="px-4 py-3">Registro Diario</th>
+              <th class="px-4 py-3">Observaciones</th>
+              <th class="px-4 py-3">Fecha Registro</th>
+              <th class="px-4 py-3 text-center">Acción</th>
             </tr>
           </thead>
+
           <tbody class="divide-y divide-gray-200">
             <?php if (!empty($reportes)): ?>
               <?php foreach ($reportes as $r): ?>
                 <tr class="hover:bg-gray-50 transition">
-                  <td class="px-4 py-2 font-medium text-gray-700 whitespace-nowrap"><?= htmlspecialchars($r['id']) ?></td>
-                  <td class="px-4 py-2 whitespace-nowrap"><?= htmlspecialchars($r['fecha']) ?></td>
-                  <td class="px-4 py-2 whitespace-nowrap"><?= htmlspecialchars($r['sede']) ?></td>
-                  <td class="px-4 py-2 whitespace-nowrap"><?= htmlspecialchars($r['encargado']) ?></td>
-                  <td class="px-4 py-2 whitespace-nowrap"><?= htmlspecialchars($r['mes']) ?></td>
-                  <td class="px-4 py-2 whitespace-nowrap"><?= htmlspecialchars($r['nombre_alimento']) ?></td>
-                  <td class="px-4 py-2 whitespace-nowrap"><?= htmlspecialchars($r['marca']) ?></td>
-                  <td class="px-4 py-2 whitespace-nowrap"><?= htmlspecialchars($r['calibre']) ?></td>
-                  <td class="px-4 py-2 text-right whitespace-nowrap"><?= htmlspecialchars($r['cantidad']) ?></td>
-                  <td class="px-4 py-2 text-gray-600 whitespace-nowrap"><?= htmlspecialchars($r['observaciones']) ?></td>
-                  <td
-                    class="px-4 py-2 font-semibold whitespace-nowrap <?= $r['estado'] === 'pendiente' ? 'text-red-600' : 'text-green-600' ?>">
-                    <?= htmlspecialchars($r['estado']) ?>
-                  </td>
-                  <td class="px-4 py-2 whitespace-nowrap"><?= $r['revisado'] ?? '-' ?></td>
-                  <td class="px-4 py-2 whitespace-nowrap"><?= $r['fecha_revision'] ?? '-' ?></td>
-                  <td class="px-4 py-2 text-gray-500 whitespace-nowrap"><?= htmlspecialchars($r['fecha_registro']) ?></td>
-                  <td class="px-4 py-2 text-center whitespace-nowrap">
+                  <td class="px-4 py-2 font-medium text-gray-700"><?= htmlspecialchars($r['id']) ?></td>
+                  <td class="px-4 py-2"><?= htmlspecialchars($r['fecha']) ?></td>
+                  <td class="px-4 py-2"><?= htmlspecialchars($r['medicamento_suplemento']) ?></td>
+                  <td class="px-4 py-2"><?= htmlspecialchars($r['dosis_gr']) ?></td>
+                  <td class="px-4 py-2"><?= htmlspecialchars($r['dias_tratamiento']) ?></td>
+                  <td class="px-4 py-2"><?= htmlspecialchars($r['lote_alevines']) ?></td>
+                  <td class="px-4 py-2"><?= htmlspecialchars($r['sala']) ?></td>
+                  <td class="px-4 py-2"><?= htmlspecialchars($r['responsable']) ?></td>
+                  <td class="px-4 py-2"><?= htmlspecialchars($r['registro_diario']) ?></td>
+                  <td class="px-4 py-2 text-gray-600"><?= htmlspecialchars($r['observaciones']) ?></td>
+                  <td class="px-4 py-2 text-gray-500"><?= htmlspecialchars($r['fecha_registro']) ?></td>
+                  <td class="px-4 py-2 text-center">
                     <a href="ver_bpa4.php?id=<?= $r['id'] ?>"
-                      class="bg-blue-600 text-white px-3 py-1.5 rounded-md hover:bg-blue-700 transition text-sm font-medium shadow">
+                      class="bg-blue-600 text-white px-3 py-1.5 rounded-md hover:bg-blue-700 transition text-sm shadow">
                       Ver Detalle
                     </a>
                   </td>
@@ -74,8 +66,8 @@
               <?php endforeach; ?>
             <?php else: ?>
               <tr>
-                <td colspan="15" class="px-4 py-6 text-center text-gray-500 italic">
-                  No hay reportes BPA-4 registrados.
+                <td colspan="12" class="px-4 py-6 text-center text-gray-500 italic">
+                  No hay reportes registrados.
                 </td>
               </tr>
             <?php endif; ?>
@@ -86,10 +78,8 @@
   </div>
 
   <script>
-    // Guarda el último ID existente al cargar la página
     let ultimoId = <?= !empty($reportes) ? max(array_column($reportes, 'id')) : 0 ?>;
 
-    // Función para actualizar la tabla automáticamente
     function actualizarTabla() {
       fetch(`index.php?controller=Supervisor&action=listarBpa4Ajax&ultimoId=${ultimoId}`)
         .then(res => res.json())
@@ -97,52 +87,40 @@
           if (data.nuevos && data.nuevos.length > 0) {
             const tbody = document.querySelector('#tablaBpa4 tbody');
 
-            // Elimina el mensaje "No hay reportes" si existe
-            const noDataRow = tbody.querySelector('td[colspan]');
-            if (noDataRow) {
-              noDataRow.parentElement.remove();
-            }
+            const noData = tbody.querySelector('td[colspan]');
+            if (noData) noData.parentElement.remove();
 
-            // Agrega las nuevas filas al inicio
             data.nuevos.forEach(r => {
               const fila = document.createElement('tr');
               fila.className = "hover:bg-gray-50 transition";
-
               fila.innerHTML = `
-                <td class="px-4 py-2 font-medium text-gray-700 whitespace-nowrap">${r.id}</td>
-                <td class="px-4 py-2 whitespace-nowrap">${r.fecha}</td>
-                <td class="px-4 py-2 whitespace-nowrap">${r.sede}</td>
-                <td class="px-4 py-2 whitespace-nowrap">${r.encargado}</td>
-                <td class="px-4 py-2 whitespace-nowrap">${r.mes}</td>
-                <td class="px-4 py-2 whitespace-nowrap">${r.nombre_alimento}</td>
-                <td class="px-4 py-2 whitespace-nowrap">${r.marca}</td>
-                <td class="px-4 py-2 whitespace-nowrap">${r.calibre}</td>
-                <td class="px-4 py-2 text-right whitespace-nowrap">${r.cantidad}</td>
-                <td class="px-4 py-2 text-gray-600 whitespace-nowrap">${r.observaciones}</td>
-                <td class="px-4 py-2 font-semibold whitespace-nowrap ${r.estado === 'pendiente' ? 'text-red-600' : 'text-green-600'}">${r.estado}</td>
-                <td class="px-4 py-2 whitespace-nowrap">${r.revisado ?? '-'}</td>
-                <td class="px-4 py-2 whitespace-nowrap">${r.fecha_revision ?? '-'}</td>
-                <td class="px-4 py-2 text-gray-500 whitespace-nowrap">${r.fecha_registro ?? '-'}</td>
-                <td class="px-4 py-2 text-center whitespace-nowrap">
-                  <a href="index.php?controller=Supervisor&action=bpa4&id=${r.id}"
-                    class="bg-blue-600 text-white px-3 py-1.5 rounded-md hover:bg-blue-700 transition text-sm font-medium shadow">
+                <td class="px-4 py-2 font-medium text-gray-700">${r.id}</td>
+                <td class="px-4 py-2">${r.fecha}</td>
+                <td class="px-4 py-2">${r.medicamento_suplemento}</td>
+                <td class="px-4 py-2">${r.dosis_gr}</td>
+                <td class="px-4 py-2">${r.dias_tratamiento}</td>
+                <td class="px-4 py-2">${r.lote_alevines}</td>
+                <td class="px-4 py-2">${r.sala}</td>
+                <td class="px-4 py-2">${r.responsable}</td>
+                <td class="px-4 py-2">${r.registro_diario}</td>
+                <td class="px-4 py-2 text-gray-600">${r.observaciones}</td>
+                <td class="px-4 py-2 text-gray-500">${r.fecha_registro}</td>
+                <td class="px-4 py-2 text-center">
+                  <a href="ver_bpa4.php?id=${r.id}"
+                    class="bg-blue-600 text-white px-3 py-1.5 rounded-md hover:bg-blue-700 transition text-sm shadow">
                     Ver Detalle
                   </a>
                 </td>
               `;
-
-              // Inserta al inicio (últimos registros arriba)
               tbody.prepend(fila);
             });
 
-            // Actualiza el último ID procesado
             ultimoId = Math.max(...data.nuevos.map(r => parseInt(r.id)));
           }
         })
-        .catch(err => console.error('Error al actualizar tabla BPA-4:', err));
+        .catch(err => console.error('Error BPA-4:', err));
     }
 
-    // Refrescar cada 2 segundos
     setInterval(actualizarTabla, 2000);
   </script>
 

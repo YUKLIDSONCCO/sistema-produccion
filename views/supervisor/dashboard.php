@@ -8,8 +8,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Panel del Supervisor</title>
 <style>
-        /* (tu CSS original aquí — lo he preservado tal cual) */
-        /* ----------------- Theme (del diseño original) ----------------- */
         :root {
             --color-primary: #4a6cfd;
             --color-primary-light: #eef2ff;
@@ -31,12 +29,10 @@
             --tag-entrepreneurship-text: #d97706;
             --tag-support: #e0e7ff;
             --tag-support-text: #4f46e5;
-
             --radius-lg: 12px;
             --shadow-soft: 0 10px 20px rgba(18, 38, 63, 0.06);
             --container-max: 1200px;
         }
-
         * { box-sizing: border-box; }
         html,body { height:100%; }
         body {
@@ -48,13 +44,11 @@
             -moz-osx-font-smoothing:grayscale;
             line-height: 1.4;
         }
-
         .page {
             max-width: var(--container-max);
             margin: 28px auto;
             padding: 0 20px 80px;
         }
-
         .main-header {
             background-color: var(--color-white);
             border: 1px solid var(--color-border);
@@ -72,40 +66,32 @@
         .subtitle { font-size:13px; color:var(--color-text-light); }
         .header-actions { display:flex; align-items:center; gap:12px; }
         .profile-avatar img { width:40px; height:40px; border-radius:50%; object-fit:cover; border:2px solid var(--color-border); }
-
         .intro { margin-top:18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
         .welcome { display:flex; flex-direction:column; gap:4px; }
         .welcome h2 { margin:0; font-size:20px; }
         .lead { margin:0; color:var(--color-text-light); font-size:14px; }
-
         .filter-bar { display:flex; justify-content:space-between; align-items:center; gap:12px; margin:18px 0; flex-wrap:wrap; }
         .filter-group { display:flex; gap:10px; flex-wrap:wrap; }
         .filter-item { background: var(--color-white); border:1px solid var(--color-border); padding:8px 12px; border-radius:10px; font-weight:600; color:var(--color-text); cursor:pointer; display:flex; gap:8px; align-items:center; box-shadow: 0 1px 0 rgba(0,0,0,0.02); }
         .search-box { display:flex; align-items:center; gap:8px; background:var(--color-white); border:1px solid var(--color-border); padding:8px 12px; border-radius:10px; }
         .search-box input { border:0; outline:0; background:transparent; font-size:14px; color:var(--color-text); }
         .view-toggles { display:flex; gap:8px; }
-
         .grid { display:grid; grid-template-columns: repeat(12, 1fr); gap:20px; align-items:start; }
-
         .card { background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:16px; box-shadow: 0 6px 18px rgba(16,24,40,0.03); }
         .card.h-100 { display:flex; flex-direction:column; height:100%; }
         .card-title { font-weight:700; font-size:15px; margin:0 0 8px 0; }
         .muted { color:var(--color-text-light); font-size:13px; }
-
         .col-6 { grid-column: span 6; }
         .col-4 { grid-column: span 4; }
         .col-8 { grid-column: span 8; }
         .col-12 { grid-column: span 12; }
-
         .stat { display:flex; gap:14px; align-items:center; }
         .stat .num { font-size:20px; font-weight:800; color:var(--color-primary); }
         .stat .label { color:var(--color-text-light); font-weight:600; }
-
         .insumos-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-top:8px; }
         .insumo-item { padding:12px; border-radius:10px; background:linear-gradient(180deg, #ffffff, #fbfdff); border:1px solid var(--color-border); }
         .insumo-item .name { font-weight:700; }
         .insumo-item .meta { color:var(--color-text-light); font-size:13px; }
-
         .employee-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:18px; margin-top:12px; }
         .employee-card { background-color: var(--color-white); border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 6px 18px rgba(16,24,40,0.03); overflow: hidden; display: flex; flex-direction: column; transition: transform .15s ease, box-shadow .15s ease; }
         .employee-card:hover { transform: translateY(-6px); }
@@ -117,20 +103,16 @@
         .tag-marketing { background-color: var(--tag-marketing); color: var(--tag-marketing-text); }
         .tag-entrepreneurship { background-color: var(--tag-entrepreneurship); color: var(--tag-entrepreneurship-text); }
         .tag-support { background-color: var(--tag-support); color: var(--tag-support-text); }
-
         .card-profile { display:flex; flex-direction:column; align-items:center; padding:18px 16px 14px; text-align:center; }
         .profile-pic { width:72px; height:72px; border-radius:50%; object-fit:cover; border:3px solid var(--color-white); box-shadow:0 6px 20px rgba(16,24,40,0.06); margin-bottom:10px; }
         .profile-name { font-size:16px; font-weight:700; margin:0; }
         .profile-id { color:var(--color-text-light); font-size:13px; margin-bottom:8px; }
-
         .card-info { padding:0 16px 16px; color:var(--color-text-light); font-size:14px; }
         .card-info p { margin:6px 0; }
         .salary { color:#16a34a; font-weight:800; }
-
         .bpa-list { display:flex; flex-direction:column; gap:10px; margin-top:8px; }
         .bpa-item { display:flex; justify-content:space-between; gap:12px; align-items:center; padding:12px; border-radius:10px; background:linear-gradient(180deg,#fff,#fbfdff); border:1px solid var(--color-border); }
         .bpa-meta { display:flex; gap:12px; align-items:center; color:var(--color-text-light); font-size:14px; }
-
         .modules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
         .module-card { background: var(--color-white); border-radius: var(--radius-lg); border: 1px solid var(--color-border); padding: 20px; box-shadow: var(--shadow-soft); transition: all 0.3s ease; }
         .module-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(18, 38, 63, 0.1); }
@@ -150,9 +132,7 @@
         .submodule-info { flex: 1; }
         .submodule-name { font-weight: 600; margin: 0; }
         .submodule-desc { font-size: 12px; color: var(--color-text-light); margin: 0; }
-
         .text-end { text-align:right; margin-top:18px; }
-
         @media (max-width: 1000px) {
             .col-6 { grid-column: span 12; }
             .col-8 { grid-column: span 12; }
@@ -165,8 +145,6 @@
 </head>
 <body>
     <div class="page">
-
-        <!-- HEADER / NAV -->
         <header class="main-header">
             <div class="brand">
                 <div class="logo">R</div>
@@ -175,7 +153,6 @@
                     <div class="subtitle">Control de producción y equipo</div>
                 </div>
             </div>
-
             <div class="header-actions">
                 <div class="muted">Usuario</div>
                 <div class="profile-avatar">
@@ -183,14 +160,11 @@
                 </div>
             </div>
         </header>
-
-        <!-- INTRO + WELCOME -->
         <section class="intro" style="margin-top:14px;">
             <div class="welcome">
                 <h2>🛠️ Panel del Supervisor</h2>
                 <p class="lead">Bienvenido, <b><?php echo htmlspecialchars($usuario['nombre'] ?? 'Supervisor'); ?></b></p>
             </div>
-
             <div style="display:flex; gap:10px; align-items:center;">
                 <div class="filter-bar" style="margin:0;">
                     <div class="filter-group">
@@ -206,19 +180,15 @@
                 </div>
             </div>
         </section>
-
         <!-- MÓDULOS JEFE DE PLANTA Y COLABORADOR -->
         <section class="col-12 card">
             <div class="card-title">🏗️ Módulos de Gestión</div>
             <p class="muted">Accede a los diferentes módulos del sistema</p>
-            
-            <div class="modules-grid">
                 <!-- (módulos preservados) -->
-                <div class="module-card">
                     <div class="module-header">
                         <div class="module-icon jefeplanta-icon">JP</div>
                         <div>
-                            <h3 class="module-title">Jefe de Planta</h3>
+                            <h3 class="module-title">Colaboradores Generales</h3>
                             <p class="module-subtitle">Gestión administrativa y operativa</p>
                         </div>
                     </div>
@@ -226,12 +196,11 @@
                         <a href="index.php?controller=Supervisor&action=inventarioGeneral" class="submodule-item">
                             <div class="submodule-icon inventario-icon">📦</div>
                             <div class="submodule-info">
-                                <div class="submodule-name">Inventarios BPA</div>
-                               
+                                <div class="submodule-name">Inventarios BPA</div>                     
                             </div>
                             <span style="color:var(--color-text-light);">→</span>
                         </a>
-                        <a href="index.php?controller=JefePlanta&action=ovas" class="submodule-item">
+                        <a href="index.php?controller=Supervisor&action=ovas" class="submodule-item">
                             <div class="submodule-icon ovas-icon">🥚</div>
                             <div class="submodule-info">
                                 <div class="submodule-name">OVAS</div>
@@ -248,44 +217,6 @@
                             <span style="color:var(--color-text-light);">→</span>
                         </a>
                     </div>
-                </div>
-
-                <div class="module-card">
-                    <div class="module-header">
-                        <div class="module-icon colaborador-icon">CO</div>
-                        <div>
-                            <h3 class="module-title">Colaborador</h3>
-                            <p class="module-subtitle">Operaciones y tareas diarias</p>
-                        </div>
-                    </div>
-                    <div class="submodules-grid">
-                        <a href="index.php?controller=Colaborador&action=inventario" class="submodule-item">
-                            <div class="submodule-icon inventario-icon">📦</div>
-                            <div class="submodule-info">
-                                <div class="submodule-name">Inventario</div>
-                                <div class="submodule-desc">Consulta y registro de materiales</div>
-                            </div>
-                            <span style="color:var(--color-text-light);">→</span>
-                        </a>
-                        <a href="index.php?controller=Colaborador&action=ovas" class="submodule-item">
-                            <div class="submodule-icon ovas-icon">🥚</div>
-                            <div class="submodule-info">
-                                <div class="submodule-name">OVAS</div>
-                                <div class="submodule-desc">Registro diario de producción</div>
-                            </div>
-                            <span style="color:var(--color-text-light);">→</span>
-                        </a>
-                        <a href="index.php?controller=Colaborador&action=peces" class="submodule-item">
-                            <div class="submodule-icon peces-icon">🐟</div>
-                            <div class="submodule-info">
-                                <div class="submodule-name">Peces</div>
-                                <div class="submodule-desc">Manejo y cuidado de peces</div>
-                            </div>
-                            <span style="color:var(--color-text-light);">→</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
         </section>
 
         <!-- GRID PRINCIPAL -->
@@ -476,30 +407,30 @@
         </div>
 
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
+    <script>
 /* ================================
-   INICIALIZACIÓN GRÁFICOS y AUTO-REFRESH
+   DASHBOARD SUPERVISOR - SCRIPT COMPLETO
    ================================ */
 
-/* Helper: safe parse JSON from PHP-inserted data */
+/* Helper: Safe parse desde PHP */
 function safeParsePhp(jsonLike, fallback) {
     try {
         return jsonLike ? jsonLike : fallback;
-    } catch (e) {
+    } catch {
         return fallback;
     }
 }
 
-/* Datos iniciales del servidor (si vienen) */
+/* Variables iniciales desde PHP */
 let initialGrafico = <?php echo json_encode($produccion['grafico'] ?? null); ?>;
 let initialBpaResumen = <?php echo json_encode($bpaResumen ?? ['aprobado' => 0, 'pendiente' => 0]); ?>;
 
-/* --- PRODUCCIÓN (Chart.js) --- */
-const ctx = document.getElementById('produccionChart').getContext('2d');
+/* --- GRÁFICO DE PRODUCCIÓN --- */
+const ctxProd = document.getElementById('produccionChart').getContext('2d');
 let chartData = Array.isArray(initialGrafico) ? initialGrafico : [];
-let produccionChart = new Chart(ctx, {
+
+let produccionChart = new Chart(ctxProd, {
     type: 'bar',
     data: {
         labels: chartData.map(d => d.label),
@@ -519,18 +450,16 @@ let produccionChart = new Chart(ctx, {
     }
 });
 
-/* Actualiza totales (hace suma simple del gráfico para total producido; total lotes = cantidad de puntos) */
+/* Actualizar totales del gráfico */
 function actualizarTotalesDesdeGrafico() {
     const valores = produccionChart.data.datasets[0].data.map(v => Number(v) || 0);
     const totalProducido = valores.reduce((s, x) => s + x, 0);
     const totalLotes = valores.length;
-    const elTotalProducido = document.getElementById('totalProducido');
-    const elTotalLotes = document.getElementById('totalLotes');
-    if (elTotalProducido) elTotalProducido.textContent = totalProducido;
-    if (elTotalLotes) elTotalLotes.textContent = totalLotes;
+    document.getElementById('totalProducido').textContent = totalProducido;
+    document.getElementById('totalLotes').textContent = totalLotes;
 }
 
-/* Si no hubo grafico inicial, traemos la primera vez */
+/* Cargar gráfico inicial si está vacío */
 async function cargarGraficoInicialSiHaceFalta() {
     if (!chartData || chartData.length === 0) {
         try {
@@ -538,21 +467,19 @@ async function cargarGraficoInicialSiHaceFalta() {
             if (!resp.ok) return;
             const data = await resp.json();
             if (Array.isArray(data)) {
-                chartData = data.map(d=>({label: d.label, value: Number(d.value) || 0}));
+                chartData = data.map(d => ({ label: d.label, value: Number(d.value) || 0 }));
                 produccionChart.data.labels = chartData.map(d => d.label);
                 produccionChart.data.datasets[0].data = chartData.map(d => d.value);
                 produccionChart.update();
                 actualizarTotalesDesdeGrafico();
             }
-        } catch (e) {
-            console.error('Error cargando grafico inicial:', e);
+        } catch (err) {
+            console.error('Error cargando gráfico inicial:', err);
         }
-    } else {
-        actualizarTotalesDesdeGrafico();
-    }
+    } else actualizarTotalesDesdeGrafico();
 }
 
-/* Refrescar gráfica desde endpoint (solo actualizar si difiere) */
+/* Refrescar gráfico producción */
 let lastGraficoJson = JSON.stringify(chartData);
 async function refrescarGrafico() {
     try {
@@ -563,7 +490,7 @@ async function refrescarGrafico() {
         const asJson = JSON.stringify(data);
         if (asJson !== lastGraficoJson) {
             lastGraficoJson = asJson;
-            chartData = data.map(d=>({label: d.label, value: Number(d.value) || 0}));
+            chartData = data.map(d => ({ label: d.label, value: Number(d.value) || 0 }));
             produccionChart.data.labels = chartData.map(d => d.label);
             produccionChart.data.datasets[0].data = chartData.map(d => d.value);
             produccionChart.update();
@@ -575,91 +502,87 @@ async function refrescarGrafico() {
     }
 }
 
-/* --- BPA STATUS (Chart + lista) --- */
+/* --- GRÁFICO BPA STATUS --- */
 const ctxBpa = document.getElementById('bpaStatusChart').getContext('2d');
 let bpaChart = new Chart(ctxBpa, {
-    type: 'bar',
+    type: 'doughnut',
     data: {
         labels: ['Aprobados', 'Pendientes'],
         datasets: [{
-            label: 'Formularios BPA-1',
-            data: [ Number(initialBpaResumen.aprobado || initialBpaResumen.aprobados || 0), Number(initialBpaResumen.pendiente || initialBpaResumen.pendientes || 0) ],
-            backgroundColor: ['rgba(34,197,94,0.7)', 'rgba(244,67,54,0.7)'],
-            borderColor: ['rgba(34,197,94,1)', 'rgba(244,67,54,1)'],
-            borderWidth: 1,
-            borderRadius: 6
+            data: [initialBpaResumen.aprobado || 0, initialBpaResumen.pendiente || 0],
+            backgroundColor: ['#16a34a', '#f59e0b'],
+            borderWidth: 0,
+            hoverOffset: 6
         }]
     },
     options: {
-        responsive: true,
-        plugins: { legend: { display: false } },
-        scales: { y: { beginAtZero: true } }
+        cutout: '70%',
+        plugins: {
+            legend: {
+                display: true,
+                position: 'bottom',
+                labels: { color: '#4b5563', font: { size: 12 } }
+            }
+        }
     }
 });
 
-/* Refrescar resumen y lista de BPA usando tu endpoint listarBpaAjax */
+/* Refrescar BPA desde listarBpaAjax */
 let lastBpaListSnapshot = '';
 async function refrescarBpa() {
     try {
-        // pedimos sin ultimoId para obtener todos los registros nuevos (>0)
         const resp = await fetch('index.php?controller=Supervisor&action=listarBpaAjax&ultimoId=0');
         if (!resp.ok) return;
         const json = await resp.json();
         const nuevos = Array.isArray(json.nuevos) ? json.nuevos : [];
-        // construir conteos por estado
+
         let aprobados = 0, pendientes = 0;
         nuevos.forEach(r => {
-            const estado = (r.estado || r.estado_reporte || '').toString().toLowerCase();
-            if (estado.includes('apro') ) aprobados++;
-            else pendientes++;
+            const estado = (r.estado || r.estado_reporte || '').toLowerCase();
+            if (estado.includes('apro')) aprobados++; else pendientes++;
         });
 
-        // si tu endpoint devuelve todos (incluidos aprobados), si hay 0 registros nuevos el array puede estar vacío.
-        // En ese caso, no tocar chart para evitar poner todo a 0. Solo actualizar si hay datos.
-        if (nuevos.length > 0) {
-            bpaChart.data.datasets[0].data = [aprobados, pendientes];
-            bpaChart.update();
-        } else {
-            // si no hay elementos, podemos mantener el initialBpaResumen (o poner 0)
-            // no hacemos nada
-        }
+        bpaChart.data.datasets[0].data = [aprobados, pendientes];
+        bpaChart.update();
 
-        // Actualizar lista visual mínima: si cambió snapshot, re-dibujar
-        const snapshot = JSON.stringify(nuevos.map(n => ({id:n.id,sede:n.sede,encargado:n.encargado,fecha:n.fecha,mes:n.mes})));
+        const snapshot = JSON.stringify(nuevos.map(n => ({
+            id: n.id, sede: n.sede, encargado: n.encargado, fecha: n.fecha, mes: n.mes
+        })));
+
         if (snapshot !== lastBpaListSnapshot) {
             lastBpaListSnapshot = snapshot;
             const container = document.getElementById('bpaListContainer');
-            if (container) {
-                if (nuevos.length === 0) {
-                    container.innerHTML = '<p class="muted" style="margin-top:12px;">No hay formularios BPA-1 pendientes de revisión.</p>';
-                } else {
-                    const html = nuevos.slice(0,8).map((b,i) => `
-                        <div class="bpa-item">
-                            <div style="display:flex; gap:12px; align-items:center;">
-                                <div style="min-width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:800; background:var(--color-primary-light); color:var(--color-primary);">
-                                    ${i+1}
-                                </div>
-                                <div>
-                                    <div style="font-weight:700;">${escapeHtml(b.sede||'')} — ${escapeHtml(b.encargado||'')}</div>
-                                    <div class="muted">${escapeHtml(b.fecha||'')} · Mes: ${escapeHtml(b.mes||'')}</div>
-                                </div>
-                            </div>
-                            <div style="display:flex; gap:8px; align-items:center;">
-                                <a href="index.php?controller=Supervisor&action=revisarBPA1&id=${encodeURIComponent(b.id)}" style="padding:8px 12px; border-radius:8px; border:1px solid #f6c84c; background:linear-gradient(180deg,#fff8e6,#fff9ed); text-decoration:none; color:#a47706; font-weight:700;">🔍 Revisar</a>
+            if (!container) return;
+
+            if (nuevos.length === 0) {
+                container.innerHTML = '<p class="muted" style="margin-top:12px;">No hay formularios BPA-1 pendientes.</p>';
+            } else {
+                const html = nuevos.slice(0, 8).map((b, i) => `
+                    <div class="bpa-item">
+                        <div style="display:flex; gap:12px; align-items:center;">
+                            <div style="min-width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:800; background:var(--color-primary-light); color:var(--color-primary);">${i + 1}</div>
+                            <div>
+                                <div style="font-weight:700;">${escapeHtml(b.sede || '')} — ${escapeHtml(b.encargado || '')}</div>
+                                <div class="muted">${escapeHtml(b.fecha || '')} · Mes: ${escapeHtml(b.mes || '')}</div>
                             </div>
                         </div>
-                    `).join('');
-                    container.innerHTML = '<div class="bpa-list">' + html + '</div>';
-                }
+                        <div style="display:flex; gap:8px; align-items:center;">
+                            <a href="index.php?controller=Supervisor&action=revisarBPA1&id=${encodeURIComponent(b.id)}"
+                               style="padding:8px 12px; border-radius:8px; border:1px solid #f6c84c;
+                                      background:linear-gradient(180deg,#fff8e6,#fff9ed);
+                                      text-decoration:none; color:#a47706; font-weight:700;">🔍 Revisar</a>
+                        </div>
+                    </div>
+                `).join('');
+                container.innerHTML = '<div class="bpa-list">' + html + '</div>';
             }
         }
-
-    } catch (e) {
-        console.error('Error refrescando BPA:', e);
+    } catch (err) {
+        console.error('Error refrescando BPA:', err);
     }
 }
 
-/* Small helper to escape HTML when inserting via innerHTML */
+/* Escapar HTML */
 function escapeHtml(str) {
     if (!str) return '';
     return String(str)
@@ -670,19 +593,17 @@ function escapeHtml(str) {
         .replace(/'/g, '&#039;');
 }
 
-/* Inicializar todo al cargar */
+/* --- INICIALIZACIÓN --- */
 document.addEventListener('DOMContentLoaded', async () => {
     await cargarGraficoInicialSiHaceFalta();
-    // si initialBpaResumen vino, actualizar chart con esos valores
     actualizarTotalesDesdeGrafico();
-    // refrescar BPA inicial (intenta obtener lista y actualizar chart/lista)
     refrescarBpa();
 
-    // Polling: grafico cada 10s, bpa cada 10s (pueden coexistir)
+    // refresca cada 10s (puedes subirlo a 60s)
     setInterval(refrescarGrafico, 10000);
     setInterval(refrescarBpa, 10000);
 
-    // BÚSQUEDA SIMPLE (tu buscador de personal)
+    // filtro de búsqueda en tarjetas (si existen)
     const searchInput = document.getElementById('searchMain');
     if (searchInput) {
         searchInput.addEventListener('input', function() {
@@ -696,6 +617,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 </script>
-
 </body>
 </html>

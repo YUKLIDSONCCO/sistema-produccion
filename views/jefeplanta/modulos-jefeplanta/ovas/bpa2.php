@@ -42,6 +42,9 @@
 </style>
 </head>
 <body>
+  <form id="formBPA2" method="POST" action="/sistema-produccion/public/index.php?controller=Ovas&action=guardarBPA2">
+
+
 <div class="container">
   <div class="header">
     <div class="brand">
@@ -51,7 +54,7 @@
         <div class="meta"><strong>CÓDIGO:</strong> CORAQUA-BPA 4 &nbsp;|&nbsp; <strong>VERSIÓN:</strong> 2.0 &nbsp;|&nbsp; <strong>FECHA:</strong> 03/08/2020</div>
       </div>
     </div>
-    <button class="btn ghost" id="volverBtn">◀️ Volver atrás</button>
+    <button class="btn ghost" id="volverBtn" type="button">◀️ Volver atrás</button>
   </div>
 
   <div class="section">
@@ -59,19 +62,19 @@
     <div style="display:flex; flex-wrap:wrap; gap:12px;">
       <div style="flex:1; min-width:180px">
         <label for="encargado">ENCARGADO</label>
-        <input type="text" id="encargado" placeholder="Nombre del encargado">
+        <input type="text" id="encargado" name="encargado" placeholder="Nombre del encargado" required>
       </div>
       <div style="flex:1; min-width:180px">
         <label for="lote">LOTE</label>
-        <input type="text" id="lote" placeholder="Código de lote">
+        <input type="text" id="lote" name="lote" placeholder="Código de lote" required>
       </div>
       <div style="flex:1; min-width:180px">
         <label for="sede">SEDE</label>
-        <input type="text" id="sede" placeholder="Nombre de sede">
+        <input type="text" id="sede" name="sede" placeholder="Nombre de sede" required>
       </div>
       <div style="flex:1; min-width:180px">
-        <label for="cantsiembra">CANT. SIEMBRA</label>
-        <input type="number" id="cantsiembra" placeholder="Cantidad">
+        <label for="cantidad_siembra">CANT. SIEMBRA</label>
+        <input type="number" id="cantidad_siembra" name="cantidad_siembra" placeholder="Cantidad" required>
       </div>
     </div>
   </div>
@@ -89,13 +92,18 @@
         </thead>
         <tbody>
           <tr>
-            <td><input type="date"></td>
-            <td><input type="text" placeholder="Bat."></td>
-            <td><input type="text" placeholder="Batea"></td>
-            <td><input type="number"></td><td><input type="number"></td><td><input type="number"></td>
-            <td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td>
-            <td><input type="number" placeholder="Total"></td>
-            <td><input type="text" placeholder="Observación"></td>
+            <td><input type="date" name="fecha_control[]"></td>
+            <td><input type="text" name="bateria[]"></td>
+            <td><input type="text" name="batea[]"></td>
+            <td><input type="number" name="c1[]"></td>
+            <td><input type="number" name="c2[]"></td>
+            <td><input type="number" name="c3[]"></td>
+            <td><input type="number" name="c4[]"></td>
+            <td><input type="number" name="c5[]"></td>
+            <td><input type="number" name="c6[]"></td>
+            <td><input type="number" name="c7[]"></td>
+            <td><input type="number" name="total[]"></td>
+            <td><input type="text" name="observacion[]"></td>
           </tr>
         </tbody>
       </table>
@@ -108,23 +116,69 @@
 
   <div class="section">
     <h3>OBSERVACIONES GENERALES</h3>
-    <textarea id="observaciones" placeholder="Escriba comentarios u observaciones adicionales"></textarea>
+    <textarea id="observaciones" name="observaciones" placeholder="Escriba comentarios u observaciones adicionales"></textarea>
   </div>
 
   <div class="actions">
-    <button class="btn" id="guardarBtn">💾 Guardar</button>
-    <button class="btn secondary" id="limpiarBtn">🧹 Limpiar</button>
+    <button class="btn" type="submit">💾 Guardar</button>
+    <button class="btn secondary" type="reset">🧹 Limpiar</button>
   </div>
 
   <footer>CORAQUA © MORTALIDAD DIARIA DE OVAS</footer>
 </div>
-
 <script>
-  // === Crear 5 filas por defecto ===
+document.getElementById('formBPA2').addEventListener('submit', async function(e) {
+    e.preventDefault(); // evita redirección
+
+    const form = e.target;
+    const data = new FormData(form);
+
+    try {
+        const response = await fetch(form.action, {
+            method: 'POST',
+            body: data
+        });
+
+        // Si el servidor responde 200 (éxito)
+        if (response.ok) {
+            alert('✅ Registros guardados correctamente.');
+            // refresca los datos de la tabla en la misma vista sin ir a otra página
+            location.reload();
+        } else {
+            alert('⚠️ Error al guardar los registros.');
+        }
+    } catch (error) {
+        console.error(error);
+        alert('❌ Error de conexión con el servidor.');
+    }
+});
+</script>
+<script>
   document.addEventListener('DOMContentLoaded', ()=>{
-    for(let i=1; i<5; i++){  // ya hay 1 fila, agregamos 4 más
+    for(let i=1; i<5; i++){
       agregarFila();
     }
+
+    const form = document.getElementById('formBPA2');
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      const formData = new FormData(form);
+
+      fetch(form.action, {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => {
+        if(!res.ok) throw new Error('Código: ' + res.status);
+        return res.text();
+      })
+      .then(resp => {
+        alert('✅ Guardado exitoso');
+      })
+      .catch(err => {
+        alert('⚠️ Error al guardar. ' + err.message);
+      });
+    });
   });
 
   function agregarFila(){
@@ -140,22 +194,12 @@
     else alert('Debe quedar al menos una fila.');
   }
 
-  function limpiarFormulario(){
-    document.querySelectorAll('input, textarea').forEach(el=>el.value='');
-  }
-
-  // Función simulada para guardar (puedes enlazar con PHP si deseas)
-  function guardarDatos(){
-    alert('✅ Datos guardados correctamente (simulado).');
-  }
-
   function volverPanel(){
     window.location.href='/sistema-produccion/views/jefeplanta/modulos-jefeplanta/ovas/dashboard.php';
   }
 
   document.getElementById('volverBtn').addEventListener('click', volverPanel);
-  document.getElementById('limpiarBtn').addEventListener('click', limpiarFormulario);
-  document.getElementById('guardarBtn').addEventListener('click', guardarDatos);
 </script>
+</form>
 </body>
 </html>

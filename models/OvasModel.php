@@ -10,6 +10,34 @@ class OvasModel {
     /* ==========================
        📘 BPA1 - CONTROL DE OVAS
        ========================== */
+       public function guardarSeleccionFertilizacion($data) {
+    $sql = "INSERT INTO seleccion_fertilizacion_ovas (
+                fecha_registro, responsable, hora_inicio, hora_final,
+                cantidad_hembras_aptas, cantidad_machos_aptos,
+                cantidad_hembras_desovadas, cantidad_machos_desovados,
+                relacion_hembras_machos, volumen_ovulos_fertilizados,
+                cantidad_ovas_fertiles, observaciones, id_lote, id_especie, id_sede
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    $stmt = $this->conn->prepare($sql);
+    return $stmt->execute([
+        $data['fecha_registro'],
+        $data['responsable'],
+        $data['hora_inicio'],
+        $data['hora_final'],
+        $data['cantidad_hembras_aptas'],
+        $data['cantidad_machos_aptos'],
+        $data['cantidad_hembras_desovadas'],
+        $data['cantidad_machos_desovados'],
+        $data['relacion_hembras_machos'],
+        $data['volumen_ovulos_fertilizados'],
+        $data['cantidad_ovas_fertiles'],
+        $data['observaciones'],
+        $data['id_lote'],
+        $data['id_especie'],
+        $data['id_sede']
+    ]);
+}
 
     public function guardarBPA1($data) {
         $sql = "INSERT INTO control_ovas (
@@ -45,91 +73,62 @@ class OvasModel {
     /* ==========================
        BPA2 - MORTALIDAD DIARIA OVAS
        ========================== */
+       public function guardarBPA2($data) {
+    try {
+        // Convertir a NULL si no hay valor
+        $id_lote = !empty($data['id_lote']) ? $data['id_lote'] : null;
+        $id_sede = !empty($data['id_sede']) ? $data['id_sede'] : null;
+        $id_especie = !empty($data['id_especie']) ? $data['id_especie'] : null;
 
-    public function guardarBPA2($data) {
-        try {
-            $sql = "INSERT INTO mortalidad_diaria_ovas (
-                codigo_formato, version, fecha_registro, encargado, cantidad_siembra, 
-                lote, sede, id_lote, id_sede, id_especie, fecha_control, bateria, 
-                batea, c1, c2, c3, c4, c5, c6, c7, total, observacion, 
-                responsable_area, jefe_planta, jefe_produccion, creado_en
-            ) VALUES (
-                :codigo_formato, :version, :fecha_registro, :encargado, :cantidad_siembra,
-                :lote, :sede, :id_lote, :id_sede, :id_especie, :fecha_control, :bateria,
-                :batea, :c1, :c2, :c3, :c4, :c5, :c6, :c7, :total, :observacion,
-                :responsable_area, :jefe_planta, :jefe_produccion, :creado_en
-            )";
+        $sql = "INSERT INTO mortalidad_diaria_ovas (
+            codigo_formato, version, fecha_registro, encargado, cantidad_siembra,
+            lote, sede, id_lote, id_sede, id_especie, fecha_control,
+            bateria, batea, c1, c2, c3, c4, c5, c6, c7, total,
+            observacion, responsable_area, jefe_planta, jefe_produccion, creado_en
+        ) VALUES (
+            :codigo_formato, :version, :fecha_registro, :encargado, :cantidad_siembra,
+            :lote, :sede, :id_lote, :id_sede, :id_especie, :fecha_control,
+            :bateria, :batea, :c1, :c2, :c3, :c4, :c5, :c6, :c7, :total,
+            :observacion, :responsable_area, :jefe_planta, :jefe_produccion, :creado_en
+        )";
 
-            $stmt = $this->conn->prepare($sql);
-            
-            return $stmt->execute([
-                ':codigo_formato' => $data['codigo_formato'],
-                ':version' => $data['version'],
-                ':fecha_registro' => $data['fecha_registro'],
-                ':encargado' => $data['encargado'],
-                ':cantidad_siembra' => $data['cantidad_siembra'],
-                ':lote' => $data['lote'],
-                ':sede' => $data['sede'],
-                ':id_lote' => $data['id_lote'],
-                ':id_sede' => $data['id_sede'],
-                ':id_especie' => $data['id_especie'],
-                ':fecha_control' => $data['fecha_control'],
-                ':bateria' => $data['bateria'],
-                ':batea' => $data['batea'],
-                ':c1' => $data['c1'],
-                ':c2' => $data['c2'],
-                ':c3' => $data['c3'],
-                ':c4' => $data['c4'],
-                ':c5' => $data['c5'],
-                ':c6' => $data['c6'],
-                ':c7' => $data['c7'],
-                ':total' => $data['total'],
-                ':observacion' => $data['observacion'],
-                ':responsable_area' => $data['responsable_area'],
-                ':jefe_planta' => $data['jefe_planta'],
-                ':jefe_produccion' => $data['jefe_produccion'],
-                ':creado_en' => $data['creado_en']
-            ]);
-        } catch (PDOException $e) {
-            error_log("Error en guardarBPA2: " . $e->getMessage());
-            return false;
-        }
-                    codigo_formato, version, fecha_registro, encargado, cantidad_siembra,
-                    lote, sede, id_lote, id_sede, id_especie, fecha_control,
-                    bateria, batea, c1, c2, c3, c4, c5, c6, c7,
-                    total, observacion, responsable_area, jefe_planta, jefe_produccion, creado_en
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute([
-            $data['codigo_formato'],
-            $data['version'],
-            $data['fecha_registro'],
-            $data['encargado'],
-            $data['cantidad_siembra'],
-            $data['lote'],
-            $data['sede'],
-            $data['id_lote'],
-            $data['id_sede'],
-            $data['id_especie'],
-            $data['fecha_control'],
-            $data['bateria'],
-            $data['batea'],
-            $data['c1'],
-            $data['c2'],
-            $data['c3'],
-            $data['c4'],
-            $data['c5'],
-            $data['c6'],
-            $data['c7'],
-            $data['total'],
-            $data['observacion'],
-            $data['responsable_area'],
-            $data['jefe_planta'],
-            $data['jefe_produccion'],
-            $data['creado_en']
-        ]);
+
+        $stmt->bindValue(':codigo_formato', $data['codigo_formato']);
+        $stmt->bindValue(':version', $data['version']);
+        $stmt->bindValue(':fecha_registro', $data['fecha_registro']);
+        $stmt->bindValue(':encargado', $data['encargado']);
+        $stmt->bindValue(':cantidad_siembra', $data['cantidad_siembra']);
+        $stmt->bindValue(':lote', $data['lote']);
+        $stmt->bindValue(':sede', $data['sede']);
+        $stmt->bindValue(':id_lote', $id_lote, is_null($id_lote) ? PDO::PARAM_NULL : PDO::PARAM_INT);
+        $stmt->bindValue(':id_sede', $id_sede, is_null($id_sede) ? PDO::PARAM_NULL : PDO::PARAM_INT);
+        $stmt->bindValue(':id_especie', $id_especie, is_null($id_especie) ? PDO::PARAM_NULL : PDO::PARAM_INT);
+        $stmt->bindValue(':fecha_control', $data['fecha_control']);
+        $stmt->bindValue(':bateria', $data['bateria']);
+        $stmt->bindValue(':batea', $data['batea']);
+        $stmt->bindValue(':c1', $data['c1']);
+        $stmt->bindValue(':c2', $data['c2']);
+        $stmt->bindValue(':c3', $data['c3']);
+        $stmt->bindValue(':c4', $data['c4']);
+        $stmt->bindValue(':c5', $data['c5']);
+        $stmt->bindValue(':c6', $data['c6']);
+        $stmt->bindValue(':c7', $data['c7']);
+        $stmt->bindValue(':total', $data['total']);
+        $stmt->bindValue(':observacion', $data['observacion']);
+        $stmt->bindValue(':responsable_area', $data['responsable_area']);
+        $stmt->bindValue(':jefe_planta', $data['jefe_planta']);
+        $stmt->bindValue(':jefe_produccion', $data['jefe_produccion']);
+        $stmt->bindValue(':creado_en', $data['creado_en']);
+
+        return $stmt->execute();
+    } catch (PDOException $e) {
+        error_log("Error al guardar BPA2: " . $e->getMessage());
+        return false;
     }
+}
+
+
 
     public function obtenerListadoBPA2PorFecha($fecha) {
         $sql = "SELECT * FROM mortalidad_diaria_ovas WHERE fecha_registro = ? ORDER BY id DESC";

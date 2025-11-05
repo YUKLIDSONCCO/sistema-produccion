@@ -323,6 +323,12 @@ public function guardarBPA4() {
         $responsables = $_POST['responsable'] ?? [];
         $observaciones = $_POST['observaciones'] ?? [];
         
+        // Validar fecha obligatoria
+        if (empty($fecha)) {
+            header("Location: /sistema-produccion/public/Inventario/bpa4?error=1&message=Fecha obligatoria");
+            exit;
+        }
+        
         // Crear conexión PDO
         $database = new Database();
         $conn = $database->getConnection();
@@ -339,6 +345,7 @@ public function guardarBPA4() {
             $responsable = $responsables[$i] ?? '';
             $obs = $observaciones[$i] ?? '';
             
+            // Validar que tenga al menos medicamento y dosis
             if (!empty($medicamento_suplemento) && !empty($dosis)) {
                 if ($model->guardarBPA4($fecha, $medicamento_suplemento, $dosis, $dias, $lote_alevines, $sala, $responsable, $obs)) {
                     $successCount++;
@@ -350,7 +357,7 @@ public function guardarBPA4() {
         if ($successCount > 0) {
             header("Location: /sistema-produccion/public/Inventario/bpa4?success=" . $successCount);
         } else {
-            header("Location: /sistema-produccion/public/Inventario/bpa4?error=1");
+            header("Location: /sistema-produccion/public/Inventario/bpa4?error=1&message=No se pudieron guardar los datos");
         }
         exit;
     }

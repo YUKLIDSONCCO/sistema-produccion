@@ -170,23 +170,24 @@ class InventarioModel {
         $stmt->execute();
         return $stmt;
     }
-
     public function guardarBPA4($fecha, $medicamento_suplemento, $dosis_gr, $dias_tratamiento, $lote_alevines, $sala, $responsable, $observaciones) {
-        $sql = "INSERT INTO control_dosificacion 
-                (fecha, medicamento_suplemento, dosis_gr, dias_tratamiento, lote_alevines, sala, responsable, observaciones) 
-                VALUES (:fecha, :medicamento_suplemento, :dosis_gr, :dias_tratamiento, :lote_alevines, :sala, :responsable, :observaciones)";
-        $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([
-            ':fecha' => $fecha,
-            ':medicamento_suplemento' => $medicamento_suplemento,
-            ':dosis_gr' => $dosis_gr,
-            ':dias_tratamiento' => $dias_tratamiento,
-            ':lote_alevines' => $lote_alevines,
-            ':sala' => $sala,
-            ':responsable' => $responsable,
-            ':observaciones' => $observaciones
-        ]);
-    }
+    $sql = "INSERT INTO control_dosificacion 
+            (fecha, medicamento_suplemento, dosis_gr, dias_tratamiento, lote_alevines, sala, responsable, observaciones, fecha_registro) 
+            VALUES (:fecha, :medicamento_suplemento, :dosis_gr, :dias_tratamiento, :lote_alevines, :sala, :responsable, :observaciones, NOW())";
+    
+    $stmt = $this->conn->prepare($sql);
+    return $stmt->execute([
+        ':fecha' => $fecha,
+        ':medicamento_suplemento' => $medicamento_suplemento,
+        ':dosis_gr' => $dosis_gr,
+        ':dias_tratamiento' => $dias_tratamiento,
+        ':lote_alevines' => $lote_alevines,
+        ':sala' => $sala,
+        ':responsable' => $responsable,
+        ':observaciones' => $observaciones
+    ]);
+}
+
 
     // ============================
     // 📊 RESUMEN GENERAL INVENTARIO
