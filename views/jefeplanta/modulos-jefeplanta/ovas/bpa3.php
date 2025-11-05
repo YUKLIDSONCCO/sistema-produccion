@@ -43,6 +43,8 @@
 </head>
 <body>
 <div class="container">
+  <form id="formOvas" method="POST">
+
   <div class="header">
     <div class="brand">
       <div class="logo"><img src="img/logo-coraqua.png" alt="Logo CORAQUA"></div>
@@ -51,7 +53,7 @@
         <div class="meta"><strong>CÓDIGO:</strong> CORAQUA-BPA 5 &nbsp;|&nbsp; <strong>VERSIÓN:</strong> 2.0 &nbsp;|&nbsp; <strong>FECHA:</strong> 03/08/2020</div>
       </div>
     </div>
-    <button class="btn ghost" id="volverBtn">◀️ Volver atrás</button>
+    <button class="btn ghost" id="volverBtn" type="button">◀️ Volver atrás</button>
   </div>
 
   <div class="section">
@@ -59,20 +61,24 @@
     <div style="display:flex; flex-wrap:wrap; gap:12px;">
       <div style="flex:1; min-width:180px">
         <label>ENCARGADO</label>
-        <input type="text" id="encargado" placeholder="Nombre del encargado">
+        <input type="text" id="encargado" name="encargado" placeholder="Nombre del encargado" required>
       </div>
       <div style="flex:1; min-width:180px">
         <label>LOTE</label>
-        <input type="text" id="lote" placeholder="Código de lote">
+        <input type="text" id="lote" name="lote" placeholder="Código de lote" required>
       </div>
       <div style="flex:1; min-width:180px">
         <label>SEDE</label>
-        <input type="text" id="sede" placeholder="Nombre de sede">
+        <input type="text" id="sede" name="sede" placeholder="Nombre de sede" required>
       </div>
       <div style="flex:1; min-width:180px">
         <label>CANT. SIEMBRA</label>
-        <input type="number" id="cantsiembra" placeholder="Cantidad">
+        <input type="number" id="cantsiembra" name="cantidad_siembra" placeholder="Cantidad" required>
       </div>
+      <!-- Campos adicionales requeridos -->
+      <input type="hidden" name="id_lote" value="1">
+      <input type="hidden" name="id_sede" value="1">
+      <input type="hidden" name="id_especie" value="1">
     </div>
   </div>
 
@@ -82,7 +88,7 @@
       <table id="tablaLarvas">
         <thead>
           <tr>
-            <th>FECHA</th><th>BAT.</th><th>BATEA</th>
+            <th>FECHA CONTROL</th><th>BATERIA</th><th>BATEA</th>
             <th colspan="2">C1</th><th colspan="2">C2</th><th colspan="2">C3</th><th colspan="2">C4</th>
             <th colspan="2">C5</th><th colspan="2">C6</th><th colspan="2">C7</th>
             <th>TOTAL</th><th>OBSERVACIONES</th>
@@ -100,6 +106,7 @@
           </tr>
         </thead>
         <tbody>
+          <!-- Las filas se agregarán aquí dinámicamente -->
         </tbody>
       </table>
     </div>
@@ -111,61 +118,267 @@
 
   <div class="section">
     <h3>OBSERVACIONES GENERALES</h3>
-    <textarea id="observaciones" placeholder="Escriba comentarios u observaciones adicionales"></textarea>
+    <textarea id="observaciones" name="observacion" placeholder="Escriba comentarios u observaciones adicionales"></textarea>
   </div>
 
+  <!-- CAMPOS OCULTOS CORREGIDOS - FUERA DEL FORMULARIO PRINCIPAL -->
+  <input type="hidden" name="responsable_area" value="Responsable Area">
+  <input type="hidden" name="jefe_planta" value="Jefe Planta">
+  <input type="hidden" name="jefe_produccion" value="Jefe Produccion">
+
   <div class="actions">
-    <button class="btn" id="guardarBtn">💾 Guardar</button>
-    <button class="btn secondary" id="limpiarBtn">🧹 Limpiar</button>
+    <button id="btnGuardar" class="btn btn-success" type="submit">💾 Guardar Datos</button>
+    <button class="btn secondary" id="limpiarBtn" type="button">🧹 Limpiar</button>
   </div>
 
   <footer>CORAQUA © MORTALIDAD DIARIA DE LARVAS</footer>
+  </form>
 </div>
-
 <script>
-  function crearFila() {
+// Agregar una fila inicial al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+    agregarFila();
+});
+
+function agregarFila() {
+    const tbody = document.querySelector("#tablaLarvas tbody");
     const fila = document.createElement("tr");
+    const fechaHoy = new Date().toISOString().split('T')[0];
+    
     fila.innerHTML = `
-      <td><input type="date"></td>
-      <td><input type="text" placeholder="Bat."></td>
-      <td><input type="text" placeholder="Batea"></td>
-      ${Array.from({length: 7}).map(()=>`
-        <td><input type="number" placeholder="L.M."></td>
-        <td><input type="number" placeholder="L.D."></td>
-      `).join('')}
-      <td><input type="number" placeholder="Total"></td>
-      <td><input type="text" placeholder="Observación"></td>
+        <td><input type="date" name="fecha_control" value="${fechaHoy}" required></td>
+        <td><input type="text" name="bateria" placeholder="Batería"></td>
+        <td><input type="text" name="batea" placeholder="Batea"></td>
+        <td><input type="number" name="c1_lm" value="0" min="0"></td>
+        <td><input type="number" name="c1_ld" value="0" min="0"></td>
+        <td><input type="number" name="c2_lm" value="0" min="0"></td>
+        <td><input type="number" name="c2_ld" value="0" min="0"></td>
+        <td><input type="number" name="c3_lm" value="0" min="0"></td>
+        <td><input type="number" name="c3_ld" value="0" min="0"></td>
+        <td><input type="number" name="c4_lm" value="0" min="0"></td>
+        <td><input type="number" name="c4_ld" value="0" min="0"></td>
+        <td><input type="number" name="c5_lm" value="0" min="0"></td>
+        <td><input type="number" name="c5_ld" value="0" min="0"></td>
+        <td><input type="number" name="c6_lm" value="0" min="0"></td>
+        <td><input type="number" name="c6_ld" value="0" min="0"></td>
+        <td><input type="number" name="c7_lm" value="0" min="0"></td>
+        <td><input type="number" name="c7_ld" value="0" min="0"></td>
+        <td><input type="number" name="total" value="0" min="0"></td>
+        <td><input type="text" name="observacion" placeholder="Observaciones"></td>
     `;
-    return fila;
-  }
+    tbody.appendChild(fila);
+}
 
-  function agregarFila(){
-    const tabla = document.querySelector('#tablaLarvas tbody');
-    tabla.appendChild(crearFila());
-  }
+function eliminarFila() {
+    const tbody = document.querySelector("#tablaLarvas tbody");
+    if (tbody.rows.length > 0) {
+        tbody.deleteRow(-1);
+    }
+}
 
-  function eliminarFila(){
-    const tabla = document.querySelector('#tablaLarvas tbody');
-    if(tabla.rows.length>1) tabla.deleteRow(-1);
-    else alert('Debe quedar al menos una fila.');
-  }
+// Manejar el envío del formulario
+document.getElementById('formOvas').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const btnGuardar = document.getElementById('btnGuardar');
+    btnGuardar.disabled = true;
+    btnGuardar.textContent = 'Guardando...';
+    
+    try {
+        // Crear FormData manualmente para mejor control
+        const formData = new FormData();
+        
+        // Agregar datos generales manualmente
+        formData.append('encargado', document.getElementById('encargado').value);
+        formData.append('lote', document.getElementById('lote').value);
+        formData.append('sede', document.getElementById('sede').value);
+        formData.append('cantidad_siembra', document.getElementById('cantsiembra').value);
+        formData.append('id_lote', '1');
+        formData.append('id_sede', '1');
+        formData.append('id_especie', '1');
+        formData.append('responsable_area', 'Responsable Area');
+        formData.append('jefe_planta', 'Jefe Planta');
+        formData.append('jefe_produccion', 'Jefe Produccion');
+        formData.append('observacion', document.getElementById('observaciones').value);
+        formData.append('codigo_formato', 'CORAQUA-BPA3');
+        formData.append('version', '2.0');
+        
+        // Obtener datos de la tabla
+        const filas = document.querySelectorAll('#tablaLarvas tbody tr');
+        console.log('Número de filas encontradas:', filas.length);
+        
+        if (filas.length === 0) {
+            alert('Debe agregar al menos una fila de datos');
+            btnGuardar.disabled = false;
+            btnGuardar.textContent = '💾 Guardar Datos';
+            return;
+        }
+        
+        // Crear arrays para cada campo
+        const fecha_control = [];
+        const bateria = [];
+        const batea = [];
+        const c1_lm = [];
+        const c1_ld = [];
+        const c2_lm = [];
+        const c2_ld = [];
+        const c3_lm = [];
+        const c3_ld = [];
+        const c4_lm = [];
+        const c4_ld = [];
+        const c5_lm = [];
+        const c5_ld = [];
+        const c6_lm = [];
+        const c6_ld = [];
+        const c7_lm = [];
+        const c7_ld = [];
+        const total = [];
+        const observacion = [];
+        
+        // Recopilar datos de cada fila
+        filas.forEach((fila, index) => {
+            const inputs = fila.querySelectorAll('input');
+            console.log(`Procesando fila ${index} con ${inputs.length} inputs`);
+            
+            fecha_control.push(inputs[0].value || '');
+            bateria.push(inputs[1].value || '');
+            batea.push(inputs[2].value || '');
+            c1_lm.push(inputs[3].value || '0');
+            c1_ld.push(inputs[4].value || '0');
+            c2_lm.push(inputs[5].value || '0');
+            c2_ld.push(inputs[6].value || '0');
+            c3_lm.push(inputs[7].value || '0');
+            c3_ld.push(inputs[8].value || '0');
+            c4_lm.push(inputs[9].value || '0');
+            c4_ld.push(inputs[10].value || '0');
+            c5_lm.push(inputs[11].value || '0');
+            c5_ld.push(inputs[12].value || '0');
+            c6_lm.push(inputs[13].value || '0');
+            c6_ld.push(inputs[14].value || '0');
+            c7_lm.push(inputs[15].value || '0');
+            c7_ld.push(inputs[16].value || '0');
+            total.push(inputs[17].value || '0');
+            observacion.push(inputs[18].value || '');
+        });
+        
+        // Agregar los arrays al FormData con la sintaxis correcta para PHP
+        fecha_control.forEach((valor, index) => {
+            formData.append(`fecha_control[${index}]`, valor);
+        });
+        bateria.forEach((valor, index) => {
+            formData.append(`bateria[${index}]`, valor);
+        });
+        batea.forEach((valor, index) => {
+            formData.append(`batea[${index}]`, valor);
+        });
+        c1_lm.forEach((valor, index) => {
+            formData.append(`c1_lm[${index}]`, valor);
+        });
+        c1_ld.forEach((valor, index) => {
+            formData.append(`c1_ld[${index}]`, valor);
+        });
+        c2_lm.forEach((valor, index) => {
+            formData.append(`c2_lm[${index}]`, valor);
+        });
+        c2_ld.forEach((valor, index) => {
+            formData.append(`c2_ld[${index}]`, valor);
+        });
+        c3_lm.forEach((valor, index) => {
+            formData.append(`c3_lm[${index}]`, valor);
+        });
+        c3_ld.forEach((valor, index) => {
+            formData.append(`c3_ld[${index}]`, valor);
+        });
+        c4_lm.forEach((valor, index) => {
+            formData.append(`c4_lm[${index}]`, valor);
+        });
+        c4_ld.forEach((valor, index) => {
+            formData.append(`c4_ld[${index}]`, valor);
+        });
+        c5_lm.forEach((valor, index) => {
+            formData.append(`c5_lm[${index}]`, valor);
+        });
+        c5_ld.forEach((valor, index) => {
+            formData.append(`c5_ld[${index}]`, valor);
+        });
+        c6_lm.forEach((valor, index) => {
+            formData.append(`c6_lm[${index}]`, valor);
+        });
+        c6_ld.forEach((valor, index) => {
+            formData.append(`c6_ld[${index}]`, valor);
+        });
+        c7_lm.forEach((valor, index) => {
+            formData.append(`c7_lm[${index}]`, valor);
+        });
+        c7_ld.forEach((valor, index) => {
+            formData.append(`c7_ld[${index}]`, valor);
+        });
+        total.forEach((valor, index) => {
+            formData.append(`total[${index}]`, valor);
+        });
+        observacion.forEach((valor, index) => {
+            formData.append(`observacion[${index}]`, valor);
+        });
+        
+        console.log('Arrays creados:');
+        console.log('fecha_control:', fecha_control);
+        console.log('bateria:', bateria);
+        console.log('batea:', batea);
+        console.log('Enviando datos al servidor...');
+        
+        // Enviar datos
+        const response = await fetch('/sistema-produccion/public/index.php?controller=Ovas&action=procesarBPA3', {
+            method: 'POST',
+            body: formData
+        });
+        
+        // Verificar si la respuesta es JSON válido
+        const responseText = await response.text();
+        console.log('Respuesta completa del servidor:', responseText);
+        
+        let data;
+        
+        try {
+            data = JSON.parse(responseText);
+        } catch (parseError) {
+            console.error('Error parseando JSON:', parseError);
+            console.error('Respuesta del servidor (texto):', responseText);
+            throw new Error('El servidor respondió con un formato inválido. Verifica los logs del servidor.');
+        }
+        
+        if (data.success) {
+            alert('✅ ' + data.message);
+            // Limpiar formulario después de guardar exitosamente
+            document.getElementById('formOvas').reset();
+            const tbody = document.querySelector("#tablaLarvas tbody");
+            tbody.innerHTML = '';
+            agregarFila(); // Agregar fila vacía inicial
+        } else {
+            alert('❌ Error: ' + (data.error || 'No se pudo guardar los datos'));
+        }
+    } catch (error) {
+        console.error('Error en el envío:', error);
+        alert('❌ Error: ' + error.message);
+    } finally {
+        btnGuardar.disabled = false;
+        btnGuardar.textContent = '💾 Guardar Datos';
+    }
+});
 
-  function limpiarFormulario(){
-    document.querySelectorAll('input, textarea').forEach(el=>el.value='');
-  }
+// Botón limpiar
+document.getElementById('limpiarBtn').addEventListener('click', function() {
+    if (confirm('¿Está seguro de que desea limpiar todos los datos?')) {
+        document.getElementById('formOvas').reset();
+        const tbody = document.querySelector("#tablaLarvas tbody");
+        tbody.innerHTML = '';
+        agregarFila(); // Agregar una fila vacía
+    }
+});
 
-  function volverPanel(){
-    window.location.href='/sistema-produccion/views/jefeplanta/modulos-jefeplanta/ovas/dashboard.php';
-  }
-
-  document.getElementById('volverBtn').addEventListener('click', volverPanel);
-  document.getElementById('limpiarBtn').addEventListener('click', limpiarFormulario);
-
-  // Crear 5 filas por defecto
-  window.addEventListener('DOMContentLoaded', ()=>{
-    const tbody = document.querySelector('#tablaLarvas tbody');
-    for(let i=0;i<5;i++) tbody.appendChild(crearFila());
-  });
+// Botón volver
+document.getElementById('volverBtn').addEventListener('click', function() {
+    window.history.back();
+});
 </script>
 </body>
 </html>

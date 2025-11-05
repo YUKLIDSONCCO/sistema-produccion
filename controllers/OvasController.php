@@ -195,48 +195,123 @@ class OvasController {
     /* =========================================
        BPA 3 - MORTALIDAD DIARIA DE LARVAS
        ========================================= */
-    public function guardarBPA3($data) {
-        $sql = "INSERT INTO mortalidad_diaria_larvas (
-                    codigo_formato, version, fecha_registro, encargado, cantidad_siembra, lote, sede,
-                    id_lote, id_sede, id_especie,
-                    c1_lm, c1_ld, c2_lm, c2_ld, c3_lm, c3_ld, c4_lm, c4_ld, c5_lm, c5_ld, c6_lm, c6_ld, c7_lm, c7_ld,
-                    total, observacion, responsable_area, jefe_planta, jefe_produccion, creado_en
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute([
-            $data['codigo_formato'],
-            $data['version'],
-            $data['fecha_registro'],
-            $data['encargado'],
-            $data['cantidad_siembra'],
-            $data['lote'],
-            $data['sede'],
-            $data['id_lote'],
-            $data['id_sede'],
-            $data['id_especie'],
-            $data['c1_lm'],
-            $data['c1_ld'],
-            $data['c2_lm'],
-            $data['c2_ld'],
-            $data['c3_lm'],
-            $data['c3_ld'],
-            $data['c4_lm'],
-            $data['c4_ld'],
-            $data['c5_lm'],
-            $data['c5_ld'],
-            $data['c6_lm'],
-            $data['c6_ld'],
-            $data['c7_lm'],
-            $data['c7_ld'],
-            $data['total'],
-            $data['observacion'],
-            $data['responsable_area'],
-            $data['jefe_planta'],
-            $data['jefe_produccion'],
-            $data['creado_en']
-        ]);
+
+    public function bpa3() {
+    include __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/bpa3.php';
+}
+
+    // =========================================
+// BPA3 - PROCESAR FORMULARIO (VARIAS FILAS)
+// =========================================
+public function procesarBPA3() {
+    // DEPURACIÓN EXTENDIDA
+    error_log("=== INICIO PROCESARBPA3 ===");
+    error_log("Método: " . $_SERVER['REQUEST_METHOD']);
+    error_log("Todos los POST: " . print_r($_POST, true));
+    error_log("Headers: " . print_r(getallheaders(), true));
+
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        echo json_encode(['success' => false, 'error' => 'Método no permitido']);
+        exit;
     }
+
+    try {
+        $registrosGuardados = 0;
+
+        // VERIFICAR SI EXISTEN LOS ARRAYS
+        error_log("¿Existe fecha_control? " . (isset($_POST['fecha_control']) ? 'SÍ' : 'NO'));
+        if (isset($_POST['fecha_control'])) {
+            error_log("fecha_control es array? " . (is_array($_POST['fecha_control']) ? 'SÍ' : 'NO'));
+            error_log("Contenido de fecha_control: " . print_r($_POST['fecha_control'], true));
+            error_log("Número de elementos en fecha_control: " . count($_POST['fecha_control']));
+        }
+
+        if (isset($_POST['fecha_control']) && is_array($_POST['fecha_control'])) {
+            $filas = count($_POST['fecha_control']);
+            error_log("Procesando $filas filas");
+
+            for ($i = 0; $i < $filas; $i++) {
+                $data = [
+                    'codigo_formato' => 'CORAQUA-BPA3',
+                    'version' => '2.0',
+                    'fecha_registro' => date('Y-m-d'),
+                    'encargado' => $_POST['encargado'] ?? '',
+                    'cantidad_siembra' => $_POST['cantidad_siembra'] ?? 0,
+                    'lote' => $_POST['lote'] ?? '',
+                    'sede' => $_POST['sede'] ?? '',
+                    'id_lote' => $_POST['id_lote'] ?? 0,
+                    'id_sede' => $_POST['id_sede'] ?? 0,
+                    'id_especie' => $_POST['id_especie'] ?? 0,
+                    'fecha_control' => $_POST['fecha_control'][$i] ?? date('Y-m-d'),
+                    'c1_lm' => $_POST['c1_lm'][$i] ?? 0,
+                    'c1_ld' => $_POST['c1_ld'][$i] ?? 0,
+                    'c2_lm' => $_POST['c2_lm'][$i] ?? 0,
+                    'c2_ld' => $_POST['c2_ld'][$i] ?? 0,
+                    'c3_lm' => $_POST['c3_lm'][$i] ?? 0,
+                    'c3_ld' => $_POST['c3_ld'][$i] ?? 0,
+                    'c4_lm' => $_POST['c4_lm'][$i] ?? 0,
+                    'c4_ld' => $_POST['c4_ld'][$i] ?? 0,
+                    'c5_lm' => $_POST['c5_lm'][$i] ?? 0,
+                    'c5_ld' => $_POST['c5_ld'][$i] ?? 0,
+                    'c6_lm' => $_POST['c6_lm'][$i] ?? 0,
+                    'c6_ld' => $_POST['c6_ld'][$i] ?? 0,
+                    'c7_lm' => $_POST['c7_lm'][$i] ?? 0,
+                    'c7_ld' => $_POST['c7_ld'][$i] ?? 0,
+                    'total' => $_POST['total'][$i] ?? 0,
+                    'observacion' => $_POST['observacion'][$i] ?? '',
+                    'responsable_area' => $_POST['responsable_area'] ?? '',
+                    'jefe_planta' => $_POST['jefe_planta'] ?? '',
+                    'jefe_produccion' => $_POST['jefe_produccion'] ?? '',
+                    'creado_en' => date('Y-m-d H:i:s')
+                ];
+
+                error_log("Datos para fila $i: " . print_r($data, true));
+                
+                // VERIFICAR SI HAY DATOS VÁLIDOS EN LA FILA
+                $filaVacia = true;
+                foreach ($data as $key => $value) {
+                    if (!in_array($key, ['codigo_formato', 'version', 'fecha_registro', 'creado_en']) && !empty($value)) {
+                        $filaVacia = false;
+                        break;
+                    }
+                }
+
+                if (!$filaVacia) {
+                    if ($this->model->guardarBPA3($data)) {
+                        $registrosGuardados++;
+                        error_log("✅ Fila $i guardada correctamente");
+                    } else {
+                        error_log("❌ ERROR al guardar fila $i");
+                    }
+                } else {
+                    error_log("⏭️ Fila $i vacía, omitiendo");
+                }
+            }
+
+            error_log("=== RESULTADO FINAL: $registrosGuardados registros guardados ===");
+            echo json_encode(['success' => true, 'message' => "Se guardaron {$registrosGuardados} registros correctamente."]);
+            exit;
+        } else {
+            error_log("❌ No se encontró fecha_control o no es array");
+            echo json_encode(['success' => false, 'error' => 'No se enviaron datos válidos en formato de array.']);
+            exit;
+        }
+
+    } catch (Exception $e) {
+        error_log("💥 EXCEPCIÓN en procesarBPA3: " . $e->getMessage());
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        exit;
+    }
+}
+public function listarBPA3() {
+    $fecha = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
+    $registros = $this->model->obtenerListadoBPA3PorFecha($fecha);
+    $datos = $registros ? $registros->fetchAll(PDO::FETCH_ASSOC) : [];
+    $fechaBusqueda = $fecha;
+    include __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/ovas/lista3.php';
+}
+
+
 
     public function obtenerListadoBPA3PorFecha($fecha) {
         $sql = "SELECT * FROM mortalidad_diaria_larvas WHERE DATE(fecha_registro) = ? ORDER BY fecha_registro DESC";

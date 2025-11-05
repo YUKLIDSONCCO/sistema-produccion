@@ -141,17 +141,18 @@ class OvasModel {
     /* ==========================
        BPA3 - MORTALIDAD DIARIA LARVAS
        ========================== */
-
-    public function guardarBPA3($data) {
+       public function guardarBPA3($data) {
+    try {
         $sql = "INSERT INTO mortalidad_diaria_larvas (
-                    codigo_formato, version, fecha_registro, encargado, cantidad_siembra,
-                    lote, sede, id_lote, id_sede, id_especie,
-                    c1_lm, c1_ld, c2_lm, c2_ld, c3_lm, c3_ld, c4_lm, c4_ld, c5_lm, c5_ld, c6_lm, c6_ld, c7_lm, c7_ld,
-                    total, observacion, responsable_area, jefe_planta, jefe_produccion, creado_en
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            codigo_formato, version, fecha_registro, encargado, cantidad_siembra,
+            lote, sede, id_lote, id_sede, id_especie, fecha_control,
+            c1_lm, c1_ld, c2_lm, c2_ld, c3_lm, c3_ld, c4_lm, c4_ld,
+            c5_lm, c5_ld, c6_lm, c6_ld, c7_lm, c7_ld,
+            total, observacion, responsable_area, jefe_planta, jefe_produccion, creado_en
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute([
+        return $stmt->execute([
             $data['codigo_formato'],
             $data['version'],
             $data['fecha_registro'],
@@ -162,6 +163,7 @@ class OvasModel {
             $data['id_lote'],
             $data['id_sede'],
             $data['id_especie'],
+            $data['fecha_control'],
             $data['c1_lm'],
             $data['c1_ld'],
             $data['c2_lm'],
@@ -183,7 +185,12 @@ class OvasModel {
             $data['jefe_produccion'],
             $data['creado_en']
         ]);
+    } catch (PDOException $e) {
+        error_log("Error al guardar BPA3: " . $e->getMessage());
+        return false;
     }
+}
+
 
     public function obtenerListadoBPA3PorFecha($fecha) {
         $sql = "SELECT * FROM mortalidad_diaria_larvas WHERE fecha_registro = ? ORDER BY id DESC";
@@ -223,5 +230,25 @@ class OvasModel {
         $stmt->execute([$fecha]);
         return $stmt;
     }
+    public function insertarMortalidadLarvas($data) {
+    try {
+        $sql = "INSERT INTO mortalidad_diaria_larvas 
+                (codigo_formato, version, fecha_registro, encargado, cantidad_siembra, lote, sede, observacion, creado_en)
+                VALUES (:codigo_formato, :version, NOW(), :encargado, :cantidad_siembra, :lote, :sede, :observacion, NOW())";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(':codigo_formato', 'CORAQUA-BPA-05');
+        $stmt->bindValue(':version', '2.0');
+        $stmt->bindValue(':encargado', $data['encargado']);
+        $stmt->bindValue(':cantidad_siembra', $data['cantidad_siembra']);
+        $stmt->bindValue(':lote', $data['lote']);
+        $stmt->bindValue(':sede', $data['sede']);
+        $stmt->bindValue(':observacion', $data['observacion']);
+        return $stmt->execute();
+    } catch (PDOException $e) {
+        return false;
+    }
+}
+
 }
 ?>
