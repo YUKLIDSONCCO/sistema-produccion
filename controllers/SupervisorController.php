@@ -441,6 +441,46 @@ public function bpa4Ovas()
 
     require_once __DIR__ . '/../views/supervisor/detalle_bpa4_ovas.php';
 }
+public function editarBpa1() {
+    $id = $_GET['id'] ?? null;
+    if (!$id) {
+        header('Location: index.php?controller=Supervisor&action=listarBpa1');
+        exit;
+    }
+
+    $modelo = new SupervisorModel();
+    $reporte = $modelo->obtenerBpa1PorId($id);
+
+    require 'views/supervisor/editar_bpa1.php';
+}
+
+public function actualizarBpa1() {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $data = [
+            'id' => $_POST['id'],
+            'fecha' => $_POST['fecha'],
+            'sede' => $_POST['sede'],
+            'encargado' => $_POST['encargado'],
+            'cantidad' => $_POST['cantidad'],
+            'estado' => $_POST['estado']
+        ];
+
+        $modelo = new SupervisorModel();
+        $modelo->actualizarBpa1($data);
+
+        header('Location: index.php?controller=Supervisor&action=listarBpa1');
+    }
+}
+
+public function eliminarBpa1() {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $id = $_POST['id'];
+        $modelo = new SupervisorModel();
+        $exito = $modelo->eliminarBpa1($id);
+        echo json_encode(['success' => $exito]);
+    }
+}
+
 
 
 }

@@ -216,57 +216,6 @@ class OvasModel {
         $stmt->execute([$fecha]);
         return $stmt;
     }
-
-
-    /* ==========================
-       BPA4 - CONTROL DE PARÁMETROS
-       ========================== */
-
-    public function guardarBPA4($data) {
-        $sql = "INSERT INTO control_parametros (
-                    codigo_formato, version, fecha_registro, mes,
-                    sede, responsable, observaciones, creado_en, actualizado_en
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute([
-            $data['codigo_formato'],
-            $data['version'],
-            $data['fecha_registro'],
-            $data['mes'],
-            $data['sede'],
-            $data['responsable'],
-            $data['observaciones'],
-            $data['creado_en'],
-            $data['actualizado_en']
-        ]);
-    }
-
-    public function obtenerListadoBPA4PorFecha($fecha) {
-        $sql = "SELECT * FROM control_parametros WHERE fecha_registro = ? ORDER BY id DESC";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute([$fecha]);
-        return $stmt;
-    }
-    public function insertarMortalidadLarvas($data) {
-    try {
-        $sql = "INSERT INTO mortalidad_diaria_larvas 
-                (codigo_formato, version, fecha_registro, encargado, cantidad_siembra, lote, sede, observacion, creado_en)
-                VALUES (:codigo_formato, :version, NOW(), :encargado, :cantidad_siembra, :lote, :sede, :observacion, NOW())";
-
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindValue(':codigo_formato', 'CORAQUA-BPA-05');
-        $stmt->bindValue(':version', '2.0');
-        $stmt->bindValue(':encargado', $data['encargado']);
-        $stmt->bindValue(':cantidad_siembra', $data['cantidad_siembra']);
-        $stmt->bindValue(':lote', $data['lote']);
-        $stmt->bindValue(':sede', $data['sede']);
-        $stmt->bindValue(':observacion', $data['observacion']);
-        return $stmt->execute();
-    } catch (PDOException $e) {
-        return false;
-    }
-}
 /* ==========================
    BPA4 - CONTROL DE PARÁMETROS
    ========================== */

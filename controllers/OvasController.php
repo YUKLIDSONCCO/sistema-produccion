@@ -381,25 +381,109 @@ public function listarBPA3() {
     /* =========================================
        BPA 4 - CONTROL DE PARÁMETROS
        ========================================= */
-    public function guardarBPA4($data) {
-        $sql = "INSERT INTO control_parametros (
-                    codigo_formato, version, fecha_registro, mes, sede, responsable,
-                    observaciones, creado_en, actualizado_en
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute([
-            $data['codigo_formato'],
-            $data['version'],
-            $data['fecha_registro'],
-            $data['mes'],
-            $data['sede'],
-            $data['responsable'],
-            $data['observaciones'],
-            $data['creado_en'],
-            $data['actualizado_en']
-        ]);
+       // Agregar en OvasController.php dentro de la clase OvasController
+public function guardarBPA4() {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        echo json_encode(['success' => false, 'error' => 'Método no permitido']);
+        exit;
     }
+
+    try {
+        // Datos generales
+        $mes = $_POST['mes'] ?? null;
+        $sede = $_POST['sede'] ?? null;
+        $responsable = $_POST['responsable'] ?? null;
+        $codigo_formato = $_POST['codigo_formato'] ?? 'CORAQUA-BPA-12';
+        $version = $_POST['version'] ?? '2.0';
+        $id_sede = isset($_POST['id_sede']) && is_numeric($_POST['id_sede']) ? (int)$_POST['id_sede'] : null;
+
+        // Arrays (esperamos nombres con [])
+        $dias = $_POST['dia'] ?? [];
+        $t_0630 = $_POST['t_0630'] ?? [];
+        $o2_0630 = $_POST['o2_0630'] ?? [];
+        $sat_0630 = $_POST['sat_0630'] ?? [];
+        $ph_0630 = $_POST['ph_0630'] ?? [];
+
+        $t_1200 = $_POST['t_1200'] ?? [];
+        $o2_1200 = $_POST['o2_1200'] ?? [];
+        $sat_1200 = $_POST['sat_1200'] ?? [];
+        $ph_1200 = $_POST['ph_1200'] ?? [];
+
+        $t_1530 = $_POST['t_1530'] ?? [];
+        $o2_1530 = $_POST['o2_1530'] ?? [];
+        $sat_1530 = $_POST['sat_1530'] ?? [];
+        $ph_1530 = $_POST['ph_1530'] ?? [];
+
+        $t_acumulada = $_POST['t_acumulada'] ?? [];
+        $observacion = $_POST['observacion'] ?? [];
+
+        $filas = max(
+            count($dias),
+            count($t_0630),
+            count($t_1200),
+            count($t_1530),
+            count($t_acumulada)
+        );
+
+        if ($filas === 0) {
+            echo json_encode(['success' => false, 'error' => 'No se recibieron filas para guardar.']);
+            exit;
+        }
+
+        $guardados = 0;
+
+        // Si el modelo tiene método guardarBPA4 que inserta una fila en control_diario_parametros_ovas
+        for ($i = 0; $i < $filas; $i++) {
+            // construir fecha_registro: usar fecha actual para el registro (puedes ajustar si quieres otra lógica)
+            $fecha_registro = date('Y-m-d');
+
+            // Si el campo 'dia' viene como número, lo pasamos tal cual.
+            $dia = isset($dias[$i]) && $dias[$i] !== '' ? (int)$dias[$i] : null;
+
+            $data = [
+                'codigo_formato' => $codigo_formato,
+                'version' => $version,
+                'fecha_registro' => $fecha_registro,
+                'mes' => $mes,
+                'sede' => $sede,
+                'responsable' => $responsable,
+                'dia' => $dia,
+                't_0630' => $t_0630[$i] !== '' ? $t_0630[$i] : null,
+                'o2_0630' => $o2_0630[$i] !== '' ? $o2_0630[$i] : null,
+                'sat_0630' => $sat_0630[$i] !== '' ? $sat_0630[$i] : null,
+                'ph_0630' => $ph_0630[$i] !== '' ? $ph_0630[$i] : null,
+                't_1200' => $t_1200[$i] !== '' ? $t_1200[$i] : null,
+                'o2_1200' => $o2_1200[$i] !== '' ? $o2_1200[$i] : null,
+                'sat_1200' => $sat_1200[$i] !== '' ? $sat_1200[$i] : null,
+                'ph_1200' => $ph_1200[$i] !== '' ? $ph_1200[$i] : null,
+                't_1530' => $t_1530[$i] !== '' ? $t_1530[$i] : null,
+                'o2_1530' => $o2_1530[$i] !== '' ? $o2_1530[$i] : null,
+                'sat_1530' => $sat_1530[$i] !== '' ? $sat_1530[$i] : null,
+                'ph_1530' => $ph_1530[$i] !== '' ? $ph_1530[$i] : null,
+                't_acumulada' => $t_acumulada[$i] !== '' ? $t_acumulada[$i] : null,
+                'observacion' => $observacion[$i] ?? null,
+                'id_sede' => $id_sede
+            ];
+
+            // Llamada al modelo — debe existir guardarBPA4 en OvasModel para insertar una fila
+            if ($this->model->guardarBPA4($data)) {
+                $guardados++;
+            }
+        }
+
+        echo json_encode([
+            'success' => true,
+            'message' => "Se guardaron {$guardados} registros correctamente.",
+            'inserted' => $guardados
+        ]);
+        exit;
+
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        exit;
+    }
+}
+
 
     public function obtenerListadoBPA4PorFecha($fecha) {
         $sql = "SELECT * FROM control_parametros WHERE DATE(fecha_registro) = ? ORDER BY fecha_registro DESC";

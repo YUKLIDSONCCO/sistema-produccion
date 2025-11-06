@@ -574,5 +574,25 @@ public function getDetalleBPA4_OVAS($id)
         return null;
     }
 }
+public function obtenerBpa1PorId($id) {
+    $stmt = $this->db->prepare("SELECT * FROM bpa1 WHERE id = ?");
+    $stmt->execute([$id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+public function actualizarBpa1($data) {
+    $sql = "UPDATE bpa1 SET fecha=?, sede=?, encargado=?, cantidad=?, estado=? WHERE id=?";
+    $stmt = $this->db->prepare($sql);
+    return $stmt->execute([
+        $data['fecha'], $data['sede'], $data['encargado'],
+        $data['cantidad'], $data['estado'], $data['id']
+    ]);
+}
+
+public function eliminarBpa1($id) {
+    $stmt = $this->db->prepare("DELETE FROM bpa1 WHERE id = ?");
+    return $stmt->execute([$id]);
+}
+
 
 }
