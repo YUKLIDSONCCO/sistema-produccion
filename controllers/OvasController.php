@@ -407,7 +407,6 @@ public function listarBPA3() {
         $stmt->execute([$fecha]);
         return $stmt;
     }
-
 }
 
 ?>

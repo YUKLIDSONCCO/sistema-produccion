@@ -267,6 +267,65 @@ class OvasModel {
         return false;
     }
 }
+/* ==========================
+   BPA4 - CONTROL DE PARÁMETROS
+   ========================== */
+
+public function guardarBPA4($data) {
+    try {
+        $sql = "INSERT INTO control_diario_parametros_ovas (
+                    codigo_formato, version, fecha_registro, mes, sede, responsable,
+                    dia, t_0630, o2_0630, sat_0630, ph_0630,
+                    t_1200, o2_1200, sat_1200, ph_1200,
+                    t_1530, o2_1530, sat_1530, ph_1530,
+                    t_acumulada, observacion, id_sede, creado_en
+                ) VALUES (
+                    :codigo_formato, :version, :fecha_registro, :mes, :sede, :responsable,
+                    :dia, :t_0630, :o2_0630, :sat_0630, :ph_0630,
+                    :t_1200, :o2_1200, :sat_1200, :ph_1200,
+                    :t_1530, :o2_1530, :sat_1530, :ph_1530,
+                    :t_acumulada, :observacion, :id_sede, NOW()
+                )";
+
+        $stmt = $this->conn->prepare($sql);
+        
+        $stmt->bindValue(':codigo_formato', $data['codigo_formato']);
+        $stmt->bindValue(':version', $data['version']);
+        $stmt->bindValue(':fecha_registro', $data['fecha_registro']);
+        $stmt->bindValue(':mes', $data['mes']);
+        $stmt->bindValue(':sede', $data['sede']);
+        $stmt->bindValue(':responsable', $data['responsable']);
+        $stmt->bindValue(':dia', $data['dia']);
+        $stmt->bindValue(':t_0630', $data['t_0630']);
+        $stmt->bindValue(':o2_0630', $data['o2_0630']);
+        $stmt->bindValue(':sat_0630', $data['sat_0630']);
+        $stmt->bindValue(':ph_0630', $data['ph_0630']);
+        $stmt->bindValue(':t_1200', $data['t_1200']);
+        $stmt->bindValue(':o2_1200', $data['o2_1200']);
+        $stmt->bindValue(':sat_1200', $data['sat_1200']);
+        $stmt->bindValue(':ph_1200', $data['ph_1200']);
+        $stmt->bindValue(':t_1530', $data['t_1530']);
+        $stmt->bindValue(':o2_1530', $data['o2_1530']);
+        $stmt->bindValue(':sat_1530', $data['sat_1530']);
+        $stmt->bindValue(':ph_1530', $data['ph_1530']);
+        $stmt->bindValue(':t_acumulada', $data['t_acumulada']);
+        $stmt->bindValue(':observacion', $data['observacion']);
+        $stmt->bindValue(':id_sede', $data['id_sede'], is_null($data['id_sede']) ? PDO::PARAM_NULL : PDO::PARAM_INT);
+
+        return $stmt->execute();
+
+    } catch (PDOException $e) {
+        error_log("Error al guardar BPA4: " . $e->getMessage());
+        return false;
+    }
+}
+
+public function obtenerListadoBPA4PorFecha($fecha) {
+    $sql = "SELECT * FROM control_diario_parametros_ovas WHERE fecha_registro = ? ORDER BY dia ASC";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([$fecha]);
+    return $stmt;
+}
 
 }
 ?>

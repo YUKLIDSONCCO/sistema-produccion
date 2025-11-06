@@ -105,7 +105,6 @@ ob_end_flush();
         <span>Accede con tu cuenta</span>
         <input type="email" name="correo" placeholder="Correo" required />
         <input type="password" name="password" placeholder="Contraseña" required />
-        <a href="#">¿Olvidaste tu contraseña?</a>
         <button type="submit">Ingresar</button>
       </form>
     </div>

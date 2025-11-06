@@ -157,6 +157,82 @@
   document.getElementById('quitarFilaBtn').addEventListener('click', quitarFila);
 
   window.addEventListener('DOMContentLoaded', generarTabla);
+  function guardarDatos() {
+    const datos = {
+        mes: document.getElementById('mes').value,
+        sede: document.getElementById('sede').value,
+        responsable: document.getElementById('responsable').value,
+        id_sede: 1, // Ajusta según tu lógica
+        dia: [],
+        t_0630: [], o2_0630: [], sat_0630: [], ph_0630: [],
+        t_1200: [], o2_1200: [], sat_1200: [], ph_1200: [],
+        t_1530: [], o2_1530: [], sat_1530: [], ph_1530: [],
+        t_acumulada: [], observacion: []
+    };
+
+    // Recoger datos de todas las filas
+    const filas = tbody.querySelectorAll('tr');
+    filas.forEach(fila => {
+        const inputs = fila.querySelectorAll('input');
+        datos.dia.push(parseInt(fila.cells[0].textContent));
+        
+        // 6:30 a.m.
+        datos.t_0630.push(inputs[0].value || null);
+        datos.o2_0630.push(inputs[1].value || null);
+        datos.sat_0630.push(inputs[2].value || null);
+        datos.ph_0630.push(inputs[3].value || null);
+        
+        // 12:00 m.
+        datos.t_1200.push(inputs[4].value || null);
+        datos.o2_1200.push(inputs[5].value || null);
+        datos.sat_1200.push(inputs[6].value || null);
+        datos.ph_1200.push(inputs[7].value || null);
+        
+        // 3:30 p.m.
+        datos.t_1530.push(inputs[8].value || null);
+        datos.o2_1530.push(inputs[9].value || null);
+        datos.sat_1530.push(inputs[10].value || null);
+        datos.ph_1530.push(inputs[11].value || null);
+        
+        // T° Acum. y Observación
+        datos.t_acumulada.push(inputs[12].value || null);
+        datos.observacion.push(inputs[13].value || '');
+    });
+
+    // ✅ CORREGIR ESTA URL - apuntar al index.php principal
+    fetch('/sistema-produccion/public/index.php?controller=Ovas&action=guardarBPA4', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams(datos)
+    })
+    .then(response => {
+        // Verificar si la respuesta es JSON válido
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            return response.text().then(text => {
+                throw new Error(`Respuesta no JSON: ${text.substring(0, 100)}`);
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            // Opcional: redirigir o limpiar el formulario
+        } else {
+            alert('Error: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error al guardar los datos: ' + error.message);
+    });
+}
+
+// Actualiza el event listener del botón Guardar
+document.getElementById('guardarBtn').addEventListener('click', guardarDatos);
 </script>
 </body>
 </html>
