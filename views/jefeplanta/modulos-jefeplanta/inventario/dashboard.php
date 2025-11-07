@@ -77,6 +77,60 @@
           <p>Aquí podrás acceder a todos los formatos BPA disponibles, registrar información y mantener actualizados los procesos de tu planta.</p>
         </div>
 
+<<<<<<< HEAD
+=======
+      <nav class="sidebar-nav">
+        <ul>
+          <li><a href="index.php?controller=JefePlanta&action=dashboard">
+  <i class="fas fa-circle-arrow-left"></i> Volver atrás
+</a></li>
+
+          <li><a href="#" id="inicioBtn" class="active"><i class="fas fa-house-chimney"></i> Inicio</a></li>
+          <li><a href="#" id="formatosBtn"><i class="fas fa-folder-open"></i> Formatos MPA</a></li>
+          <li><a href="#" id="listadoBtn"><i class="fas fa-list-check"></i> Listado MPA</a></li>
+          <li><a href="#" id="laboratorioBtn"><i class="fas fa-flask-vial"></i> Laboratorio</a></li>
+          <li><a href="#" id="salaBtn"><i class="fas fa-water"></i> Sala Empeques</a></li>
+          <li><a href="#" id="reportesBtn"><i class="fas fa-chart-line"></i> Reportes MPA</a></li>
+          <a href="index.php?controller=Auth&action=logout" class="nav-item" onclick="return confirm('¿Seguro que deseas cerrar sesión?');">
+  <div class="nav-icon">🚪</div>
+  <span class="label small">Cerrar Sesión</span>
+</a>
+
+
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Contenido Principal -->
+    <main class="main-content" id="mainContent">
+      <header class="header">
+        <div class="search-bar">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Buscar formato..." />
+        </div>
+        <div class="header-right">
+          <div class="notification">
+            <i class="far fa-bell"></i>
+            <span class="badge">1</span>
+          </div>
+          <div class="user-profile">
+            <div class="user-info">
+              <span>CORAQUA</span>
+              <small>Jefe de Planta</small>
+            </div>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+        </div>
+      </header>
+
+      <!-- INICIO -->
+      <section class="dashboard" id="inicioSection">
+        <div class="welcome">
+          <h1>🐟 Bienvenido al Panel de Inventario</h1>
+          <p>Aquí podrás acceder a todos los formatos BPA disponibles, registrar información y mantener actualizados los procesos de tu planta.</p>
+        </div>
+
+>>>>>>> 6c2638a (Aun falta hacer cambios)
         <!-- 🐠 Pez animado -->
         <div class="fish"></div>
       </section>

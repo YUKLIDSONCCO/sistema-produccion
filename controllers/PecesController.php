@@ -5,8 +5,14 @@ require_once "../models/PecesModel.php";
 class PecesController {
 
     public function bpa6() {
+<<<<<<< HEAD
         // Carga de formulario BPA6
         require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa6.php';
+=======
+        $model = new PecesModel();
+        $especies = $model->obtenerEspecies();
+        include "../views/jefeplanta/modulos-jefeplanta/peces/bpa6.php";
+>>>>>>> 6c2638a (Aun falta hacer cambios)
     }
 
     public function guardarBpa6() {
@@ -153,6 +159,7 @@ class PecesController {
         $model = new PecesModel();
         $registros = $model->getBpa7List();
         require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa7-listado.php';
+<<<<<<< HEAD
     }
 
     public function eliminarBpa7() {
@@ -162,6 +169,8 @@ class PecesController {
         }
         header("Location: index.php?controller=Peces&action=bpa7Listado");
         exit;
+=======
+>>>>>>> 6c2638a (Aun falta hacer cambios)
     }
 
     /* ======================
@@ -246,6 +255,7 @@ class PecesController {
         $model = new PecesModel();
         $registros = $model->getBpa10List();
         require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa10-listado.php';
+<<<<<<< HEAD
     }
 
     public function eliminarBpa10() {
@@ -255,6 +265,8 @@ class PecesController {
         }
         header("Location: index.php?controller=Peces&action=bpa10Listado");
         exit;
+=======
+>>>>>>> 6c2638a (Aun falta hacer cambios)
     }
 
     /* ======================
@@ -394,8 +406,12 @@ class PecesController {
 
     public function bpa12Listado() {
         $model = new PecesModel();
+<<<<<<< HEAD
         // Usar listado detallado por fila para mostrar las columnas de medición en la vista
         $registros = $model->getBpa12ListDetailed();
+=======
+        $registros = $model->getBpa12List();
+>>>>>>> 6c2638a (Aun falta hacer cambios)
         require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa12-listado.php';
     }
 
