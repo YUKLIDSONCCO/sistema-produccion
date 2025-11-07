@@ -10,172 +10,155 @@ $actividadReciente = $actividadReciente ?? [];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración - Sistema Producción</title>
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+
     <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #34495e;
-            --accent-color: #3498db;
-            --success-color: #27ae60;
-            --warning-color: #f39c12;
-            --danger-color: #e74c3c;
-            --light-color: #ecf0f1;
-            --dark-color: #2c3e50;
-        }
-        
-        body {
-            background-color: #f8f9fa;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        .sidebar {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            height: 100vh;
-            position: fixed;
-            width: 250px;
-            transition: all 0.3s;
-            z-index: 1000;
-        }
-        
-        .sidebar .logo {
-            padding: 20px 15px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .sidebar .logo img {
-            height: 40px;
-        }
-        
-        .sidebar .nav-link {
-            color: rgba(255,255,255,0.8);
-            padding: 12px 20px;
-            margin: 5px 0;
-            border-radius: 5px;
-            transition: all 0.3s;
-        }
-        
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
-            background-color: rgba(255,255,255,0.1);
-            color: white;
-        }
-        
-        .sidebar .nav-link i {
-            margin-right: 10px;
-            width: 20px;
-            text-align: center;
-        }
-        
-        .main-content {
-            margin-left: 250px;
-            padding: 20px;
-            transition: all 0.3s;
-        }
-        
-        .navbar-custom {
-            background-color: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .stat-card {
-            border-radius: 10px;
-            border: none;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-            margin-bottom: 20px;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .stat-card .card-body {
-            padding: 25px;
-        }
-        
-        .stat-icon {
-            font-size: 2.5rem;
-            opacity: 0.7;
-        }
-        
-        .card-users {
-            border-left: 4px solid var(--accent-color);
-        }
-        
-        .card-active {
-            border-left: 4px solid var(--success-color);
-        }
-        
-        .card-pending {
-            border-left: 4px solid var(--warning-color);
-        }
-        
-        .card-suspended {
-            border-left: 4px solid var(--danger-color);
-        }
-        
-        .chart-container {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-        
-        .recent-activity {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        
-        .activity-item {
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .activity-item:last-child {
-            border-bottom: none;
-        }
-        
-        .activity-time {
-            font-size: 0.8rem;
-            color: #6c757d;
-        }
-        
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 70px;
-                text-align: center;
-            }
-            
-            .sidebar .logo span, .sidebar .nav-link span {
-                display: none;
-            }
-            
-            .sidebar .nav-link i {
-                margin-right: 0;
-                font-size: 1.2rem;
-            }
-            
-            .main-content {
-                margin-left: 70px;
-            }
-        }
+      :root{
+        --cora-orange: #ff7b00;
+        --cora-dark: #0f2b2b;
+        --muted: #6b6b6b;
+        --card-bg: rgba(255,255,255,0.98);
+        --soft-shadow: 0 8px 30px rgba(15,43,43,0.06);
+        --glass: rgba(255,255,255,0.6);
+        --green-soft: #dff6ea;
+      }
+
+      /* Reset & base */
+      *{box-sizing:border-box}
+      body{
+        margin:0;
+        font-family: Inter, Poppins, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+        background: linear-gradient(180deg,#f7fbfc 0%, #f0f4f6 100%);
+        color:var(--cora-dark);
+        -webkit-font-smoothing:antialiased;
+      }
+
+      /* Layout */
+      .sidebar{
+        position:fixed;
+        left:0;
+        top:0;
+        bottom:0;
+        width:260px;
+        background: linear-gradient(180deg,#ec8304ff 0%, #ec8304ff 100%);
+        color:#fff;
+        padding:20px;
+        display:flex;
+        flex-direction:column;
+        gap:12px;
+        transition: width .22s ease;
+        z-index:1100;
+      }
+      .sidebar.collapsed{ width:76px; }
+      .sidebar .logo{
+        display:flex;
+        align-items:center;
+        gap:12px;
+        padding-bottom:8px;
+        border-bottom:1px solid rgba(250, 144, 14, 0.94);
+      }
+      .sidebar .logo i{font-size:22px;color:var(--cora-orange)}
+      .sidebar .logo span{font-weight:700; letter-spacing:.3px}
+
+      .sidebar-nav{margin-top:12px; flex:1; overflow:auto}
+      .sidebar-nav a{
+        display:flex;
+        align-items:center;
+        gap:12px;
+        color:rgba(255,255,255,0.92);
+        padding:10px 8px;
+        border-radius:10px;
+        text-decoration:none;
+        margin-bottom:6px;
+        transition: background .15s;
+      }
+      .sidebar-nav a:hover, .sidebar-nav a.active{ background: rgba(255,255,255,0.06); }
+
+      .sidebar-nav i{ width:30px; text-align:center; font-size:16px }
+
+      main.main-content{
+        margin-left:260px;
+        padding:22px;
+        transition: margin-left .22s ease;
+      }
+      .sidebar.collapsed + main.main-content{ margin-left:76px; }
+
+      /* Header */
+      .header{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:12px;
+        margin-bottom:16px;
+      }
+      .search-bar{
+        display:flex;
+        align-items:center;
+        gap:10px;
+        background:var(--card-bg);
+        border-radius:12px;
+        padding:8px 12px;
+        box-shadow:var(--soft-shadow);
+        border:1px solid rgba(15,43,43,0.03);
+        min-width:260px;
+      }
+      .search-bar input{ border:0; outline:none; background:transparent; width:260px }
+      .header-right{ display:flex; align-items:center; gap:12px }
+
+      .notification{ position:relative; background:var(--card-bg); padding:8px 10px; border-radius:10px; box-shadow:var(--soft-shadow); border:1px solid rgba(15,43,43,0.03)}
+      .notification .badge{ position:absolute; top:-6px; right:-6px; background:#e74c3c; color:#fff; font-size:11px; padding:4px 6px; border-radius:50% }
+
+      .user-profile{ display:flex; align-items:center; gap:10px; background:var(--card-bg); padding:6px 10px; border-radius:12px; box-shadow:var(--soft-shadow); border:1px solid rgba(15,43,43,0.03)}
+      .user-profile .user-info{ display:flex; flex-direction:column; line-height:1; }
+      .user-profile small{ color:var(--muted); font-size:12px }
+
+      /* Welcome card */
+      .welcome{
+        background: linear-gradient(180deg,#fff,#fffdf9);
+        padding:18px;
+        border-radius:14px;
+        border:1px solid rgba(15,43,43,0.04);
+        box-shadow:var(--soft-shadow);
+        display:flex;
+        justify-content:space-between;
+        gap:12px;
+        align-items:center;
+      }
+      .welcome h1{ margin:0; font-size:1.05rem }
+
+      /* Grid & cards */
+      .row-flex{ display:flex; gap:16px; flex-wrap:wrap; margin-top:18px }
+      .card{ background:var(--card-bg); padding:18px; border-radius:14px; box-shadow:var(--soft-shadow); border:1px solid rgba(15,43,43,0.04); flex:1; min-width:220px }
+      .card .title{ color:var(--muted); font-size:13px; margin-bottom:8px }
+      .card .value{ font-size:1.6rem; font-weight:800 }
+
+      /* Chart container smaller */
+      .chart-small{ height:220px !important; }
+
+      /* Recent activity */
+      .recent-activity{ padding:12px; max-height:300px; overflow:auto }
+      .activity-item{ padding:10px; border-radius:8px; margin-bottom:8px; background:linear-gradient(180deg, rgba(15,86,96,0.03), rgba(255,123,0,0.02)); border:1px solid rgba(15,43,43,0.04) }
+
+      /* Quick actions */
+      .quick-actions{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; margin-top:14px }
+      .action-btn{ display:block; padding:16px; border-radius:12px; text-align:center; text-decoration:none; color:#fff; font-weight:700; box-shadow:0 8px 24px rgba(15,43,43,0.06) }
+      .action-users{ background: linear-gradient(90deg,#1e88e5,#42a5f5) }
+      .action-config{ background: linear-gradient(90deg,#0f5660,#2ca58d) }
+      .action-audit{ background: linear-gradient(90deg,#ff9a4a,#ff7b00) }
+
+      /* Footer */
+      footer{ text-align:center; color:var(--muted); margin-top:18px }
+
+      /* Responsive */
+      @media(max-width:900px){
+        .sidebar{ left:-9999px; position:fixed; transform:translateX(0) }
+        .sidebar.collapsed{ left:0 }
+        main.main-content{ margin-left:0; padding:12px }
+      }
     </style>
 </head>
 <body>
@@ -188,283 +171,167 @@ $actividadReciente = $actividadReciente ?? [];
     ?>
 
     <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="logo d-flex align-items-center">
-            <img src="/sistema-produccion/public/img/coraqua.png" alt="Logo Coraqua">
-            <span class="ms-2 fw-bold">Sistema Producción</span>
+    <aside class="sidebar" id="sidebar">
+        <div class="logo">
+            <i class="fas fa-water"></i>
+            <span>CORAQUA</span>
         </div>
-        
-        <nav class="nav flex-column mt-3">
-            <a class="nav-link active" href="index.php?controller=Admin&action=dashboard">
-                <i class="fas fa-tachometer-alt"></i>
-                <span>Dashboard</span>
-            </a>
-            <a class="nav-link" href="index.php?controller=Admin&action=index">
-                <i class="fas fa-users"></i>
-                <span>Gestión de Usuarios</span>
-            </a>
-            <a class="nav-link" href="index.php?controller=Admin&action=mostrarRegistro">
-                <i class="fas fa-user-plus"></i>
-                <span>Registrar Usuario</span>
-            </a>
-            <a class="nav-link" href="index.php?controller=Config&action=index">
-                <i class="fas fa-cog"></i>
-                <span>Configuración</span>
-            </a>
-            <a class="nav-link" href="index.php?controller=Auditoria&action=index">
-                <i class="fas fa-chart-bar"></i>
-                <span>Auditoría</span>
-            </a>
-            <a class="nav-link" href="index.php?controller=Auth&action=logout">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Cerrar Sesión</span>
-            </a>
+
+        <nav class="sidebar-nav" role="navigation">
+            <a class="active" href="index.php?controller=Admin&action=dashboard"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+            <a href="index.php?controller=Admin&action=index"><i class="fas fa-users"></i><span>Gestión de Usuarios</span></a>
+            <a href="index.php?controller=Admin&action=mostrarRegistro"><i class="fas fa-user-plus"></i><span>Registrar Usuario</span></a>
+            <a href="index.php?controller=Auditoria&action=index"><i class="fas fa-chart-bar"></i><span>Ver Reportes</span></a>
+            <a href="index.php?controller=Config&action=index"><i class="fas fa-cog"></i><span>Configuración</span></a>
+            
+            <a href="index.php?controller=Auth&action=logout" onclick="return confirm('¿Seguro que deseas cerrar sesión?');"><i class="fas fa-sign-out-alt"></i><span>Cerrar Sesión</span></a>
         </nav>
-    </div>
+    </aside>
 
     <!-- Main Content -->
-    <div class="main-content">
-        <!-- Top Bar -->
-        <nav class="navbar navbar-expand-lg navbar-custom rounded mb-4">
-            <div class="container-fluid">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse">
-                    <i class="fas fa-bars"></i>
-                </button>
-                
-                <div class="d-flex align-items-center ms-auto">
-                    <div class="dropdown">
-                        <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
-                            <img src="<?= $_SESSION['usuario']['foto'] ?? '/sistema-produccion/public/img/default-avatar.png' ?>" 
-                                 alt="Perfil" class="user-avatar me-2">
-                            <span class="d-none d-md-inline"><?= htmlspecialchars($_SESSION['usuario']['nombre']); ?></span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Mi Perfil</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Configuración</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="index.php?controller=Auth&action=logout"><i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</a></li>
-                        </ul>
-                    </div>
-                </div>
+    <main class="main-content">
+        <div class="header">
+            <div style="display:flex; gap:12px; align-items:center;">
+              <button id="toggleSidebar" title="Menu" style="background:transparent;border:0;font-size:18px;cursor:pointer;color:var(--cora-dark)">
+                <i class="fas fa-bars"></i>
+              </button>
+              <div class="search-bar" role="search">
+                <i class="fas fa-search" style="color:var(--muted)"></i>
+                <input type="text" placeholder="Buscar formato..." aria-label="Buscar formato" />
+              </div>
             </div>
-        </nav>
 
-        <!-- Page Title -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Panel de Administración</h1>
-            <div class="btn-group">
-                <button class="btn btn-outline-primary btn-sm" id="refreshBtn">
-                    <i class="fas fa-sync-alt"></i> Actualizar
-                </button>
-                <button class="btn btn-outline-secondary btn-sm" id="printBtn">
-                    <i class="fas fa-print"></i> Imprimir Reporte
-                </button>
+                <div class="user-profile" title="<?= htmlspecialchars($_SESSION['usuario']['nombre']); ?>">
+                    <div class="user-info">
+                        <span><?= htmlspecialchars($_SESSION['usuario']['nombre']); ?></span>
+                        <small>Administrador</small>
+                    </div>
+                    <i class="fas fa-chevron-down" style="color:var(--muted)"></i>
+                </div>
             </div>
         </div>
 
-        <!-- Alert Messages -->
-        <?php if (isset($_SESSION['success'])): ?>
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <?= $_SESSION['success']; ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-            <?php unset($_SESSION['success']); ?>
-        <?php endif; ?>
-        
-        <?php if (isset($_SESSION['error'])): ?>
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <?= $_SESSION['error']; ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-            <?php unset($_SESSION['error']); ?>
-        <?php endif; ?>
-        <!-- Statistics Cards -->
-<div class="row">
-    <div class="col-xl-3 col-md-6">
-        <div class="card stat-card card-users">
-            <div class="card-body">
-                <div class="row align-items-center">
-                    <div class="col-8">
-                        <h5 class="card-title text-muted mb-0">Total Usuarios</h5>
-                        <h2 class="mt-2 mb-0" id="totalUsers"><?= $estadisticas['total_usuarios'] ?? 0 ?></h2>
-                    </div>
-                    <div class="col-4 text-end">
-                        <i class="fas fa-users stat-icon text-primary"></i>
-                    </div>
-                </div>
-            </div>
+        <div class="welcome" role="region" aria-label="Bienvenida">
+          <div>
+            <h1>👋 Hola, <?= htmlspecialchars($_SESSION['usuario']['nombre']); ?></h1>
+            <p style="margin:6px 0 0 0; color:var(--muted)">Panel de administración — controla usuarios, configuración y auditoría.</p>
+          </div>
+          <div style="min-width:120px; text-align:right;">
+            <small style="color:var(--muted)">Última actividad</small><br>
+            <strong style="font-size:1.1rem">Hoy</strong>
+          </div>
         </div>
-    </div>
-    
-    <div class="col-xl-3 col-md-6">
-        <div class="card stat-card card-active">
-            <div class="card-body">
-                <div class="row align-items-center">
-                    <div class="col-8">
-                        <h5 class="card-title text-muted mb-0">Usuarios Activos</h5>
-                        <h2 class="mt-2 mb-0" id="activeUsers"><?= $estadisticas['activos'] ?? 0 ?></h2>
-                    </div>
-                    <div class="col-4 text-end">
-                        <i class="fas fa-user-check stat-icon text-success"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-xl-3 col-md-6">
-        <div class="card stat-card card-suspended">
-            <div class="card-body">
-                <div class="row align-items-center">
-                    <div class="col-8">
-                        <h5 class="card-title text-muted mb-0">Suspendidos</h5>
-                        <h2 class="mt-2 mb-0" id="suspendedUsers"><?= $estadisticas['suspendidos'] ?? 0 ?></h2>
-                    </div>
-                    <div class="col-4 text-end">
-                        <i class="fas fa-user-slash stat-icon text-danger"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-        <!-- Charts and Activity -->
-<div class="row mt-4">
-    <div class="col-lg-8">
-        <div class="chart-container">
-            <h5 class="mb-3">Distribución de Usuarios por Rol</h5>
-            <canvas id="usersChart" height="250"></canvas>
-        </div>
-    </div>
-    
-    <div class="col-lg-4">
-        <div class="recent-activity">
-            <h5 class="mb-3">Actividad Reciente</h5>
-            <div id="recentActivity">
-                <?php if (!empty($actividadReciente)): ?>
-                    <?php foreach ($actividadReciente as $actividad): ?>
-                        <div class="activity-item">
-                            <div class="d-flex justify-content-between">
-                                <span class="fw-bold"><?= htmlspecialchars($actividad['accion']) ?></span>
-                                <small class="activity-time">
-                                    <?= $this->calcularTiempoTranscurrido($actividad['fecha']) ?>
-                                </small>
-                            </div>
-                            <small class="text-muted">
-                                <?= htmlspecialchars($actividad['usuario']) ?> 
-                                <?= $actividad['accion'] === 'Nuevo usuario registrado' ? 'se registró en el sistema' : '' ?>
-                            </small>
-                        </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <div class="text-muted text-center py-3">No hay actividad reciente</div>
-                <?php endif; ?>
-            </div>
-        </div>
-    </div>
-</div>
 
-        <!-- Quick Actions -->
-        <div class="row mt-4">
-            <div class="col-12">
-                <div class="chart-container">
-                    <h5 class="mb-3">Acciones Rápidas</h5>
-                    <div class="row text-center">
-                        <div class="col-md-3 mb-3">
-                            <a href="index.php?controller=Admin&action=index" class="btn btn-success btn-lg w-100 py-3">
-                                <i class="fas fa-users fa-2x mb-2"></i><br>
-                                Gestionar Usuarios
-                            </a>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <a href="index.php?controller=Config&action=index" class="btn btn-info btn-lg w-100 py-3">
-                                <i class="fas fa-cog fa-2x mb-2"></i><br>
-                                Configuración
-                            </a>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <a href="index.php?controller=Auditoria&action=index" class="btn btn-warning btn-lg w-100 py-3">
-                                <i class="fas fa-chart-bar fa-2x mb-2"></i><br>
-                Ver Auditoría
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+        <!-- Stats row -->
+        <div class="row-flex" style="margin-top:18px">
+          <div class="card" style="max-width:320px">
+            <div class="title">Total Usuarios</div>
+            <div class="value" id="totalUsers"><?= $estadisticas['total_usuarios'] ?? 0 ?></div>
+          </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+          <div class="card" style="max-width:320px">
+            <div class="title">Usuarios Activos</div>
+            <div class="value" id="activeUsers"><?= $estadisticas['activos'] ?? 0 ?></div>
+          </div>
+
+          <div class="card" style="max-width:320px">
+            <div class="title">Suspendidos</div>
+            <div class="value" id="suspendedUsers"><?= $estadisticas['suspendidos'] ?? 0 ?></div>
+          </div>
+        </div>
+
+        <!-- charts + activity -->
+        <div class="row-flex" style="margin-top:18px; align-items:flex-start">
+          <div class="card" style="flex:2; min-width:360px;">
+            <div class="title">Distribución de Usuarios por Rol</div>
+            <canvas id="usersChart" class="chart-small" aria-label="Grafico de roles" role="img"></canvas>
+          </div>
+
+          <div class="card" style="flex:1; min-width:260px;">
+            <div class="title">Actividad Reciente</div>
+            <div class="recent-activity">
+              <?php if (!empty($actividadReciente)): ?>
+                  <?php foreach ($actividadReciente as $actividad): ?>
+                      <div class="activity-item">
+                          <div style="display:flex; justify-content:space-between; align-items:center;">
+                              <div style="font-weight:700; font-size:13px"><?= htmlspecialchars($actividad['accion']) ?></div>
+                              <small style="color:var(--muted); font-size:12px"><?= $this->calcularTiempoTranscurrido($actividad['fecha']) ?></small>
+                          </div>
+                          <div style="color:var(--muted); font-size:13px; margin-top:6px">
+                              <?= htmlspecialchars($actividad['usuario']) ?>
+                          </div>
+                      </div>
+                  <?php endforeach; ?>
+              <?php else: ?>
+                  <div style="text-align:center; color:var(--muted); padding:18px">No hay actividad reciente</div>
+              <?php endif; ?>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick actions -->
+        <div style="margin-top:18px">
+          <div class="card">
+            <div class="title">Acciones Rápidas</div>
+            <div class="quick-actions" style="margin-top:12px">
+              <a class="action-btn action-users" href="index.php?controller=Admin&action=index"><i class="fas fa-users fa-lg"></i><div style="margin-top:8px">Gestionar Usuarios</div></a>
+              <a class="action-btn action-config" href="index.php?controller=Config&action=index"><i class="fas fa-cog fa-lg"></i><div style="margin-top:8px">Configuración</div></a>
+              <a class="action-btn action-audit" href="index.php?controller=Auditoria&action=index"><i class="fas fa-chart-bar fa-lg"></i><div style="margin-top:8px">Ver Auditoría</div></a>
+            </div>
+          </div>
+        </div>
+
+    </main>
+
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Datos reales desde PHP
-        const distribucionRoles = <?= json_encode($distribucionRoles) ?>;
-        
-        // Preparar datos para el gráfico
+      // Toggle sidebar
+      const toggleBtn = document.getElementById('toggleSidebar');
+      const sidebar = document.getElementById('sidebar');
+      toggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('collapsed');
+      });
+
+      // Chart.js init (small, kept logic same)
+      document.addEventListener('DOMContentLoaded', function(){
+        const distribucionRoles = <?= json_encode($distribucionRoles) ?> || [];
         const labels = distribucionRoles.map(item => item.rol);
-        const data = distribucionRoles.map(item => parseInt(item.cantidad));
-        const colores = ['#3498db', '#2ecc71', '#f39c12', '#e74c3c', '#9b59b6', '#1abc9c'];
-        
-        // Initialize chart with real data
+        const data = distribucionRoles.map(item => parseInt(item.cantidad) || 0);
+        const colores = ['#ff7b00','#2ecc71','#42a5f5','#f39c12','#9b59b6','#1abc9c'];
+
         const ctx = document.getElementById('usersChart').getContext('2d');
-        const usersChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: labels,
-                datasets: [{
-                    data: data,
-                    backgroundColor: colores,
-                    borderWidth: 2,
-                    borderColor: '#fff'
-                }]
+        new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels,
+            datasets: [{
+              data,
+              backgroundColor: colores.slice(0, labels.length),
+              borderColor: '#fff',
+              borderWidth: 2
+            }]
+          },
+          options: {
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'bottom' },
             },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const label = context.label || '';
-                                const value = context.raw || 0;
-                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                const percentage = Math.round((value / total) * 100);
-                                return `${label}: ${value} (${percentage}%)`;
-                            }
-                        }
-                    }
-                }
-            }
+            layout: { padding: 8 }
+          }
         });
 
-        // Refresh button functionality - ahora recarga la página
-        document.getElementById('refreshBtn').addEventListener('click', function() {
+        // refresh & print (keep behavior)
+        const refreshBtn = document.getElementById('refreshBtn');
+        if(refreshBtn){
+          refreshBtn.addEventListener('click', function(){
             this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Actualizando...';
-            setTimeout(() => {
-                location.reload();
-            }, 1000);
-        });
-
-        // Print button functionality
-        document.getElementById('printBtn').addEventListener('click', function() {
-            window.print();
-        });
-
-        // Responsive sidebar toggle for mobile
-        const sidebarToggle = document.querySelector('.navbar-toggler');
-        const sidebar = document.querySelector('.sidebar');
-        const mainContent = document.querySelector('.main-content');
-
-        if (sidebarToggle) {
-            sidebarToggle.addEventListener('click', function() {
-                sidebar.classList.toggle('collapsed');
-                mainContent.classList.toggle('expanded');
-            });
+            setTimeout(()=>location.reload(), 900);
+          });
         }
-    });
-</script>
+        const printBtn = document.getElementById('printBtn');
+        if(printBtn){
+          printBtn.addEventListener('click', ()=> window.print());
+        }
+      });
+    </script>
 </body>
 </html>

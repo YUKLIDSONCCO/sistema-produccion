@@ -29,7 +29,7 @@
       <nav class="sidebar-nav">
         <ul>
           <li><a href="index.php?controller=JefePlanta&action=dashboard">
-  <i class="fas fa-circle-arrow-left"></i> Volver al Dashboard
+  <i class="fas fa-circle-arrow-left"></i> Volver atrás
 </a></li>
 
           <li><a href="#" id="inicioBtn" class="active"><i class="fas fa-house-chimney"></i> Inicio</a></li>
@@ -61,7 +61,6 @@
             <span class="badge">1</span>
           </div>
           <div class="user-profile">
-            <img src="https://via.placeholder.com/40" alt="User" />
             <div class="user-info">
               <span>CORAQUA</span>
               <small>Jefe de Planta</small>
