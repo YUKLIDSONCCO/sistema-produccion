@@ -28,14 +28,22 @@
 
       <nav class="sidebar-nav">
         <ul>
-          <li><a href="javascript:history.back()"><i class="fas fa-circle-arrow-left"></i> Volver atrás</a></li>
+          <li><a href="index.php?controller=JefePlanta&action=dashboard">
+  <i class="fas fa-circle-arrow-left"></i> Volver al Dashboard
+</a></li>
+
           <li><a href="#" id="inicioBtn" class="active"><i class="fas fa-house-chimney"></i> Inicio</a></li>
           <li><a href="#" id="formatosBtn"><i class="fas fa-folder-open"></i> Formatos MPA</a></li>
           <li><a href="#" id="listadoBtn"><i class="fas fa-list-check"></i> Listado MPA</a></li>
           <li><a href="#" id="laboratorioBtn"><i class="fas fa-flask-vial"></i> Laboratorio</a></li>
           <li><a href="#" id="salaBtn"><i class="fas fa-water"></i> Sala Empeques</a></li>
           <li><a href="#" id="reportesBtn"><i class="fas fa-chart-line"></i> Reportes MPA</a></li>
-          <li><a href="index.php?controller=Login&action=cerrarSesion"><i class="fas fa-door-open"></i> Cerrar sesión</a></li>
+          <a href="index.php?controller=Auth&action=logout" class="nav-item" onclick="return confirm('¿Seguro que deseas cerrar sesión?');">
+  <div class="nav-icon">🚪</div>
+  <span class="label small">Cerrar Sesión</span>
+</a>
+
+
         </ul>
       </nav>
     </aside>
