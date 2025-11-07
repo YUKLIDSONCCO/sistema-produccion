@@ -5,9 +5,8 @@ require_once "../models/PecesModel.php";
 class PecesController {
 
     public function bpa6() {
-        $model = new PecesModel();
-        $especies = $model->obtenerEspecies();
-        include "../views/jefeplanta/modulos-jefeplanta/peces/bpa6/bpa6.php";
+        // Carga de formulario BPA6
+        require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa6.php';
     }
 
     public function guardarBpa6() {
@@ -27,19 +26,28 @@ class PecesController {
                 $id_especie = $model->agregarEspecieYObtenerID($dataEspecie);
             }
 
-            // Datos principales del formato BPA6
-            $data = [
-                'codigo_formato' => $_POST['codigo_formato'] ?? '',
-                'version' => $_POST['version'] ?? '',
-                'fecha_registro' => $_POST['fecha_registro'] ?? '',
+            // Soporte multi-fila desde el formulario (arrays)
+            $ups = $_POST['up'] ?? [];
+            $lotes = $_POST['lote'] ?? [];
+            $morts = $_POST['mortalidad'] ?? [];
+            $morbs = $_POST['morbilidad'] ?? [];
+            $totals = $_POST['total'] ?? [];
+            $obs = $_POST['observaciones'] ?? [];
+
+            // Si no vienen como arrays, normalizamos a un solo elemento
+            if (!is_array($ups)) { $ups = [$ups]; }
+            if (!is_array($lotes)) { $lotes = [$lotes]; }
+            if (!is_array($morts)) { $morts = [$morts]; }
+            if (!is_array($morbs)) { $morbs = [$morbs]; }
+            if (!is_array($totals)) { $totals = [$totals]; }
+            if (!is_array($obs)) { $obs = [$obs]; }
+
+            $base = [
+                'codigo_formato' => $_POST['codigo_formato'] ?? 'CORAQUA BPA-6',
+                'version' => $_POST['version'] ?? '2.0',
+                'fecha_registro' => $_POST['fecha_registro'] ?? date('Y-m-d'),
                 'responsable' => $_POST['responsable'] ?? '',
                 'sede' => $_POST['sede'] ?? '',
-                'up' => $_POST['up'] ?? '',
-                'lote' => $_POST['lote'] ?? '',
-                'mortalidad' => $_POST['mortalidad'] ?? 0,
-                'morbilidad' => $_POST['morbilidad'] ?? 0,
-                'total' => $_POST['total'] ?? 0,
-                'observaciones' => $_POST['observaciones'] ?? '',
                 'id_especie' => $id_especie,
                 'id_lote' => $_POST['id_lote'] ?? null,
                 'id_sede' => $_POST['id_sede'] ?? null,
@@ -47,37 +55,73 @@ class PecesController {
                 'actualizado_en' => date('Y-m-d H:i:s')
             ];
 
-            $model->guardarBpa6($data);
+            $n = max(count($ups), count($lotes));
+            for ($i = 0; $i < $n; $i++) {
+                if (empty($lotes[$i]) && empty($ups[$i])) continue;
+                $data = $base;
+                $data['up'] = $ups[$i] ?? '';
+                $data['lote'] = $lotes[$i] ?? '';
+                $data['mortalidad'] = (int)($morts[$i] ?? 0);
+                $data['morbilidad'] = (int)($morbs[$i] ?? 0);
+                $data['observaciones'] = is_array($obs) ? ($obs[$i] ?? '') : ($obs ?? '');
+                $model->guardarBpa6($data);
+            }
 
-            header("Location: index.php?controller=Peces&action=bpa6");
+            // Volver al formulario con mensaje de éxito; el listado se ve desde el botón en la vista
+            header("Location: index.php?controller=Peces&action=bpa6&status=ok");
             exit;
         }
+    }
+
+    public function bpa6Listado() {
+        $model = new PecesModel();
+        $registros = $model->getBpa6List();
+        require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa6-listado.php';
+    }
+
+    public function eliminarBpa6() {
+        if (isset($_GET['id'])) {
+            $model = new PecesModel();
+            $model->eliminarBpa6($_GET['id']);
+        }
+        header("Location: index.php?controller=Peces&action=bpa6Listado");
+        exit;
     }
 
     /* ======================
        BPA 7 - ALIMENTACIÓN DIARIA
        ====================== */
     public function bpa7() {
-        require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa7/bpa7.php';
+        require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa7.php';
     }
 
     public function guardarBpa7() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $model = new PecesModel();
 
-            $data = [
-                'codigo_formato' => $_POST['codigo_formato'] ?? '',
-                'version' => $_POST['version'] ?? '',
-                'fecha_registro' => $_POST['fecha_registro'] ?? '',
+            // Arrays de filas
+            $ups = $_POST['up'] ?? [];
+            $lotes = $_POST['lote'] ?? [];
+            $biomasas = $_POST['biomasa'] ?? [];
+            $tasas = $_POST['tasa_alimentacion'] ?? [];
+            $alim = $_POST['alimento_suministrado'] ?? [];
+            $calibres = $_POST['calibre'] ?? [];
+            $obs = $_POST['observaciones'] ?? [];
+
+            if (!is_array($ups)) { $ups = [$ups]; }
+            if (!is_array($lotes)) { $lotes = [$lotes]; }
+            if (!is_array($biomasas)) { $biomasas = [$biomasas]; }
+            if (!is_array($tasas)) { $tasas = [$tasas]; }
+            if (!is_array($alim)) { $alim = [$alim]; }
+            if (!is_array($calibres)) { $calibres = [$calibres]; }
+            if (!is_array($obs)) { $obs = [$obs]; }
+
+            $base = [
+                'codigo_formato' => $_POST['codigo_formato'] ?? 'CORAQUA BPA-7',
+                'version' => $_POST['version'] ?? '2.0',
+                'fecha_registro' => $_POST['fecha_registro'] ?? date('Y-m-d'),
                 'responsable' => $_POST['responsable'] ?? '',
                 'sede' => $_POST['sede'] ?? '',
-                'up' => $_POST['up'] ?? '',
-                'lote' => $_POST['lote'] ?? '',
-                'biomasa' => $_POST['biomasa'] ?? 0,
-                'tasa_alimentacion' => $_POST['tasa_alimentacion'] ?? 0,
-                'alimento_suministrado' => $_POST['alimento_suministrado'] ?? 0,
-                'calibre' => $_POST['calibre'] ?? '',
-                'observaciones' => $_POST['observaciones'] ?? '',
                 'id_lote' => $_POST['id_lote'] ?? null,
                 'id_especie' => $_POST['id_especie'] ?? null,
                 'id_sede' => $_POST['id_sede'] ?? null,
@@ -85,8 +129,21 @@ class PecesController {
                 'actualizado_en' => date('Y-m-d H:i:s')
             ];
 
-            $model->guardarBpa7($data);
-            header("Location: index.php?controller=Peces&action=bpa7");
+            $n = max(count($ups), count($lotes));
+            for ($i = 0; $i < $n; $i++) {
+                if (empty($lotes[$i]) && empty($ups[$i])) continue;
+                $data = $base;
+                $data['up'] = $ups[$i] ?? '';
+                $data['lote'] = $lotes[$i] ?? '';
+                $data['biomasa'] = (float)($biomasas[$i] ?? 0);
+                $data['tasa_alimentacion'] = (float)($tasas[$i] ?? 0);
+                $data['alimento_suministrado'] = (float)($alim[$i] ?? 0);
+                $data['calibre'] = $calibres[$i] ?? '';
+                $data['observaciones'] = is_array($obs) ? ($obs[$i] ?? '') : ($obs ?? '');
+                $model->guardarBpa7($data);
+            }
+
+            header("Location: index.php?controller=Peces&action=bpa7Listado");
             exit;
         }
     }
@@ -94,14 +151,23 @@ class PecesController {
     public function bpa7Listado() {
         $model = new PecesModel();
         $registros = $model->getBpa7List();
-        require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa7/bpa7-listado.php';
+        require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa7-listado.php';
+    }
+
+    public function eliminarBpa7() {
+        if (isset($_GET['id'])) {
+            $model = new PecesModel();
+            $model->eliminarBpa7($_GET['id']);
+        }
+        header("Location: index.php?controller=Peces&action=bpa7Listado");
+        exit;
     }
 
     /* ======================
        BPA 10 - MUESTREO
        ====================== */
     public function bpa10() {
-        require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa10/bpa10.php';
+        require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa10.php';
     }
 
     public function guardarBpa10() {
@@ -113,11 +179,14 @@ class PecesController {
             $pesos = $_POST['peso_promedio'] ?? [];
             $coeficientes = $_POST['coeficiente_variacion'] ?? [];
             $factores = $_POST['factor_k'] ?? [];
-            $ups = [];
+            $ups = $_POST['up'] ?? [];
 
-            // Generar UPs basado en el número de filas
-            for ($i = 0; $i < count($lotes); $i++) {
-                $ups[] = 'UP-' . str_pad($i + 1, 2, '0', STR_PAD_LEFT);
+            // Si no mandan ups, generarlos
+            if (empty($ups)) {
+                $ups = [];
+                for ($i = 0; $i < count($lotes); $i++) {
+                    $ups[] = 'UP-' . str_pad($i + 1, 2, '0', STR_PAD_LEFT);
+                }
             }
 
             // Validar campos requeridos del formulario
@@ -158,8 +227,8 @@ class PecesController {
                         'peso_promedio' => $pesos[$i] ?? 0,
                         'coeficiente_variacion' => $coeficientes[$i] ?? 0,
                         'factor_k' => $factores[$i] ?? 0,
-                        'observaciones' => '', // Se puede agregar manejo de observaciones por fila si es necesario
-                        'id_lote' => null // Se puede agregar manejo de id_lote si es necesario
+                        'observaciones' => $_POST['observaciones'][$i] ?? '',
+                        'id_lote' => $_POST['id_lote'] ?? null
                     ]);
                     
                     $model->guardarBpa10($data);
@@ -174,7 +243,16 @@ class PecesController {
     public function bpa10Listado() {
         $model = new PecesModel();
         $registros = $model->getBpa10List();
-        require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa10/bpa10-listado.php';
+        require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa10-listado.php';
+    }
+
+    public function eliminarBpa10() {
+        if (isset($_GET['id'])) {
+            $model = new PecesModel();
+            $model->eliminarBpa10($_GET['id']);
+        }
+        header("Location: index.php?controller=Peces&action=bpa10Listado");
+        exit;
     }
 
     /* ======================
