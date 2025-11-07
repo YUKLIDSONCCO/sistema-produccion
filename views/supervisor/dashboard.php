@@ -7,412 +7,498 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Panel del Supervisor</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <style>
-        :root {
-            --color-primary: #4a6cfd;
-            --color-primary-light: #eef2ff;
-            --color-text: #2c3e50;
-            --color-text-light: #778ca2;
-            --color-bg: #f8f9fa;
-            --color-white: #ffffff;
-            --color-border: #e5e7eb;
+  :root{
+    --bg: #eaf4f4;
+    --muted: #6b7a7a;
+    --card: #ffffff;
+    --accent1: #f49340;       /* Naranja vibrante: PRINCIPAL */
+    --accent1-light: #fbdcaf;
+    --accent1-dark: #d87e2c;
+    --accent2: #3b82f6;       /* Azul complementario */
+    --accent-contrast: #ffffff;
+    --radius: 16px;
+    --shadow: 0 8px 22px rgba(244, 147, 64, 0.15);
+    --shadow-card: 0 4px 14px rgba(0, 0, 0, 0.06);
+    --color-border: #dbe7e7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: #1e293b;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+  }
+  .app {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 28px;
+    padding: 32px;
+  }
 
-            --tag-operations: #e0f2fe;
-            --tag-operations-text: #0284c7;
-            --tag-hr: #ede9fe;
-            --tag-hr-text: #7c3aed;
-            --tag-engineering: #dcfce7;
-            --tag-engineering-text: #16a34a;
-            --tag-marketing: #fee2e2;
-            --tag-marketing-text: #dc2626;
-            --tag-entrepreneurship: #fef3c7;
-            --tag-entrepreneurship-text: #d97706;
-            --tag-support: #e0e7ff;
-            --tag-support-text: #4f46e5;
-            --radius-lg: 12px;
-            --shadow-soft: 0 10px 20px rgba(18, 38, 63, 0.06);
-            --container-max: 1200px;
-        }
-        * { box-sizing: border-box; }
-        html,body { height:100%; }
-        body {
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-            background: var(--color-bg);
-            color: var(--color-text);
-            -webkit-font-smoothing:antialiased;
-            -moz-osx-font-smoothing:grayscale;
-            line-height: 1.4;
-        }
-        .page {
-            max-width: var(--container-max);
-            margin: 28px auto;
-            padding: 0 20px 80px;
-        }
-        .main-header {
-            background-color: var(--color-white);
-            border: 1px solid var(--color-border);
-            border-radius: 14px;
-            padding: 14px 18px;
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            gap: 16px;
-            box-shadow: var(--shadow-soft);
-        }
-        .brand { display:flex; align-items:center; gap:12px; }
-        .logo { width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:18px; border:2px solid var(--color-border); background: linear-gradient(180deg, #ffffff 0%, #f6f8ff 100%); }
-        .title { font-size:18px; font-weight:700; color:var(--color-text); }
-        .subtitle { font-size:13px; color:var(--color-text-light); }
-        .header-actions { display:flex; align-items:center; gap:12px; }
-        .profile-avatar img { width:40px; height:40px; border-radius:50%; object-fit:cover; border:2px solid var(--color-border); }
-        .intro { margin-top:18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
-        .welcome { display:flex; flex-direction:column; gap:4px; }
-        .welcome h2 { margin:0; font-size:20px; }
-        .lead { margin:0; color:var(--color-text-light); font-size:14px; }
-        .filter-bar { display:flex; justify-content:space-between; align-items:center; gap:12px; margin:18px 0; flex-wrap:wrap; }
-        .filter-group { display:flex; gap:10px; flex-wrap:wrap; }
-        .filter-item { background: var(--color-white); border:1px solid var(--color-border); padding:8px 12px; border-radius:10px; font-weight:600; color:var(--color-text); cursor:pointer; display:flex; gap:8px; align-items:center; box-shadow: 0 1px 0 rgba(0,0,0,0.02); }
-        .search-box { display:flex; align-items:center; gap:8px; background:var(--color-white); border:1px solid var(--color-border); padding:8px 12px; border-radius:10px; }
-        .search-box input { border:0; outline:0; background:transparent; font-size:14px; color:var(--color-text); }
-        .view-toggles { display:flex; gap:8px; }
-        .grid { display:grid; grid-template-columns: repeat(12, 1fr); gap:20px; align-items:start; }
-        .card { background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:16px; box-shadow: 0 6px 18px rgba(16,24,40,0.03); }
-        .card.h-100 { display:flex; flex-direction:column; height:100%; }
-        .card-title { font-weight:700; font-size:15px; margin:0 0 8px 0; }
-        .muted { color:var(--color-text-light); font-size:13px; }
-        .col-6 { grid-column: span 6; }
-        .col-4 { grid-column: span 4; }
-        .col-8 { grid-column: span 8; }
-        .col-12 { grid-column: span 12; }
-        .stat { display:flex; gap:14px; align-items:center; }
-        .stat .num { font-size:20px; font-weight:800; color:var(--color-primary); }
-        .stat .label { color:var(--color-text-light); font-weight:600; }
-        .insumos-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-top:8px; }
-        .insumo-item { padding:12px; border-radius:10px; background:linear-gradient(180deg, #ffffff, #fbfdff); border:1px solid var(--color-border); }
-        .insumo-item .name { font-weight:700; }
-        .insumo-item .meta { color:var(--color-text-light); font-size:13px; }
-        .employee-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:18px; margin-top:12px; }
-        .employee-card { background-color: var(--color-white); border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 6px 18px rgba(16,24,40,0.03); overflow: hidden; display: flex; flex-direction: column; transition: transform .15s ease, box-shadow .15s ease; }
-        .employee-card:hover { transform: translateY(-6px); }
-        .card-header { display:flex; justify-content:space-between; align-items:center; padding:14px 16px; border-bottom:1px solid var(--color-border); }
-        .department-tag { font-size:12px; padding:6px 10px; border-radius:999px; font-weight:700; }
-        .tag-operations { background-color: var(--tag-operations); color: var(--tag-operations-text); }
-        .tag-hr { background-color: var(--tag-hr); color: var(--tag-hr-text); }
-        .tag-engineering { background-color: var(--tag-engineering); color: var(--tag-engineering-text); }
-        .tag-marketing { background-color: var(--tag-marketing); color: var(--tag-marketing-text); }
-        .tag-entrepreneurship { background-color: var(--tag-entrepreneurship); color: var(--tag-entrepreneurship-text); }
-        .tag-support { background-color: var(--tag-support); color: var(--tag-support-text); }
-        .card-profile { display:flex; flex-direction:column; align-items:center; padding:18px 16px 14px; text-align:center; }
-        .profile-pic { width:72px; height:72px; border-radius:50%; object-fit:cover; border:3px solid var(--color-white); box-shadow:0 6px 20px rgba(16,24,40,0.06); margin-bottom:10px; }
-        .profile-name { font-size:16px; font-weight:700; margin:0; }
-        .profile-id { color:var(--color-text-light); font-size:13px; margin-bottom:8px; }
-        .card-info { padding:0 16px 16px; color:var(--color-text-light); font-size:14px; }
-        .card-info p { margin:6px 0; }
-        .salary { color:#16a34a; font-weight:800; }
-        .bpa-list { display:flex; flex-direction:column; gap:10px; margin-top:8px; }
-        .bpa-item { display:flex; justify-content:space-between; gap:12px; align-items:center; padding:12px; border-radius:10px; background:linear-gradient(180deg,#fff,#fbfdff); border:1px solid var(--color-border); }
-        .bpa-meta { display:flex; gap:12px; align-items:center; color:var(--color-text-light); font-size:14px; }
-        .modules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
-        .module-card { background: var(--color-white); border-radius: var(--radius-lg); border: 1px solid var(--color-border); padding: 20px; box-shadow: var(--shadow-soft); transition: all 0.3s ease; }
-        .module-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(18, 38, 63, 0.1); }
-        .module-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--color-border); }
-        .module-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; }
-        .jefeplanta-icon { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
-        .colaborador-icon { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
-        .module-title { font-size: 18px; font-weight: 700; margin: 0; }
-        .module-subtitle { font-size: 13px; color: var(--color-text-light); margin: 0; }
-        .submodules-grid { display: grid; gap: 10px; }
-        .submodule-item { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 8px; background: var(--color-bg); border: 1px solid var(--color-border); text-decoration: none; color: var(--color-text); transition: all 0.2s ease; }
-        .submodule-item:hover { background: var(--color-primary-light); border-color: var(--color-primary); transform: translateX(5px); }
-        .submodule-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; }
-        .inventario-icon { background: #10b981; }
-        .ovas-icon { background: #f59e0b; }
-        .peces-icon { background: #3b82f6; }
-        .submodule-info { flex: 1; }
-        .submodule-name { font-weight: 600; margin: 0; }
-        .submodule-desc { font-size: 12px; color: var(--color-text-light); margin: 0; }
-        .text-end { text-align:right; margin-top:18px; }
-        @media (max-width: 1000px) {
-            .col-6 { grid-column: span 12; }
-            .col-8 { grid-column: span 12; }
-            .col-4 { grid-column: span 12; }
-            .col-12 { grid-column: span 12; }
-            .intro { flex-direction:column; align-items:flex-start; gap:8px; }
-            .modules-grid { grid-template-columns: 1fr; }
-        }
-    </style>
+  /* ===== SIDEBAR: NO SE TOCA ===== */
+  .sidebar {
+    background: linear-gradient(180deg, #f49340, #fbdcaf);
+    border-radius: 20px;
+    padding: 22px;
+    color: var(--accent-contrast);
+    height: calc(100vh - 56px);
+    position: sticky;
+    top: 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .brand { display: flex; gap: 12px; align-items: center; }
+  .avatar {
+    width: 52px; height: 52px; border-radius: 12px; overflow: hidden;
+    border: 2px solid rgba(255,255,255,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 24px;
+    background: white;
+    color: var(--accent1);
+  }
+  .user h4 { margin: 0; font-size: 15px; font-weight: 700; }
+  .user p { margin: 0; font-size: 13px; opacity: 0.9; }
+  nav.sidebar-nav { margin-top: 26px; }
+  .nav-section { display: flex; flex-direction: column; gap: 8px; }
+  .nav-item {
+    display: flex; gap: 12px; align-items: center; padding: 10px;
+    border-radius: 10px; cursor: pointer; color: rgba(255,255,255,0.92);
+    font-weight: 600; text-decoration: none;
+    transition: background 0.18s, transform 0.12s;
+  }
+  .nav-item:hover { transform: translateY(-2px); background: rgba(255,255,255,0.08); }
+  .nav-item.active { background: rgba(255,255,255,0.12); }
+  .nav-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.12);
+  }
+
+  /* Main */
+  .main { padding: 22px 18px; }
+  .topbar {
+    display: flex; align-items: center; gap: 16px; margin-bottom: 18px;
+  }
+  .search {
+    flex: 1; display: flex; align-items: center; gap: 12px;
+    background: var(--card); padding: 12px; border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    border: 1px solid var(--color-border);
+  }
+  .search input {
+    border: 0; outline: 0; font-size: 15px; width: 100%;
+    background: transparent;
+    color: #222;
+  }
+  .top-actions { display: flex; gap: 10px; align-items: center; }
+  .icon-btn {
+    background: var(--card); border-radius: 10px; padding: 8px 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    cursor: pointer; text-decoration: none;
+    color: inherit;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* Grid y Cards */
+  .page-content { margin-top: 12px; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 22px;
+    align-items: start;
+  }
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--color-border);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  }
+  .card.h-100 { display: flex; flex-direction: column; height: 100%; }
+  .card-title {
+    font-weight: 700;
+    font-size: 16px;
+    margin: 0 0 12px 0;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .muted { color: var(--muted); font-size: 13px; }
+  .col-6 { grid-column: span 6; }
+  .col-4 { grid-column: span 4; }
+  .col-8 { grid-column: span 8; }
+  .col-12 { grid-column: span 12; }
+
+  /* Estadísticas */
+  .stat { display: flex; gap: 18px; align-items: center; }
+  .stat .num { font-size: 22px; font-weight: 800; color: var(--accent1); }
+  .stat .label { color: var(--muted); font-weight: 600; }
+
+  /* Insumos */
+  .insumos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin-top: 12px;
+  }
+  .insumo-item {
+    padding: 14px;
+    border-radius: 12px;
+    background: linear-gradient(180deg, #ffffff, #fbfdff);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+  }
+
+  /* Personal */
+  .employee-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    margin-top: 16px;
+  }
+  .employee-card {
+    background-color: var(--card);
+    border-radius: 14px;
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.2s ease;
+  }
+  .employee-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  }
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .department-tag {
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-weight: 700;
+    background-color: #dbe7f5;
+    color: var(--accent2);
+  }
+  .profile-pic {
+    width: 76px; height: 76px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid white;
+    margin-bottom: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  }
+
+  /* BPA */
+  .bpa-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .bpa-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    align-items: center;
+    padding: 14px;
+    border-radius: 12px;
+    background: var(--card);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+  }
+
+  /* Gráficos: asegurar altura mínima y centrado */
+  canvas {
+    width: 100% !important;
+    height: 140px !important;
+    max-height: 160px;
+    margin-top: 10px;
+  }
+
+  /* Botones de acción */
+  .text-end {
+    text-align: right;
+    margin-top: 20px;
+  }
+  .text-end a {
+    display: inline-block;
+    text-decoration: none;
+    padding: 12px 20px;
+    border-radius: 12px;
+    background: var(--accent1);
+    color: white;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(244, 147, 64, 0.3);
+    transition: all 0.2s ease;
+  }
+  .text-end a:hover {
+    background: var(--accent1-dark);
+    transform: translateY(-2px);
+  }
+
+  /* Responsive */
+  @media (max-width: 1000px) {
+    .app { grid-template-columns: 1fr; padding: 18px; }
+    .sidebar { display: none; }
+    .col-6, .col-8, .col-4, .col-12 { grid-column: span 12; }
+  }
+</style>
 </head>
 <body>
-    <div class="page">
-        <header class="main-header">
-            <div class="brand">
-                <div class="logo">R</div>
-                <div>
-                    <div class="title">Panel del Supervisor</div>
-                    <div class="subtitle">Control de producción y equipo</div>
-                </div>
-            </div>
-            <div class="header-actions">
-                <div class="muted">Usuario</div>
-                <div class="profile-avatar">
-                    <img src="<?php echo isset($usuario['avatar']) ? htmlspecialchars($usuario['avatar']) : 'https://i.pravatar.cc/40?img=11'; ?>" alt="Avatar">
-                </div>
-            </div>
-        </header>
-        <section class="intro" style="margin-top:14px;">
-            <div class="welcome">
-                <h2>🛠️ Panel del Supervisor</h2>
-                <p class="lead">Bienvenido, <b><?php echo htmlspecialchars($usuario['nombre'] ?? 'Supervisor'); ?></b></p>
-            </div>
-            <div style="display:flex; gap:10px; align-items:center;">
-                <div class="filter-bar" style="margin:0;">
-                    <div class="filter-group">
-                        <div class="filter-item">Últimos 4 años</div>
-                        <div class="filter-item">Todos los departamentos</div>
-                        <div class="filter-item">Antigüedad</div>
-                        <div class="filter-item">10000-50000 $/a</div>
-                    </div>
-                    <div class="search-box" style="margin-left:12px;">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"></path></svg>
-                        <input type="text" placeholder="Buscar..." id="searchMain">
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- MÓDULOS JEFE DE PLANTA Y COLABORADOR -->
-        <section class="col-12 card">
-            <div class="card-title">🏗️ Módulos de Gestión</div>
-            <p class="muted">Accede a los diferentes módulos del sistema</p>
-                <!-- (módulos preservados) -->
-                    <div class="module-header">
-                        <div class="module-icon jefeplanta-icon">JP</div>
-                        <div>
-                            <h3 class="module-title">Colaboradores Generales</h3>
-                            <p class="module-subtitle">Gestión administrativa y operativa</p>
-                        </div>
-                    </div>
-                    <div class="submodules-grid">
-                        <a href="index.php?controller=Supervisor&action=inventarioGeneral" class="submodule-item">
-                            <div class="submodule-icon inventario-icon">📦</div>
-                            <div class="submodule-info">
-                                <div class="submodule-name">Inventarios BPA</div>                     
-                            </div>
-                            <span style="color:var(--color-text-light);">→</span>
-                        </a>
-                        <a href="index.php?controller=Supervisor&action=ovas" class="submodule-item">
-                            <div class="submodule-icon ovas-icon">🥚</div>
-                            <div class="submodule-info">
-                                <div class="submodule-name">OVAS</div>
-                                <div class="submodule-desc">Control de producción de ovas</div>
-                            </div>
-                            <span style="color:var(--color-text-light);">→</span>
-                        </a>
-                        <a href="index.php?controller=JefePlanta&action=peces" class="submodule-item">
-                            <div class="submodule-icon peces-icon">🐟</div>
-                            <div class="submodule-info">
-                                <div class="submodule-name">Peces</div>
-                                <div class="submodule-desc">Seguimiento de población piscícola</div>
-                            </div>
-                            <span style="color:var(--color-text-light);">→</span>
-                        </a>
-                    </div>
-        </section>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div>
+        <div class="brand">
+          <div class="avatar">R</div>
+          <div class="user">
+            <h4>Panel Supervisor</h4>
+            <p>Producción y equipo</p>
+          </div>
+        </div>
+        <nav class="sidebar-nav">
+          <div class="nav-section">
+            <a href="index.php?controller=Supervisor&action=dashboard" class="nav-item active">
+              <div class="nav-icon">🛠️</div><span>Inicio</span>
+            </a>
+            <a href="index.php?controller=Supervisor&action=inventarioGeneral" class="nav-item">
+              <div class="nav-icon">📦</div><span>Inventarios MPA</span>
+            </a>
+            <a href="index.php?controller=Supervisor&action=ovas" class="nav-item">
+              <div class="nav-icon">🥚</div><span>OVAS MPA</span>
+            </a>
+            <a href="index.php?controller=JefePlanta&action=peces" class="nav-item">
+              <div class="nav-icon">🐟</div><span>Peces MPA</span>
+            </a>
+          </div>
+          <div class="nav-section" style="margin-top:18px;">
+            <a href="index.php?controller=Supervisor&action=reportes" class="nav-item">
+              <div class="nav-icon">📊</div><span>Reportes</span>
+            </a>
+          </div>
+        </nav>
+      </div>
+      <div style="font-size:13px; opacity:0.95; margin-top:16px;">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span>👤</span>
+          <strong><?php echo htmlspecialchars($usuario['nombre'] ?? 'Supervisor'); ?></strong>
+        </div>
+      </div>
+    </aside>
 
-        <!-- GRID PRINCIPAL -->
-        <section class="grid" style="margin-top:12px;">
+    <!-- Main Content -->
+    <main class="main">
+      <header class="topbar">
+        <div class="search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"></path></svg>
+          <input type="text" placeholder="Buscar..." id="searchMain">
+        </div>
+        <div class="top-actions">
+          <div class="icon-btn" style="width:40px;height:40px; padding:0;">
+            <img src="<?php echo isset($usuario['avatar']) ? htmlspecialchars($usuario['avatar']) : 'https://i.pravatar.cc/40?img=11'; ?>" alt="Avatar" style="width:100%;height:100%;border-radius:8px;object-fit:cover;">
+          </div>
+        </div>
+      </header>
 
-            <!-- Producción (col-6 en desktop) -->
-            <div class="col-6 card h-100">
-                <div>
-                    <div class="card-title">📈 Producción en Curso</div>
-                    <p class="muted">Resumen rápido de producción</p>
-                </div>
-
-                <div style="margin-top:14px;">
-                    <div class="stat">
-                        <div>
-                            <!-- IDs añadidos para actualización por JS -->
-                            <div id="totalLotes" class="num"><?php echo intval($produccion['total_lotes'] ?? 0); ?></div>
-                            <div class="label">Total de Lotes</div>
-                        </div>
-                        <div style="margin-left:22px;">
-                            <div id="totalProducido" class="num"><?php echo intval($produccion['total_producido'] ?? 0); ?></div>
-                            <div class="label">Total Producido (unidades)</div>
-                        </div>
-                    </div>
-
-                    <?php if (!empty($produccion['detalles'])): ?>
-                        <div style="margin-top:14px;">
-                            <?php foreach ($produccion['detalles'] as $d): ?>
-                                <div style="display:flex; justify-content:space-between; padding:8px 0; border-top:1px dashed var(--color-border);">
-                                    <div style="font-weight:700;"><?php echo htmlspecialchars($d['label']); ?></div>
-                                    <div class="muted"><?php echo htmlspecialchars($d['value']); ?></div>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                    <?php else: ?>
-                        <p class="muted" style="margin-top:12px;">No hay detalles adicionales de producción.</p>
-                    <?php endif; ?>
-                </div>
-                <!-- 📊 Gráfico de barras -->
-<div style="margin-top: 24px;">
-    <h3 style="font-size:15px; font-weight:700; margin-bottom:8px;">Tendencia de producción</h3>
-    <canvas id="produccionChart" height="140"></canvas>
-</div>
-
-            </div>
-
-            <!-- Insumos (col-6 en desktop) -->
-            <div class="col-6 card">
-                <div>
-                    <div class="card-title">📦 Insumos Asignados</div>
-                    <p class="muted">Stock actual y unidades</p>
-                </div>
-
-                <?php if (!empty($insumos)): ?>
-                    <div class="insumos-grid">
-                        <?php foreach ($insumos as $ins): ?>
-                            <div class="insumo-item">
-                                <div class="name"><?php echo htmlspecialchars($ins['nombre']); ?></div>
-                                <div class="meta">Stock: <strong><?php echo htmlspecialchars($ins['stock']); ?></strong> &nbsp;|&nbsp; Unidad: <?php echo htmlspecialchars($ins['unidad_medida']); ?></div>
-                                <?php if (!empty($ins['nota'])): ?>
-                                    <div class="muted" style="margin-top:6px;"><?php echo htmlspecialchars($ins['nota']); ?></div>
-                                <?php endif; ?>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                <?php else: ?>
-                    <p class="muted" style="margin-top:12px;">No hay insumos registrados.</p>
-                <?php endif; ?>
-            </div>
-
-            <!-- Personal en Turno (full width) -->
-            <div class="col-12 card">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <div>
-                        <div class="card-title">👷‍♂️ Personal en Turno</div>
-                        <div class="muted">Lista de personal activo en este turno</div>
-                    </div>
-                    <div class="muted"><?php echo date('d M Y'); ?></div>
-                </div>
-
-                <?php if (!empty($personal)): ?>
-                    <div class="employee-grid" style="margin-top:16px;">
-                        <?php foreach ($personal as $p):
-                            $roleLower = strtolower($p['rol'] ?? '');
-                            $tagClass = 'tag-support';
-                            if (strpos($roleLower, 'hr') !== false || strpos($roleLower, 'recursos') !== false) $tagClass = 'tag-hr';
-                            else if (strpos($roleLower, 'oper') !== false || strpos($roleLower, 'operaciones') !== false) $tagClass = 'tag-operations';
-                            else if (strpos($roleLower, 'ingenier') !== false) $tagClass = 'tag-engineering';
-                            else if (strpos($roleLower, 'marketing') !== false) $tagClass = 'tag-marketing';
-                        ?>
-                            <div class="employee-card">
-                                <div class="card-header">
-                                    <span class="department-tag <?php echo $tagClass; ?>"><?php echo htmlspecialchars($p['rol']); ?></span>
-                                    <span class="muted">Turno: <?php echo htmlspecialchars($p['turno'] ?? '---'); ?></span>
-                                </div>
-                                <div class="card-profile">
-                                    <img class="profile-pic" src="<?php echo !empty($p['avatar']) ? htmlspecialchars($p['avatar']) : 'https://i.pravatar.cc/80?img=12'; ?>" alt="<?php echo htmlspecialchars($p['nombre']); ?>">
-                                    <h3 class="profile-name"><?php echo htmlspecialchars($p['nombre']); ?></h3>
-                                    <span class="profile-id"><?php echo htmlspecialchars($p['id_personal'] ?? ''); ?></span>
-                                    <p class="profile-contact muted">
-                                        <?php echo htmlspecialchars($p['email'] ?? ''); ?> <br>
-                                        <?php echo htmlspecialchars($p['telefono'] ?? ''); ?>
-                                    </p>
-                                </div>
-                                <div class="card-info">
-                                    <p>Rol: <span><?php echo htmlspecialchars($p['rol']); ?></span> • Experiencia: <span><?php echo htmlspecialchars($p['experiencia'] ?? '-'); ?></span></p>
-                                    <?php if (!empty($p['salario'])): ?>
-                                        <p>Salario: <span class="salary"><?php echo htmlspecialchars($p['salario']); ?></span></p>
-                                    <?php endif; ?>
-                                </div>
-                                <div style="padding:12px 16px; border-top:1px solid var(--color-border); display:flex; justify-content:space-between; align-items:center;">
-                                    <small class="muted">ID: <?php echo htmlspecialchars($p['id_personal'] ?? '-'); ?></small>
-                                    <a href="index.php?controller=Supervisor&action=perfil&pid=<?php echo urlencode($p['id_personal'] ?? ''); ?>" style="text-decoration:none; font-weight:700; color:var(--color-primary);">Ver perfil →</a>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                <?php else: ?>
-                    <p class="muted" style="margin-top:12px;">No hay personal asignado en este turno.</p>
-                <?php endif; ?>
-            </div>
-
-            <!-- Formularios BPA-1 Recibidos (col-8) -->
-            <div class="col-8 card">
-                <div>
-                    <div class="card-title">📄 Formularios BPA-1 Recibidos</div>
-                    <p class="muted">Revisar formularios pendientes</p>
-                </div>
-
-                <div id="bpaListContainer">
-                    <?php if (!empty($bpa1_pendientes)): ?>
-                        <div class="bpa-list">
-                            <?php foreach ($bpa1_pendientes as $i => $b): ?>
-                                <div class="bpa-item">
-                                    <div style="display:flex; gap:12px; align-items:center;">
-                                        <div style="min-width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:800; background:var(--color-primary-light); color:var(--color-primary);">
-                                            <?php echo $i+1; ?>
-                                        </div>
-                                        <div>
-                                            <div style="font-weight:700;"><?php echo htmlspecialchars($b['sede']); ?> — <?php echo htmlspecialchars($b['encargado']); ?></div>
-                                            <div class="muted"><?php echo htmlspecialchars($b['fecha']); ?> · Mes: <?php echo htmlspecialchars($b['mes']); ?></div>
-                                        </div>
-                                    </div>
-                                    <div style="display:flex; gap:8px; align-items:center;">
-                                        <a href="index.php?controller=Supervisor&action=revisarBPA1&id=<?php echo urlencode($b['id']); ?>" style="padding:8px 12px; border-radius:8px; border:1px solid #f6c84c; background:linear-gradient(180deg,#fff8e6,#fff9ed); text-decoration:none; color:#a47706; font-weight:700;">🔍 Revisar</a>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                    <?php else: ?>
-                        <p class="muted" style="margin-top:12px;">No hay formularios BPA-1 pendientes de revisión.</p>
-                    <?php endif; ?>
-                </div>
-            </div>
-
-            <!-- Reportes y acciones (col-4) -->
-            <div class="col-4 card">
-                <div>
-                    <div class="card-title">📑 Acciones y Reportes</div>
-                    <p class="muted">Accesos rápidos</p>
-                </div>
-
-                <div style="margin-top:12px; display:flex; flex-direction:column; gap:10px;">
-                    <a href="index.php?controller=Supervisor&action=reportes" style="display:inline-block; text-decoration:none; padding:10px 12px; border-radius:10px; background:var(--color-primary); color:#fff; font-weight:700; text-align:center;">Ver Reportes</a>
-
-                    <a href="index.php?controller=Supervisor&action=crearIncidencia" style="display:inline-block; text-decoration:none; padding:10px 12px; border-radius:10px; background:linear-gradient(180deg,#fff,#fbfdff); border:1px solid var(--color-border); text-align:center; font-weight:700; color:var(--color-text);">✚ Nueva incidencia</a>
-
-                    <a href="index.php?controller=Supervisor&action=insumos" style="display:inline-block; text-decoration:none; padding:10px 12px; border-radius:10px; background:linear-gradient(180deg,#fff,#fbfdff); border:1px solid var(--color-border); text-align:center; font-weight:700; color:var(--color-text);">📦 Gestionar Insumos</a>
-                </div>
-
-                <div style="margin-top:16px;">
-                    <div class="muted">Última sincronización</div>
-                    <div id="lastSync" style="font-weight:700; margin-top:6px;"><?php echo date('d M Y H:i'); ?></div>
-                </div>
-
-                <!-- AGREGADO: gráfico de barras Aprobados vs Pendientes -->
-                <div style="margin-top:14px;">
-                    <div class="muted">BPA-1: Aprobados vs Pendientes</div>
-                    <canvas id="bpaStatusChart" style="width:100%;height:140px;margin-top:8px;"></canvas>
-                </div>
-            </div>
-
-        </section>
-
-        <!-- Footer action -->
-        <div class="text-end">
-            <a href="index.php?controller=Supervisor&action=reportes" style="display:inline-block; text-decoration:none; padding:10px 18px; border-radius:10px; background:var(--color-primary); color:#fff; font-weight:700;">📑 Ver Reportes</a>
+      <div class="page-content">
+        <div style="margin-bottom:18px;">
+          <h2 style="margin:0; font-size:22px;">🛠️ Panel del Supervisor</h2>
+          <p class="muted">Bienvenido, <strong><?php echo htmlspecialchars($usuario['nombre'] ?? 'Supervisor'); ?></strong></p>
         </div>
 
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
+
+        <!-- GRID PRINCIPAL -->
+        <section class="grid">
+          <!-- Producción -->
+          <div class="col-6 card h-100">
+            <div>
+              <div class="card-title">📈 Producción en Curso</div>
+              <p class="muted">Resumen rápido de producción</p>
+            </div>
+            <div style="margin-top:14px;">
+              <div class="stat">
+                <div>
+                  <div id="totalLotes" class="num"><?php echo intval($produccion['total_lotes'] ?? 0); ?></div>
+                  <div class="label">Total de Lotes</div>
+                </div>
+                <div style="margin-left:22px;">
+                  <div id="totalProducido" class="num"><?php echo intval($produccion['total_producido'] ?? 0); ?></div>
+                  <div class="label">Total Producido (unidades)</div>
+                </div>
+              </div>
+              <?php if (!empty($produccion['detalles'])): ?>
+                <div style="margin-top:14px;">
+                  <?php foreach ($produccion['detalles'] as $d): ?>
+                    <div style="display:flex; justify-content:space-between; padding:8px 0; border-top:1px dashed var(--color-border);">
+                      <div style="font-weight:700;"><?php echo htmlspecialchars($d['label']); ?></div>
+                      <div class="muted"><?php echo htmlspecialchars($d['value']); ?></div>
+                    </div>
+                  <?php endforeach; ?>
+                </div>
+              <?php else: ?>
+                <p class="muted" style="margin-top:12px;">No hay detalles adicionales de producción.</p>
+              <?php endif; ?>
+            </div>
+            <div style="margin-top:24px;">
+              <h3 style="font-size:15px; font-weight:700; margin-bottom:8px;">Tendencia de producción</h3>
+              <canvas id="produccionChart" height="140"></canvas>
+            </div>
+          </div>
+
+          <!-- Insumos -->
+          <div class="col-6 card">
+            <div>
+              <div class="card-title">📦 Insumos Asignados</div>
+              <p class="muted">Stock actual y unidades</p>
+            </div>
+            <?php if (!empty($insumos)): ?>
+              <div class="insumos-grid">
+                <?php foreach ($insumos as $ins): ?>
+                  <div class="insumo-item">
+                    <div class="name"><?php echo htmlspecialchars($ins['nombre']); ?></div>
+                    <div class="meta">Stock: <strong><?php echo htmlspecialchars($ins['stock']); ?></strong> &nbsp;|&nbsp; Unidad: <?php echo htmlspecialchars($ins['unidad_medida']); ?></div>
+                    <?php if (!empty($ins['nota'])): ?>
+                      <div class="muted" style="margin-top:6px;"><?php echo htmlspecialchars($ins['nota']); ?></div>
+                    <?php endif; ?>
+                  </div>
+                <?php endforeach; ?>
+              </div>
+            <?php else: ?>
+              <p class="muted" style="margin-top:12px;">No hay insumos registrados.</p>
+            <?php endif; ?>
+          </div>
+
+          <!-- Personal -->
+          <div class="col-12 card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <div class="card-title">👷‍♂️ Personal en Turno</div>
+                <div class="muted">Lista de personal activo en este turno</div>
+              </div>
+              <div class="muted"><?php echo date('d M Y'); ?></div>
+            </div>
+            <?php if (!empty($personal)): ?>
+              <div class="employee-grid" style="margin-top:16px;">
+                <?php foreach ($personal as $p):
+                  $roleLower = strtolower($p['rol'] ?? '');
+                  $tagClass = 'department-tag';
+                ?>
+                  <div class="employee-card">
+                    <div class="card-header">
+                      <span class="<?php echo $tagClass; ?>"><?php echo htmlspecialchars($p['rol']); ?></span>
+                      <span class="muted">Turno: <?php echo htmlspecialchars($p['turno'] ?? '---'); ?></span>
+                    </div>
+                    <div style="display:flex; flex-direction:column; align-items:center; padding:18px 16px 14px; text-align:center;">
+                      <img class="profile-pic" src="<?php echo !empty($p['avatar']) ? htmlspecialchars($p['avatar']) : 'https://i.pravatar.cc/80?img=12'; ?>" alt="<?php echo htmlspecialchars($p['nombre']); ?>">
+                      <h3 style="font-size:16px; font-weight:700; margin:0;"><?php echo htmlspecialchars($p['nombre']); ?></h3>
+                      <span class="muted" style="font-size:13px; margin:6px 0;"><?php echo htmlspecialchars($p['id_personal'] ?? ''); ?></span>
+                      <p class="muted" style="font-size:13px;">
+                        <?php echo htmlspecialchars($p['email'] ?? ''); ?><br>
+                        <?php echo htmlspecialchars($p['telefono'] ?? ''); ?>
+                      </p>
+                    </div>
+                    <div style="padding:0 16px 16px; color:var(--muted); font-size:14px;">
+                      <p>Rol: <?php echo htmlspecialchars($p['rol']); ?> • Experiencia: <?php echo htmlspecialchars($p['experiencia'] ?? '-'); ?></p>
+                      <?php if (!empty($p['salario'])): ?>
+                        <p>Salario: <span style="color:#16a34a; font-weight:800;"><?php echo htmlspecialchars($p['salario']); ?></span></p>
+                      <?php endif; ?>
+                    </div>
+                    <div style="padding:12px 16px; border-top:1px solid var(--color-border); display:flex; justify-content:space-between; align-items:center;">
+                      <small class="muted">ID: <?php echo htmlspecialchars($p['id_personal'] ?? '-'); ?></small>
+                      <a href="index.php?controller=Supervisor&action=perfil&pid=<?php echo urlencode($p['id_personal'] ?? ''); ?>" style="text-decoration:none; font-weight:700; color:var(--accent1);">Ver perfil →</a>
+                    </div>
+                  </div>
+                <?php endforeach; ?>
+              </div>
+            <?php else: ?>
+              <p class="muted" style="margin-top:12px;">No hay personal asignado en este turno.</p>
+            <?php endif; ?>
+          </div>
+
+          <!-- BPA-1 -->
+          <div class="col-8 card">
+            <div>
+              <div class="card-title">📄 Formularios MPA-1 Recibidos</div>
+              <p class="muted">Revisar formularios pendientes</p>
+            </div>
+            <div id="bpaListContainer">
+              <?php if (!empty($bpa1_pendientes)): ?>
+                <div class="bpa-list">
+                  <?php foreach ($bpa1_pendientes as $i => $b): ?>
+                    <div class="bpa-item">
+                      <div style="display:flex; gap:12px; align-items:center;">
+                        <div style="min-width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:800; background:#fbdcaf; color:#f49340;">
+                          <?php echo $i+1; ?>
+                        </div>
+                        <div>
+                          <div style="font-weight:700;"><?php echo htmlspecialchars($b['sede']); ?> — <?php echo htmlspecialchars($b['encargado']); ?></div>
+                          <div class="muted"><?php echo htmlspecialchars($b['fecha']); ?> · Mes: <?php echo htmlspecialchars($b['mes']); ?></div>
+                        </div>
+                      </div>
+                      <div style="display:flex; gap:8px; align-items:center;">
+                        <a href="index.php?controller=Supervisor&action=revisarBPA1&id=<?php echo urlencode($b['id']); ?>" style="padding:8px 12px; border-radius:8px; border:1px solid #f6c84c; background:linear-gradient(180deg,#fff8e6,#fff9ed); text-decoration:none; color:#a47706; font-weight:700;">🔍 Revisar</a>
+                      </div>
+                    </div>
+                  <?php endforeach; ?>
+                </div>
+              <?php else: ?>
+                <p class="muted" style="margin-top:12px;">No hay formularios MPA-1 pendientes de revisión.</p>
+              <?php endif; ?>
+            </div>
+          </div>
+
+          <!-- Acciones -->
+          <div class="col-4 card">
+            <div>
+              <div class="card-title">📑 Acciones y Reportes</div>
+              <p class="muted">Accesos rápidos</p>
+            </div>
+            <div style="margin-top:12px; display:flex; flex-direction:column; gap:10px;">
+              <a href="index.php?controller=Supervisor&action=reportes" style="display:inline-block; text-decoration:none; padding:10px 12px; border-radius:10px; background:var(--accent1); color:white; font-weight:700; text-align:center;">Ver Reportes</a>
+              <a href="index.php?controller=Supervisor&action=crearIncidencia" style="display:inline-block; text-decoration:none; padding:10px 12px; border-radius:10px; background:var(--card); border:1px solid var(--color-border); text-align:center; font-weight:700; color:#222;">✚ Nueva incidencia</a>
+              <a href="index.php?controller=Supervisor&action=insumos" style="display:inline-block; text-decoration:none; padding:10px 12px; border-radius:10px; background:var(--card); border:1px solid var(--color-border); text-align:center; font-weight:700; color:#222;">📦 Gestionar Insumos</a>
+            </div>
+            <div style="margin-top:16px;">
+              <div class="muted">Última sincronización</div>
+              <div id="lastSync" style="font-weight:700; margin-top:6px; color:#222;"><?php echo date('d M Y H:i'); ?></div>
+            </div>
+            <div style="margin-top:14px;">
+              <div class="muted">BPA-1: Aprobados vs Pendientes</div>
+              <canvas id="bpaStatusChart" style="width:100%;height:140px;margin-top:8px;"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <div class="text-end">
+          <a href="index.php?controller=Supervisor&action=reportes">📑 Ver Reportes</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
 /* ================================
    DASHBOARD SUPERVISOR - SCRIPT COMPLETO
    ================================ */
-
 /* Helper: Safe parse desde PHP */
 function safeParsePhp(jsonLike, fallback) {
     try {
@@ -421,7 +507,6 @@ function safeParsePhp(jsonLike, fallback) {
         return fallback;
     }
 }
-
 /* Variables iniciales desde PHP */
 let initialGrafico = <?php echo json_encode($produccion['grafico'] ?? null); ?>;
 let initialBpaResumen = <?php echo json_encode($bpaResumen ?? ['aprobado' => 0, 'pendiente' => 0]); ?>;
@@ -429,7 +514,6 @@ let initialBpaResumen = <?php echo json_encode($bpaResumen ?? ['aprobado' => 0, 
 /* --- GRÁFICO DE PRODUCCIÓN --- */
 const ctxProd = document.getElementById('produccionChart').getContext('2d');
 let chartData = Array.isArray(initialGrafico) ? initialGrafico : [];
-
 let produccionChart = new Chart(ctxProd, {
     type: 'bar',
     data: {
@@ -437,8 +521,8 @@ let produccionChart = new Chart(ctxProd, {
         datasets: [{
             label: 'Producción (unidades)',
             data: chartData.map(d => parseFloat(d.value) || 0),
-            backgroundColor: 'rgba(74, 108, 253, 0.5)',
-            borderColor: 'rgba(74, 108, 253, 1)',
+            backgroundColor: 'rgba(244, 147, 64, 0.5)',
+            borderColor: 'rgba(244, 147, 64, 1)',
             borderWidth: 1,
             borderRadius: 6
         }]
@@ -450,7 +534,6 @@ let produccionChart = new Chart(ctxProd, {
     }
 });
 
-/* Actualizar totales del gráfico */
 function actualizarTotalesDesdeGrafico() {
     const valores = produccionChart.data.datasets[0].data.map(v => Number(v) || 0);
     const totalProducido = valores.reduce((s, x) => s + x, 0);
@@ -459,7 +542,6 @@ function actualizarTotalesDesdeGrafico() {
     document.getElementById('totalLotes').textContent = totalLotes;
 }
 
-/* Cargar gráfico inicial si está vacío */
 async function cargarGraficoInicialSiHaceFalta() {
     if (!chartData || chartData.length === 0) {
         try {
@@ -479,7 +561,6 @@ async function cargarGraficoInicialSiHaceFalta() {
     } else actualizarTotalesDesdeGrafico();
 }
 
-/* Refrescar gráfico producción */
 let lastGraficoJson = JSON.stringify(chartData);
 async function refrescarGrafico() {
     try {
@@ -527,7 +608,6 @@ let bpaChart = new Chart(ctxBpa, {
     }
 });
 
-/* Refrescar BPA desde listarBpaAjax */
 let lastBpaListSnapshot = '';
 async function refrescarBpa() {
     try {
@@ -535,32 +615,27 @@ async function refrescarBpa() {
         if (!resp.ok) return;
         const json = await resp.json();
         const nuevos = Array.isArray(json.nuevos) ? json.nuevos : [];
-
         let aprobados = 0, pendientes = 0;
         nuevos.forEach(r => {
             const estado = (r.estado || r.estado_reporte || '').toLowerCase();
             if (estado.includes('apro')) aprobados++; else pendientes++;
         });
-
         bpaChart.data.datasets[0].data = [aprobados, pendientes];
         bpaChart.update();
-
         const snapshot = JSON.stringify(nuevos.map(n => ({
             id: n.id, sede: n.sede, encargado: n.encargado, fecha: n.fecha, mes: n.mes
         })));
-
         if (snapshot !== lastBpaListSnapshot) {
             lastBpaListSnapshot = snapshot;
             const container = document.getElementById('bpaListContainer');
             if (!container) return;
-
             if (nuevos.length === 0) {
                 container.innerHTML = '<p class="muted" style="margin-top:12px;">No hay formularios BPA-1 pendientes.</p>';
             } else {
                 const html = nuevos.slice(0, 8).map((b, i) => `
                     <div class="bpa-item">
                         <div style="display:flex; gap:12px; align-items:center;">
-                            <div style="min-width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:800; background:var(--color-primary-light); color:var(--color-primary);">${i + 1}</div>
+                            <div style="min-width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:800; background:#fbdcaf; color:#f49340;">${i + 1}</div>
                             <div>
                                 <div style="font-weight:700;">${escapeHtml(b.sede || '')} — ${escapeHtml(b.encargado || '')}</div>
                                 <div class="muted">${escapeHtml(b.fecha || '')} · Mes: ${escapeHtml(b.mes || '')}</div>
@@ -582,28 +657,23 @@ async function refrescarBpa() {
     }
 }
 
-/* Escapar HTML */
 function escapeHtml(str) {
     if (!str) return '';
     return String(str)
         .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
+        .replace(/</g, '<')
+        .replace(/>/g, '>')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
 }
 
-/* --- INICIALIZACIÓN --- */
 document.addEventListener('DOMContentLoaded', async () => {
     await cargarGraficoInicialSiHaceFalta();
     actualizarTotalesDesdeGrafico();
     refrescarBpa();
-
-    // refresca cada 10s (puedes subirlo a 60s)
     setInterval(refrescarGrafico, 10000);
     setInterval(refrescarBpa, 10000);
 
-    // filtro de búsqueda en tarjetas (si existen)
     const searchInput = document.getElementById('searchMain');
     if (searchInput) {
         searchInput.addEventListener('input', function() {

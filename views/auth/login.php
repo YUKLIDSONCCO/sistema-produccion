@@ -1,13 +1,15 @@
+
 <?php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
+    
 }
 
 // Mostrar mensaje de error
 if (isset($_SESSION['error'])) {
     echo '<div style="
         background-color: #ffdddd;
-        color: #a94442;
+        color: #f18b0eff;
         border: 1px solid #f5c6cb;
         padding: 10px;
         border-radius: 6px;
@@ -42,15 +44,11 @@ if (isset($_SESSION['success'])) {
 }
 
 if (isset($_SESSION['error'])) {
-    echo '<div style="background: #f8d7da; color: #721c24; padding: 10px; margin: 10px; border-radius: 5px; text-align: center;">' . $_SESSION['error'] . '</div>';
+    echo '<div style="background: #f8d7da; color: #f89c34ff; padding: 10px; margin: 10px; border-radius: 5px; text-align: center;">' . $_SESSION['error'] . '</div>';
     unset($_SESSION['error']);
 }
 ob_start();
-?>
-<iframe src="http://192.168.137.207/sistema-produccion/public/panel.php" 
-        style="position:fixed;top:0;left:0;width:100%;height:100%;border:none;z-index:-1;">
-</iframe>
-<?php
+
 ob_end_flush();
 ?>
 
@@ -85,9 +83,9 @@ ob_end_flush();
         <!-- AGREGAR SELECT DE ROLES -->
         <select name="rol" required style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 8px;">
           <option value="">-- Selecciona tu rol --</option>
+          <option value="4">Administrador</option>
           <option value="2">Jefe Planta</option>
           <option value="3">Supervisor</option>
-          <option value="4">Colaborador</option>
         </select>
         <label for="foto">Sube una foto nítida de tu rostro:</label>
 <input type="file" name="foto" id="foto" accept="image/*" capture="user" required 

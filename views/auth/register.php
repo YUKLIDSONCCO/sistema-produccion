@@ -45,9 +45,9 @@
 
     <select name="rol" required>
       <option value="">-- Selecciona un rol --</option>
+      <option value="4">Administrador</option>
       <option value="2">Jefe Planta</option>
       <option value="3">Supervisor</option>
-      <option value="4">Colaborador</option>
     </select>
 
     <button type="submit">Registrar</button>

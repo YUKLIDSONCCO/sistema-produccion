@@ -6,13 +6,42 @@
 }
 
 body {
-  background-color: #c9d6ff;
-  background: linear-gradient(to right, #e2e2e2, #c9d6ff);
+  /* color de fondo que se verá si sobran bordes */
+  background-color: #0b1e33;
+
+  /* imagen de fondo */
+  background-image: url("../img/coraqua14.jpg");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover; /* 🔹 mantiene la imagen completa */
+  background-attachment: fixed;
+
+  /* estructura de página */
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+}
+
+/* 🔸 Compatibilidad móvil y tablets */
+@media (max-width: 1024px) {
+  body {
+    background-attachment: scroll; /* Evita saltos en móviles */
+    background-size: contain;      /* Mantiene toda la imagen visible */
+    background-position: center top;
+  }
+}
+
+/* 🔸 Pantallas muy pequeñas */
+@media (max-width: 600px) {
+  body {
+    background-size: 100% auto;    /* se adapta mejor a celulares */
+    background-position: center top;
+  }
 }
 
 .container {
@@ -45,7 +74,7 @@ body {
   margin: 15px 0 10px;
 }
 .container button {
-  background-color: #a82d2d;
+  background-color: #f5822b;
   color: #fff;
   padding: 10px 45px;
   border: 1px solid transparent;
@@ -158,9 +187,9 @@ body {
 }
 
 .toogle {
-  background-color: #a82d2d;
+  background-color: #f78c1a;
   height: 100%;
-  background: linear-gradient(to right, #c05c5c, #a82d2d);
+  background: linear-gradient(to right, #ef8f08, #f89a1f);
   color: #fff;
   position: relative;
   left: -100%;
