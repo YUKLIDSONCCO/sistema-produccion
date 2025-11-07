@@ -33,11 +33,7 @@ class SupervisorController extends BaseController {
         "bpa1", "bpa2", "bpa3", "bpaResumen"
     ));
 }
-
-
-    // ==============================
     // 📋 VISUALIZAR CUALQUIER BPA (1, 2, 3, 4)
-    // ==============================
     public function verBPA($tipo = 1, $id = null) {
     // Mapear las tablas según el tipo de BPA
     $mapaTablas = [
@@ -46,28 +42,20 @@ class SupervisorController extends BaseController {
         3 => ['control' => 'control_medicamento'],
         4 => ['control' => 'dosificacion_medicamentos'],
     ];
-
     if (!isset($mapaTablas[$tipo])) {
         echo "<script>alert('Tipo de BPA no válido.'); window.location.href='/sistema-produccion/public/index.php?controller=Supervisor&action=inventarioGeneral';</script>";
         exit;
     }
-
     if (!$id) {
         echo "<script>alert('Debe especificar un ID de reporte.'); window.location.href='/sistema-produccion/public/index.php?controller=Supervisor&action=inventarioGeneral';</script>";
         exit;
     }
-
     $tabla = $mapaTablas[$tipo]['control'];
-
-    // Obtener los datos del reporte desde el modelo
     $reporte = $this->model->getDetalleBPA($tabla, $id);
-
     if (!$reporte) {
         echo "<script>alert('No se encontró el reporte BPA seleccionado.'); window.location.href='/sistema-produccion/public/index.php?controller=Supervisor&action=inventarioGeneral';</script>";
         exit;
     }
-
-    // Determinar la vista según el tipo
     $vista = "supervisor/revision_bpa{$tipo}";
 
     // Renderizar la vista correspondiente
@@ -441,44 +429,81 @@ public function bpa4Ovas()
 
     require_once __DIR__ . '/../views/supervisor/detalle_bpa4_ovas.php';
 }
-public function editarBpa1() {
-    $id = $_GET['id'] ?? null;
-    if (!$id) {
-        header('Location: index.php?controller=Supervisor&action=listarBpa1');
-        exit;
-    }
-
-    $modelo = new SupervisorModel();
-    $reporte = $modelo->obtenerBpa1PorId($id);
-
-    require 'views/supervisor/editar_bpa1.php';
+public function listaGlobal() {
+    $filtro = $_GET['filtro'] ?? 'dia';
+    $fecha = $_GET['fecha'] ?? null; // ✅ Capturamos la fecha del input
+    $reportes = $this->model->getListaGlobalBPA($filtro, $fecha);
+    $this->view("supervisor/lista_global_bpa", compact("reportes", "filtro", "fecha"));
 }
 
-public function actualizarBpa1() {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $data = [
-            'id' => $_POST['id'],
-            'fecha' => $_POST['fecha'],
-            'sede' => $_POST['sede'],
-            'encargado' => $_POST['encargado'],
-            'cantidad' => $_POST['cantidad'],
-            'estado' => $_POST['estado']
-        ];
+public function verDetallesBPA() {
+    $tipo = $_GET['tipo'] ?? '';
+    $id = $_GET['id'] ?? 0;
 
-        $modelo = new SupervisorModel();
-        $modelo->actualizarBpa1($data);
-
-        header('Location: index.php?controller=Supervisor&action=listarBpa1');
+    if (!$tipo || !$id) {
+        echo "<p>Error: datos incompletos.</p>";
+        return;
     }
+
+    // Determinar la tabla según el tipo de BPA
+    switch ($tipo) {
+        case 'BPA-1':
+            $tabla = 'control_alimento_almacen';
+            break;
+        case 'BPA-2':
+            $tabla = 'control_sal_almacen';
+            break;
+        case 'BPA-3':
+            $tabla = 'control_producto_terminado';
+            break;
+        case 'BPA-4':
+            $tabla = 'control_empaque';
+            break;
+        default:
+            echo "<p>Tipo de formulario no válido.</p>";
+            return;
+    }
+
+    $detalle = $this->model->getDetalleBPAGeneral($tabla, $id);
+    $this->view("supervisor/detalle_bpa", compact("detalle", "tipo", "tabla"));
 }
+public function actualizarEstadoBPA() {
+    $tipo = $_POST['tipo'] ?? '';
+    $id = $_POST['id'] ?? 0;
+    $estado = $_POST['estado'] ?? '';
 
-public function eliminarBpa1() {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $id = $_POST['id'];
-        $modelo = new SupervisorModel();
-        $exito = $modelo->eliminarBpa1($id);
-        echo json_encode(['success' => $exito]);
+    // 🔍 DEPURAR
+    error_log("Tipo: $tipo | ID: $id | Estado: $estado");
+
+    if (!$tipo || !$id || !$estado) {
+        echo json_encode(['success' => false, 'message' => 'Datos incompletos']);
+        return;
     }
+
+    switch ($tipo) {
+        case 'BPA-1':
+            $tabla = 'control_alimento_almacen';
+            break;
+        case 'BPA-2':
+            $tabla = 'control_sal_almacen';
+            break;
+        case 'BPA-3':
+            $tabla = 'control_producto_terminado';
+            break;
+        case 'BPA-4':
+            $tabla = 'control_empaque';
+            break;
+        default:
+            echo json_encode(['success' => false, 'message' => 'Tipo inválido']);
+            return;
+    }
+
+    $ok = $this->model->actualizarEstado($tabla, $id, $estado);
+
+    // 🔍 DEPURAR
+    error_log("UPDATE resultado: " . ($ok ? 'éxito' : 'falló'));
+
+    echo json_encode(['success' => $ok]);
 }
 
 

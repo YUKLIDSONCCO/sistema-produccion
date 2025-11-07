@@ -574,24 +574,63 @@ public function getDetalleBPA4_OVAS($id)
         return null;
     }
 }
-public function obtenerBpa1PorId($id) {
-    $stmt = $this->db->prepare("SELECT * FROM bpa1 WHERE id = ?");
+public function getListaGlobalBPA($filtro = 'dia', $fecha = null) {
+    $where = "";
+
+    if ($fecha) {
+        // ✅ Si el usuario seleccionó una fecha específica
+        $where = "WHERE DATE(fecha) = :fecha";
+    } else {
+        // 🔁 Si no seleccionó fecha, usar los filtros tradicionales
+        switch ($filtro) {
+            case 'semana':
+                $where = "WHERE YEARWEEK(fecha, 1) = YEARWEEK(CURDATE(), 1)";
+                break;
+            case 'mes':
+                $where = "WHERE YEAR(fecha) = YEAR(CURDATE()) AND MONTH(fecha) = MONTH(CURDATE())";
+                break;
+            default:
+                $where = "WHERE DATE(fecha) = CURDATE()";
+                break;
+        }
+    }
+
+    $sql = "
+        SELECT 'BPA-1' AS tipo, id, fecha, sede, encargado, estado, revisado 
+        FROM control_alimento_almacen $where
+        UNION ALL
+        SELECT 'BPA-2' AS tipo, id, fecha, sede, encargado, estado, revisado 
+        FROM control_sal_almacen $where
+        UNION ALL
+        SELECT 'BPA-3' AS tipo, id, fecha, sede, encargado, estado, revisado 
+        FROM control_producto_terminado $where
+        UNION ALL
+        SELECT 'BPA-4' AS tipo, id, fecha, sede, encargado, estado, revisado 
+        FROM control_empaque $where
+        ORDER BY fecha DESC
+    ";
+
+    $stmt = $this->conn->prepare($sql);
+
+    if ($fecha) {
+        // ✅ Vinculamos parámetro de fecha solo si se seleccionó
+        $stmt->bindParam(':fecha', $fecha);
+    }
+
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+public function getDetalleBPAGeneral($tabla, $id) {
+    $sql = "SELECT * FROM $tabla WHERE id = ?";
+    $stmt = $this->conn->prepare($sql);
     $stmt->execute([$id]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
-
-public function actualizarBpa1($data) {
-    $sql = "UPDATE bpa1 SET fecha=?, sede=?, encargado=?, cantidad=?, estado=? WHERE id=?";
-    $stmt = $this->db->prepare($sql);
-    return $stmt->execute([
-        $data['fecha'], $data['sede'], $data['encargado'],
-        $data['cantidad'], $data['estado'], $data['id']
-    ]);
-}
-
-public function eliminarBpa1($id) {
-    $stmt = $this->db->prepare("DELETE FROM bpa1 WHERE id = ?");
-    return $stmt->execute([$id]);
+public function actualizarEstado($tabla, $id, $estado) {
+    $sql = "UPDATE $tabla SET estado_supervisor = ? WHERE id = ?";
+    $stmt = $this->conn->prepare($sql);
+    return $stmt->execute([$estado, $id]);
 }
 
 

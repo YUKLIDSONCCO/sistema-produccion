@@ -4,20 +4,27 @@
 // Simplemente he añadido algunos valores para que veas cómo cambian los colores.
 $formularios = [
     [
+        'id' => 'global',
+        'emoji' => '🌍',
+        'titulo' => 'LISTA GLOBAL',
+        'descripcion' => 'Ver todos los registros BPA (1, 2, 3 y 4) por día, semana o mes',
+        'pendientes' => 0,
+        'url' => 'index.php?controller=Supervisor&action=listaGlobal'
+    ],
+    [
         'id' => 'bpa1',
         'emoji' => '🧾',
         'titulo' => 'BPA-1',
         'descripcion' => 'Control de alimentos en almacén',
-        'pendientes' => 3, // Ejemplo con pendientes (se mostrará en rojo)
+        'pendientes' => 3,
         'url' => 'index.php?controller=Supervisor&action=listarBPA1'
-
     ],
     [
         'id' => 'bpa2',
         'emoji' => '🥬',
         'titulo' => 'BPA-2',
         'descripcion' => 'Control de alimentos en proceso',
-        'pendientes' => 0, // Ejemplo sin pendientes (se mostrará en verde)
+        'pendientes' => 0,
         'url' => 'index.php?controller=Supervisor&action=listarBPA2'
     ],
     [
@@ -25,7 +32,7 @@ $formularios = [
         'emoji' => '🥩',
         'titulo' => 'BPA-3',
         'descripcion' => 'Control de producto terminado',
-        'pendientes' => 1, // Ejemplo con pendientes (se mostrará en rojo)
+        'pendientes' => 1,
         'url' => 'index.php?controller=Supervisor&action=listarBPA3'
     ],
     [
@@ -33,10 +40,11 @@ $formularios = [
         'emoji' => '🧃',
         'titulo' => 'BPA-4',
         'descripcion' => 'Control de materiales de empaque',
-        'pendientes' => 0, // Ejemplo sin pendientes (se mostrará en verde)
+        'pendientes' => 0,
         'url' => 'index.php?controller=Supervisor&action=listarBPA4'
     ],
 ];
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
