@@ -29,11 +29,17 @@ class PecesModel {
 
     public function guardarBpa6($data) {
         $conn = $this->obtenerConexion();
+        // La columna "total" es generada (mortalidad + morbilidad), no se inserta manualmente.
+        // Normalizar FKs vacíos a NULL para evitar violar restricciones.
+        $id_lote = (isset($data['id_lote']) && is_numeric($data['id_lote']) && (int)$data['id_lote'] > 0) ? (int)$data['id_lote'] : null;
+        $id_especie = (isset($data['id_especie']) && is_numeric($data['id_especie']) && (int)$data['id_especie'] > 0) ? (int)$data['id_especie'] : null;
+        $id_sede = (isset($data['id_sede']) && is_numeric($data['id_sede']) && (int)$data['id_sede'] > 0) ? (int)$data['id_sede'] : null;
+
         $sql = "INSERT INTO mortalidad_alevines (
                     codigo_formato, version, fecha_registro, responsable, sede, up, lote,
-                    mortalidad, morbilidad, total, observaciones,
+                    mortalidad, morbilidad, observaciones,
                     id_lote, id_especie, id_sede, creado_en, actualizado_en
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
         $stmt->execute([
             $data['codigo_formato'],
@@ -45,14 +51,33 @@ class PecesModel {
             $data['lote'],
             $data['mortalidad'],
             $data['morbilidad'],
-            $data['total'],
             $data['observaciones'],
-            $data['id_lote'],
-            $data['id_especie'],
-            $data['id_sede'],
+            $id_lote,
+            $id_especie,
+            $id_sede,
             $data['creado_en'],
             $data['actualizado_en']
         ]);
+    }
+
+    public function getBpa6List() {
+        $conn = $this->obtenerConexion();
+        $sql = "SELECT * FROM mortalidad_alevines ORDER BY fecha_registro DESC, up ASC";
+        $stmt = $conn->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getBpa6ById($id) {
+        $conn = $this->obtenerConexion();
+        $stmt = $conn->prepare("SELECT * FROM mortalidad_alevines WHERE id = ? LIMIT 1");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function eliminarBpa6($id) {
+        $conn = $this->obtenerConexion();
+        $stmt = $conn->prepare("DELETE FROM mortalidad_alevines WHERE id = ?");
+        return $stmt->execute([$id]);
     }
 
     /* =========================================
@@ -92,6 +117,19 @@ class PecesModel {
         $sql = "SELECT * FROM alimentacion_diaria ORDER BY fecha_registro DESC";
         $stmt = $conn->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getBpa7ById($id) {
+        $conn = $this->obtenerConexion();
+        $stmt = $conn->prepare("SELECT * FROM alimentacion_diaria WHERE id = ? LIMIT 1");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function eliminarBpa7($id) {
+        $conn = $this->obtenerConexion();
+        $stmt = $conn->prepare("DELETE FROM alimentacion_diaria WHERE id = ?");
+        return $stmt->execute([$id]);
     }
 
     /* =========================================
@@ -171,6 +209,19 @@ public function getBpa10List() {
     $sql = "SELECT * FROM muestreo ORDER BY fecha_registro DESC, up ASC";
     $stmt = $conn->query($sql);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+public function getBpa10ById($id) {
+    $conn = $this->obtenerConexion();
+    $stmt = $conn->prepare("SELECT * FROM muestreo WHERE id = ? LIMIT 1");
+    $stmt->execute([$id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+public function eliminarBpa10($id) {
+    $conn = $this->obtenerConexion();
+    $stmt = $conn->prepare("DELETE FROM muestreo WHERE id = ?");
+    return $stmt->execute([$id]);
 }
 
     /* =========================================
