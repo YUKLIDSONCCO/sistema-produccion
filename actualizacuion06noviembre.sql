@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 06-11-2025 a las 23:51:11
+-- Tiempo de generación: 07-11-2025 a las 21:09:57
 -- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Versión de PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,6 +20,93 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `coraqua_produccion`
 --
+
+DELIMITER $$
+--
+-- Procedimientos
+--
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertar_datos_control_alimento` ()   BEGIN
+    DECLARE v_fecha DATE;
+    DECLARE v_mes VARCHAR(20);
+    DECLARE v_sede VARCHAR(100);
+    DECLARE v_encargado VARCHAR(100);
+    DECLARE v_marca VARCHAR(100);
+    DECLARE v_nombre_alimento VARCHAR(150);
+    DECLARE v_calibre VARCHAR(50);
+    DECLARE v_cantidad DECIMAL(10,2);
+    DECLARE v_obs TEXT;
+    DECLARE v_dia INT;
+    DECLARE v_semana INT;
+
+    SET v_sede = 'Puno';
+    SET v_encargado = 'Juan Pérez';
+    SET v_obs = 'Control rutinario de ingreso de alimento.';
+    SET v_fecha = '2025-01-01';
+
+    WHILE v_fecha <= '2025-03-31' DO
+        SET v_dia = DAYOFWEEK(v_fecha);
+        SET v_semana = WEEK(v_fecha);
+
+        -- Solo lunes a viernes
+        IF v_dia BETWEEN 2 AND 6 THEN
+
+            -- 🔹 Asignar mes textual
+            SET v_mes = CASE MONTH(v_fecha)
+                WHEN 1 THEN 'Enero'
+                WHEN 2 THEN 'Febrero'
+                WHEN 3 THEN 'Marzo'
+            END;
+
+            -- 🔹 Cambiar marca y alimento por semana
+            CASE MOD(v_semana, 4)
+                WHEN 0 THEN
+                    SET v_marca = 'Acuafeed';
+                    SET v_nombre_alimento = 'Alimento Balanceado Trucha Premium';
+                WHEN 1 THEN
+                    SET v_marca = 'Nutraqua';
+                    SET v_nombre_alimento = 'Alimento Trucha Crecimiento';
+                WHEN 2 THEN
+                    SET v_marca = 'PiscisPro';
+                    SET v_nombre_alimento = 'Alimento Trucha Juvenil';
+                WHEN 3 THEN
+                    SET v_marca = 'AquaPlus';
+                    SET v_nombre_alimento = 'Alimento Trucha Reproductor';
+            END CASE;
+
+            -- 🔹 Variar calibre por día
+            SET v_calibre = CASE MOD(v_dia, 5)
+                WHEN 1 THEN '1mm'
+                WHEN 2 THEN '2mm'
+                WHEN 3 THEN '3mm'
+                WHEN 4 THEN '4mm'
+                ELSE '5mm'
+            END;
+
+            -- 🔹 Insertar 10 registros por día
+            SET @i = 1;
+            WHILE @i <= 10 DO
+                SET v_cantidad = ROUND(40 + (RAND() * 160), 2);
+                INSERT INTO control_alimento_almacen (
+                    fecha, sede, encargado, mes, marca, calibre,
+                    cantidad, nombre_alimento, observaciones, estado,
+                    id_usuario, id_sede, id_lote, id_especie,
+                    revisado, fecha_revision, estado_supervisor
+                ) VALUES (
+                    v_fecha, v_sede, v_encargado, v_mes, v_marca, v_calibre,
+                    v_cantidad, v_nombre_alimento, v_obs, 'pendiente',
+                    1, 1, 1, 1,
+                    0, NULL, 'Pendiente'
+                );
+                SET @i = @i + 1;
+            END WHILE;
+        END IF;
+
+        -- Avanzar un día
+        SET v_fecha = DATE_ADD(v_fecha, INTERVAL 1 DAY);
+    END WHILE;
+END$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -99,31 +186,38 @@ CREATE TABLE `control_alimento_almacen` (
   `id_lote` int(11) DEFAULT NULL,
   `id_especie` int(11) DEFAULT NULL,
   `revisado` tinyint(1) DEFAULT 0,
-  `fecha_revision` datetime DEFAULT NULL
+  `fecha_revision` datetime DEFAULT NULL,
+  `estado_supervisor` enum('Pendiente','Aprobado','Desaprobado') DEFAULT 'Pendiente'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `control_alimento_almacen`
 --
 
-INSERT INTO `control_alimento_almacen` (`id`, `fecha`, `sede`, `encargado`, `mes`, `marca`, `calibre`, `cantidad`, `nombre_alimento`, `observaciones`, `estado`, `id_usuario`, `fecha_registro`, `id_sede`, `id_lote`, `id_especie`, `revisado`, `fecha_revision`) VALUES
-(66, '2025-11-01', 'Pisco', 'Juan Carlos Mendoza', 'Noviembre', 'Nicovita', '2.0 mm', 500.00, 'Alimento Balanceado Trucha', 'Lote de producción regular', 'aprobado', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 1, NULL),
-(67, '2025-11-01', 'Pisco', 'María Elena Quispe', 'Noviembre', 'Purina', '3.0 mm', 750.50, 'Alimento Crecimiento Tilapia', 'Para estanques E-5 al E-8', 'pendiente', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 0, NULL),
-(68, '2025-11-01', 'Pisco', 'Roberto Silva López', 'Noviembre', 'Skretting', '1.5 mm', 300.25, 'Alimento Inicio Trucha', 'Alevines etapa inicial', 'aprobado', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 1, NULL),
-(69, '2025-11-01', 'Huancayo', 'Carmen Rosa Torres', 'Noviembre', 'Nicovita', '2.5 mm', 450.75, 'Alimento Engorde Tilapia', 'Temperatura controlada', 'aprobado', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 1, NULL),
-(70, '2025-11-01', 'Huancayo', 'Luis Alberto Ramos', 'Noviembre', 'Purina', '4.0 mm', 600.00, 'Alimento Final Trucha', 'Preparación para cosecha', 'pendiente', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 0, NULL),
-(71, '2025-11-01', 'Arequipa', 'Ana Cecilia Díaz', 'Noviembre', 'Skretting', '2.0 mm', 350.80, 'Alimento Balanceado Tilapia', 'Humedad óptima', 'aprobado', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 1, NULL),
-(72, '2025-11-01', 'Arequipa', 'Pedro Manuel Castillo', 'Noviembre', 'Nicovita', '3.5 mm', 480.30, 'Alimento Crecimiento Trucha', 'Lote de alta calidad', 'aprobado', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 1, NULL),
-(73, '2025-11-01', 'Pisco', 'Juan Carlos Mendoza', 'Noviembre', 'Purina', '1.8 mm', 275.90, 'Alimento Alevines Tilapia', 'Proteína 45%', 'pendiente', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 0, NULL),
-(74, '2025-11-01', 'Huancayo', 'Carmen Rosa Torres', 'Noviembre', 'Skretting', '2.8 mm', 520.60, 'Alimento Engorde Trucha', 'Con suplemento vitamínico', 'aprobado', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 1, NULL),
-(75, '2025-11-01', 'Arequipa', 'Ana Cecilia Díaz', 'Noviembre', 'Nicovita', '3.2 mm', 420.45, 'Alimento Final Tilapia', 'Última etapa', 'aprobado', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 1, NULL),
-(76, '2025-11-01', 'Pisco', 'Roberto Silva López', 'Noviembre', 'Purina', '2.2 mm', 380.70, 'Alimento Balanceado Trucha', 'Stock para 15 días', 'pendiente', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 0, NULL),
-(77, '2025-11-01', 'Huancayo', 'Luis Alberto Ramos', 'Noviembre', 'Skretting', '4.5 mm', 550.25, 'Alimento Crecimiento Tilapia', 'Para estanques nuevos', 'aprobado', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 1, NULL),
-(78, '2025-11-01', 'Arequipa', 'Pedro Manuel Castillo', 'Noviembre', 'Nicovita', '1.2 mm', 200.15, 'Alimento Inicio Tilapia', 'Alevines recién sembrados', 'aprobado', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 1, NULL),
-(79, '2025-11-01', 'Pisco', 'María Elena Quispe', 'Noviembre', 'Purina', '3.8 mm', 470.80, 'Alimento Engorde Trucha', 'Con astaxantina', 'pendiente', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 0, NULL),
-(80, '2025-11-01', 'Huancayo', 'Carmen Rosa Torres', 'Noviembre', 'Skretting', '2.5 mm', 320.95, 'Alimento Final Tilapia', 'Pre-cosecha', 'aprobado', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 1, NULL),
-(81, '2025-11-02', 'Rr', 'Cg', 'Mayo', 'Gg', 'Carlos', 3.00, 'Tt', 'Ggghh', 'pendiente', NULL, '2025-11-02 20:28:00', NULL, NULL, NULL, 0, NULL),
-(82, '2025-11-02', 'Carlos', 'Pedregal', 'Junio', 'Sede', 'Tt', 5.00, 'Fg', 'Gg', 'pendiente', NULL, '2025-11-02 20:30:56', NULL, NULL, NULL, 0, NULL);
+INSERT INTO `control_alimento_almacen` (`id`, `fecha`, `sede`, `encargado`, `mes`, `marca`, `calibre`, `cantidad`, `nombre_alimento`, `observaciones`, `estado`, `id_usuario`, `fecha_registro`, `id_sede`, `id_lote`, `id_especie`, `revisado`, `fecha_revision`, `estado_supervisor`) VALUES
+(66, '2025-11-01', 'Pisco', 'Juan Carlos Mendoza', 'Noviembre', 'Nicovita', '2.0 mm', 500.00, 'Alimento Balanceado Trucha', 'Lote de producción regular', 'aprobado', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 1, NULL, 'Pendiente'),
+(67, '2025-11-01', 'Pisco', 'María Elena Quispe', 'Noviembre', 'Purina', '3.0 mm', 750.50, 'Alimento Crecimiento Tilapia', 'Para estanques E-5 al E-8', 'pendiente', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 0, NULL, 'Pendiente'),
+(68, '2025-11-01', 'Pisco', 'Roberto Silva López', 'Noviembre', 'Skretting', '1.5 mm', 300.25, 'Alimento Inicio Trucha', 'Alevines etapa inicial', 'aprobado', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 1, NULL, 'Pendiente'),
+(69, '2025-11-01', 'Huancayo', 'Carmen Rosa Torres', 'Noviembre', 'Nicovita', '2.5 mm', 450.75, 'Alimento Engorde Tilapia', 'Temperatura controlada', 'aprobado', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 1, NULL, 'Pendiente'),
+(70, '2025-11-01', 'Huancayo', 'Luis Alberto Ramos', 'Noviembre', 'Purina', '4.0 mm', 600.00, 'Alimento Final Trucha', 'Preparación para cosecha', 'pendiente', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 0, NULL, 'Pendiente'),
+(71, '2025-11-01', 'Arequipa', 'Ana Cecilia Díaz', 'Noviembre', 'Skretting', '2.0 mm', 350.80, 'Alimento Balanceado Tilapia', 'Humedad óptima', 'aprobado', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 1, NULL, 'Pendiente'),
+(72, '2025-11-01', 'Arequipa', 'Pedro Manuel Castillo', 'Noviembre', 'Nicovita', '3.5 mm', 480.30, 'Alimento Crecimiento Trucha', 'Lote de alta calidad', 'aprobado', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 1, NULL, 'Pendiente'),
+(73, '2025-11-01', 'Pisco', 'Juan Carlos Mendoza', 'Noviembre', 'Purina', '1.8 mm', 275.90, 'Alimento Alevines Tilapia', 'Proteína 45%', 'pendiente', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 0, NULL, 'Pendiente'),
+(74, '2025-11-01', 'Huancayo', 'Carmen Rosa Torres', 'Noviembre', 'Skretting', '2.8 mm', 520.60, 'Alimento Engorde Trucha', 'Con suplemento vitamínico', 'aprobado', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 1, NULL, 'Pendiente'),
+(75, '2025-11-01', 'Arequipa', 'Ana Cecilia Díaz', 'Noviembre', 'Nicovita', '3.2 mm', 420.45, 'Alimento Final Tilapia', 'Última etapa', 'aprobado', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 1, NULL, 'Pendiente'),
+(76, '2025-11-01', 'Pisco', 'Roberto Silva López', 'Noviembre', 'Purina', '2.2 mm', 380.70, 'Alimento Balanceado Trucha', 'Stock para 15 días', 'pendiente', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 0, NULL, 'Pendiente'),
+(77, '2025-11-01', 'Huancayo', 'Luis Alberto Ramos', 'Noviembre', 'Skretting', '4.5 mm', 550.25, 'Alimento Crecimiento Tilapia', 'Para estanques nuevos', 'aprobado', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 1, NULL, 'Pendiente'),
+(78, '2025-11-01', 'Arequipa', 'Pedro Manuel Castillo', 'Noviembre', 'Nicovita', '1.2 mm', 200.15, 'Alimento Inicio Tilapia', 'Alevines recién sembrados', 'aprobado', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 1, NULL, 'Pendiente'),
+(79, '2025-11-01', 'Pisco', 'María Elena Quispe', 'Noviembre', 'Purina', '3.8 mm', 470.80, 'Alimento Engorde Trucha', 'Con astaxantina', 'pendiente', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 0, NULL, 'Pendiente'),
+(80, '2025-11-01', 'Huancayo', 'Carmen Rosa Torres', 'Noviembre', 'Skretting', '2.5 mm', 320.95, 'Alimento Final Tilapia', 'Pre-cosecha', 'aprobado', NULL, '2025-11-02 04:13:17', NULL, NULL, NULL, 1, NULL, 'Pendiente'),
+(81, '2025-11-02', 'Rr', 'Cg', 'Mayo', 'Gg', 'Carlos', 3.00, 'Tt', 'Ggghh', 'pendiente', NULL, '2025-11-02 20:28:00', NULL, NULL, NULL, 0, NULL, 'Pendiente'),
+(82, '2025-11-02', 'Carlos', 'Pedregal', 'Junio', 'Sede', 'Tt', 5.00, 'Fg', 'Gg', 'pendiente', NULL, '2025-11-02 20:30:56', NULL, NULL, NULL, 0, NULL, 'Pendiente'),
+(83, '2025-11-07', 'puno', 'carlods', 'Febrero', '223', '4', 2.00, '2', '222', 'pendiente', NULL, '2025-11-07 05:52:52', NULL, NULL, NULL, 0, NULL, 'Pendiente'),
+(84, '2025-11-07', '4', '4', 'Enero', '4', '4', 4.00, '4', '4', 'pendiente', NULL, '2025-11-07 06:08:39', NULL, NULL, NULL, 0, NULL, 'Aprobado'),
+(85, '2025-11-06', 'carlos', 'pedrgal', 'Noviembre', 'dale', '2', 10.00, 'carlo', 'pipo', 'pendiente', NULL, '2025-11-07 18:17:37', NULL, NULL, NULL, 0, NULL, 'Pendiente'),
+(86, '2025-11-06', 'carlos', 'pedrgal', 'Noviembre', 'dalemo', '4', 12.00, 'carlos', 'pipopo', 'pendiente', NULL, '2025-11-07 18:17:37', NULL, NULL, NULL, 0, NULL, 'Pendiente'),
+(87, '2025-11-06', 'carlos', 'pedrgal', 'Noviembre', 'dalemon1', '6', 14.00, 'carloss', 'pipopopi', 'pendiente', NULL, '2025-11-07 18:17:37', NULL, NULL, NULL, 0, NULL, 'Pendiente'),
+(88, '2025-11-06', 'carlos', 'pedrgal', 'Noviembre', 'dalemon2', '8', 16.00, 'carloss', 'papay', 'pendiente', NULL, '2025-11-07 18:17:37', NULL, NULL, NULL, 0, NULL, 'Pendiente');
 
 -- --------------------------------------------------------
 
@@ -236,7 +330,8 @@ CREATE TABLE `control_empaque` (
   `revisado` tinyint(1) DEFAULT 0,
   `comentarios_supervisor` text DEFAULT NULL,
   `fecha_revision` datetime DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `estado_supervisor` enum('Pendiente','Aprobado','Desaprobado') DEFAULT 'Pendiente'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -322,7 +417,8 @@ CREATE TABLE `control_producto_terminado` (
   `revisado` tinyint(1) DEFAULT 0,
   `comentarios_supervisor` text DEFAULT NULL,
   `fecha_revision` datetime DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `estado_supervisor` enum('Pendiente','Aprobado','Desaprobado') DEFAULT 'Pendiente'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -347,32 +443,33 @@ CREATE TABLE `control_sal_almacen` (
   `revisado` tinyint(1) DEFAULT 0,
   `id_usuario` int(11) DEFAULT NULL,
   `comentarios_supervisor` text DEFAULT NULL,
-  `fecha_revision` timestamp NULL DEFAULT NULL
+  `fecha_revision` timestamp NULL DEFAULT NULL,
+  `estado_supervisor` enum('Pendiente','Aprobado','Desaprobado') DEFAULT 'Pendiente'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `control_sal_almacen`
 --
 
-INSERT INTO `control_sal_almacen` (`id`, `fecha`, `sede`, `encargado`, `mes`, `cantidad`, `nombre_sal`, `observaciones`, `fecha_registro`, `id_sede`, `id_lote`, `estado`, `revisado`, `id_usuario`, `comentarios_supervisor`, `fecha_revision`) VALUES
-(11, '2025-01-15', 'Sede Puno', 'Carlos Mamani', 'Enero', 125.50, 'Sal marina gruesa', 'Buen control de calidad', '2025-11-02 04:19:59', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL),
-(12, '2025-02-10', 'Sede Juliaca', 'Ana Quispe', 'Febrero', 98.75, 'Sal yodada fina', 'Sin observaciones', '2025-11-02 04:19:59', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL),
-(13, '2025-03-05', 'Sede Arequipa', 'Luis Ramos', 'Marzo', 132.20, 'Sal rosada', 'Producto homogéneo', '2025-11-02 04:19:59', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL),
-(14, '2025-04-22', 'Sede Puno', 'María Flores', 'Abril', 110.00, 'Sal industrial', 'Verificar humedad', '2025-11-02 04:19:59', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL),
-(15, '2025-05-18', 'Sede Tacna', 'José Choque', 'Mayo', 89.60, 'Sal para consumo animal', 'Revisión aprobada', '2025-11-02 04:19:59', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL),
-(16, '2025-06-09', 'Sede Moquegua', 'Rosa Apaza', 'Junio', 147.30, 'Sal gourmet', 'Excelente presentación', '2025-11-02 04:19:59', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL),
-(17, '2025-07-12', 'Sede Puno', 'Carlos Mamani', 'Julio', 100.00, 'Sal marina fina', 'Nivel de sodio dentro del rango', '2025-11-02 04:19:59', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL),
-(18, '2025-08-25', 'Sede Arequipa', 'Luis Ramos', 'Agosto', 118.90, 'Sal yodada gruesa', 'Revisión técnica favorable', '2025-11-02 04:19:59', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL),
-(19, '2025-09-30', 'Sede Juliaca', 'Ana Quispe', 'Septiembre', 140.00, 'Sal rosada premium', 'Sin anomalías detectadas', '2025-11-02 04:19:59', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL),
-(20, '2025-10-21', 'Sede Tacna', 'José Choque', 'Octubre', 155.80, 'Sal industrial refinada', 'Producto final listo', '2025-11-02 04:19:59', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL),
-(21, '2025-11-02', 'ffdhd', 'gfg', 'Marzo', 0.00, 'htfdh', '', '2025-11-02 04:20:53', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL),
-(22, '2025-11-02', '55', '55', 'Marzo', 0.00, 'gg', '', '2025-11-02 04:53:35', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL),
-(23, '2025-11-02', '544', '55', 'Abril', 0.00, 'Array', 'Array', '2025-11-02 05:00:43', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL),
-(24, '2025-11-02', 'R5R', '66', 'Febrero', 5.00, 'UYG', 'UGGG', '2025-11-02 05:07:48', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL),
-(25, '2025-11-03', 'yygbv', 'huh', 'Febrero', 47.00, '44', '44', '2025-11-03 00:28:12', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL),
-(26, '2025-11-02', 'Fg', 'Ff', 'Junio', 2.00, 'Tt', 'Gg', '2025-11-03 02:52:22', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL),
-(27, '2025-11-02', 'Rr', 'Ff', 'Junio', 3.00, 'G', 'Cslo', '2025-11-03 03:02:02', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL),
-(28, '2025-11-02', 'Carl9d', 'Carlos', 'Junio', 1.00, 'Carlos', 'Csrlos', '2025-11-03 03:03:01', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL);
+INSERT INTO `control_sal_almacen` (`id`, `fecha`, `sede`, `encargado`, `mes`, `cantidad`, `nombre_sal`, `observaciones`, `fecha_registro`, `id_sede`, `id_lote`, `estado`, `revisado`, `id_usuario`, `comentarios_supervisor`, `fecha_revision`, `estado_supervisor`) VALUES
+(11, '2025-01-15', 'Sede Puno', 'Carlos Mamani', 'Enero', 125.50, 'Sal marina gruesa', 'Buen control de calidad', '2025-11-02 04:19:59', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL, 'Pendiente'),
+(12, '2025-02-10', 'Sede Juliaca', 'Ana Quispe', 'Febrero', 98.75, 'Sal yodada fina', 'Sin observaciones', '2025-11-02 04:19:59', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL, 'Pendiente'),
+(13, '2025-03-05', 'Sede Arequipa', 'Luis Ramos', 'Marzo', 132.20, 'Sal rosada', 'Producto homogéneo', '2025-11-02 04:19:59', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL, 'Pendiente'),
+(14, '2025-04-22', 'Sede Puno', 'María Flores', 'Abril', 110.00, 'Sal industrial', 'Verificar humedad', '2025-11-02 04:19:59', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL, 'Pendiente'),
+(15, '2025-05-18', 'Sede Tacna', 'José Choque', 'Mayo', 89.60, 'Sal para consumo animal', 'Revisión aprobada', '2025-11-02 04:19:59', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL, 'Pendiente'),
+(16, '2025-06-09', 'Sede Moquegua', 'Rosa Apaza', 'Junio', 147.30, 'Sal gourmet', 'Excelente presentación', '2025-11-02 04:19:59', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL, 'Pendiente'),
+(17, '2025-07-12', 'Sede Puno', 'Carlos Mamani', 'Julio', 100.00, 'Sal marina fina', 'Nivel de sodio dentro del rango', '2025-11-02 04:19:59', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL, 'Pendiente'),
+(18, '2025-08-25', 'Sede Arequipa', 'Luis Ramos', 'Agosto', 118.90, 'Sal yodada gruesa', 'Revisión técnica favorable', '2025-11-02 04:19:59', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL, 'Pendiente'),
+(19, '2025-09-30', 'Sede Juliaca', 'Ana Quispe', 'Septiembre', 140.00, 'Sal rosada premium', 'Sin anomalías detectadas', '2025-11-02 04:19:59', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL, 'Pendiente'),
+(20, '2025-10-21', 'Sede Tacna', 'José Choque', 'Octubre', 155.80, 'Sal industrial refinada', 'Producto final listo', '2025-11-02 04:19:59', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL, 'Pendiente'),
+(21, '2025-11-02', 'ffdhd', 'gfg', 'Marzo', 0.00, 'htfdh', '', '2025-11-02 04:20:53', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL, 'Pendiente'),
+(22, '2025-11-02', '55', '55', 'Marzo', 0.00, 'gg', '', '2025-11-02 04:53:35', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL, 'Pendiente'),
+(23, '2025-11-02', '544', '55', 'Abril', 0.00, 'Array', 'Array', '2025-11-02 05:00:43', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL, 'Pendiente'),
+(24, '2025-11-02', 'R5R', '66', 'Febrero', 5.00, 'UYG', 'UGGG', '2025-11-02 05:07:48', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL, 'Pendiente'),
+(25, '2025-11-03', 'yygbv', 'huh', 'Febrero', 47.00, '44', '44', '2025-11-03 00:28:12', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL, 'Pendiente'),
+(26, '2025-11-02', 'Fg', 'Ff', 'Junio', 2.00, 'Tt', 'Gg', '2025-11-03 02:52:22', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL, 'Pendiente'),
+(27, '2025-11-02', 'Rr', 'Ff', 'Junio', 3.00, 'G', 'Cslo', '2025-11-03 03:02:02', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL, 'Pendiente'),
+(28, '2025-11-02', 'Carl9d', 'Carlos', 'Junio', 1.00, 'Carlos', 'Csrlos', '2025-11-03 03:03:01', NULL, NULL, 'Pendiente', 0, NULL, NULL, NULL, 'Pendiente');
 
 -- --------------------------------------------------------
 
@@ -735,7 +832,27 @@ INSERT INTO `mortalidad_diaria_ovas` (`id`, `codigo_formato`, `version`, `fecha_
 (60, 'CORAQUA-BPA2', '2.0', '2025-11-05', '4', 4, '4', '4', NULL, NULL, NULL, '0000-00-00', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', '', '', '2025-11-05 13:16:25'),
 (61, 'CORAQUA-BPA2', '2.0', '2025-11-05', '4', 4, '4', '4', NULL, NULL, NULL, '0000-00-00', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', '', '', '2025-11-05 13:16:25'),
 (62, 'CORAQUA-BPA2', '2.0', '2025-11-05', '4', 4, '4', '4', NULL, NULL, NULL, '0000-00-00', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', '', '', '2025-11-05 13:16:26'),
-(63, 'CORAQUA-BPA2', '2.0', '2025-11-05', '4', 4, '4', '4', NULL, NULL, NULL, '0000-00-00', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', '', '', '2025-11-05 13:16:26');
+(63, 'CORAQUA-BPA2', '2.0', '2025-11-05', '4', 4, '4', '4', NULL, NULL, NULL, '0000-00-00', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', '', '', '2025-11-05 13:16:26'),
+(64, 'CORAQUA-BPA2', '2.0', '2025-11-07', '4', 4, '4', '4', NULL, NULL, NULL, '2025-11-07', '7', '4', -1, 4, 4, 4, 4, 4, 5, '5', '', '', '', '2025-11-07 12:11:31'),
+(65, 'CORAQUA-BPA2', '2.0', '2025-11-07', '4', 4, '4', '4', NULL, NULL, NULL, '2025-11-07', '5', '4', 14, 4, 4, 4, 4, -1, 4, '', '', '', '', '2025-11-07 12:11:31'),
+(66, 'CORAQUA-BPA2', '2.0', '2025-11-07', '4', 4, '4', '4', NULL, NULL, NULL, '0000-00-00', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', '', '', '2025-11-07 12:11:31'),
+(67, 'CORAQUA-BPA2', '2.0', '2025-11-07', '4', 4, '4', '4', NULL, NULL, NULL, '0000-00-00', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', '', '', '2025-11-07 12:11:31'),
+(68, 'CORAQUA-BPA2', '2.0', '2025-11-07', '4', 4, '4', '4', NULL, NULL, NULL, '0000-00-00', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', '', '', '2025-11-07 12:11:31'),
+(69, 'CORAQUA-BPA2', '2.0', '2025-11-07', '4', 4, '4', '4', NULL, NULL, NULL, '2025-11-07', '7', '4', -1, 4, 4, 4, 4, 4, 5, '5', '', '', '', '2025-11-07 12:11:31'),
+(70, 'CORAQUA-BPA2', '2.0', '2025-11-07', '4', 4, '4', '4', NULL, NULL, NULL, '2025-11-07', '5', '4', 14, 4, 4, 4, 4, -1, 4, '', '', '', '', '2025-11-07 12:11:31'),
+(71, 'CORAQUA-BPA2', '2.0', '2025-11-07', '4', 4, '4', '4', NULL, NULL, NULL, '0000-00-00', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', '', '', '2025-11-07 12:11:31'),
+(72, 'CORAQUA-BPA2', '2.0', '2025-11-07', '4', 4, '4', '4', NULL, NULL, NULL, '0000-00-00', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', '', '', '2025-11-07 12:11:31'),
+(73, 'CORAQUA-BPA2', '2.0', '2025-11-07', '4', 4, '4', '4', NULL, NULL, NULL, '0000-00-00', '', '', 0, 0, 0, 0, 0, 0, 0, '', '', '', '', '2025-11-07 12:11:31'),
+(74, 'CORAQUA-BPA2', '2.0', '2025-11-07', 'kiara', 0, '123', 'chichillapi', NULL, NULL, NULL, '2025-11-07', '0', '0', 0, 1, 2, 0, 0, 0, 0, '', '', '', '', '2025-11-07 12:15:40'),
+(75, 'CORAQUA-BPA2', '2.0', '2025-11-07', 'kiara', 0, '123', 'chichillapi', NULL, NULL, NULL, '2025-11-07', '0', '1', 0, 0, 0, 0, 0, 0, 0, '', '', '', '', '2025-11-07 12:15:40'),
+(76, 'CORAQUA-BPA2', '2.0', '2025-11-07', 'kiara', 0, '123', 'chichillapi', NULL, NULL, NULL, '0000-00-00', '', '2', 0, 0, 0, 0, 0, 0, 0, '', '', '', '', '2025-11-07 12:15:40'),
+(77, 'CORAQUA-BPA2', '2.0', '2025-11-07', 'kiara', 0, '123', 'chichillapi', NULL, NULL, NULL, '0000-00-00', '', '3', 0, 0, 0, 0, 0, 0, 0, '', '', '', '', '2025-11-07 12:15:40'),
+(78, 'CORAQUA-BPA2', '2.0', '2025-11-07', 'kiara', 0, '123', 'chichillapi', NULL, NULL, NULL, '0000-00-00', '', '4', 0, 0, 0, 0, 0, 0, 0, '', '', '', '', '2025-11-07 12:15:40'),
+(79, 'CORAQUA-BPA2', '2.0', '2025-11-07', 'kiara', 0, '123', 'chichillapi', NULL, NULL, NULL, '2025-11-07', '0', '0', 0, 1, 2, 0, 0, 0, 0, '', '', '', '', '2025-11-07 12:15:40'),
+(80, 'CORAQUA-BPA2', '2.0', '2025-11-07', 'kiara', 0, '123', 'chichillapi', NULL, NULL, NULL, '2025-11-07', '0', '1', 0, 0, 0, 0, 0, 0, 0, '', '', '', '', '2025-11-07 12:15:40'),
+(81, 'CORAQUA-BPA2', '2.0', '2025-11-07', 'kiara', 0, '123', 'chichillapi', NULL, NULL, NULL, '0000-00-00', '', '2', 0, 0, 0, 0, 0, 0, 0, '', '', '', '', '2025-11-07 12:15:40'),
+(82, 'CORAQUA-BPA2', '2.0', '2025-11-07', 'kiara', 0, '123', 'chichillapi', NULL, NULL, NULL, '0000-00-00', '', '3', 0, 0, 0, 0, 0, 0, 0, '', '', '', '', '2025-11-07 12:15:40'),
+(83, 'CORAQUA-BPA2', '2.0', '2025-11-07', 'kiara', 0, '123', 'chichillapi', NULL, NULL, NULL, '0000-00-00', '', '4', 0, 0, 0, 0, 0, 0, 0, '', '', '', '', '2025-11-07 12:15:40');
 
 -- --------------------------------------------------------
 
@@ -845,6 +962,15 @@ CREATE TABLE `sedes` (
   `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `sedes`
+--
+
+INSERT INTO `sedes` (`id_sede`, `nombre`, `ubicacion`, `contacto`, `fecha_creacion`) VALUES
+(1, 'Puno', NULL, NULL, '2025-11-07 20:07:26'),
+(2, 'Cusco', NULL, NULL, '2025-11-07 20:07:26'),
+(3, 'Arequipa', NULL, NULL, '2025-11-07 20:07:26');
+
 -- --------------------------------------------------------
 
 --
@@ -911,7 +1037,7 @@ INSERT INTO `usuarios` (`id_usuario`, `nombre`, `correo`, `password`, `id_rol`, 
 (4, 'Colaborador 1', 'colaborador1@coraqua.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 4, NULL, 'activo', '2025-09-25 14:19:11', '2025-09-25 14:19:11'),
 (5, 'pedro', 'pedro@coraqua.com', '$2y$10$lGUk9URq.KmDByO5G2fhheIB7eSW4QjTwFP1APlz2C3E3iEQgOdKy', 3, NULL, 'activo', '2025-10-06 05:13:11', '2025-10-06 06:14:16'),
 (6, 'Café Americano', 'cafe@coraqua.com', '$2y$10$buJa3HAqMLEayp7aNKkCGOIOj5L3pOCwmjICjWuw5ox684dtrRKy2', 3, NULL, 'activo', '2025-10-06 05:23:57', '2025-10-06 05:26:23'),
-(7, 'Niko', 'jefeplanta2@coraqua.com', '$2y$10$6MnjpvcUMEK40Js04enG7uZVk9LNCO.C7GupnWaF7SJu2kohRFRwW', 2, NULL, 'suspendido', '2025-10-06 05:33:12', '2025-10-06 05:33:12'),
+(7, 'Niko', 'jefeplanta2@coraqua.com', '$2y$10$6MnjpvcUMEK40Js04enG7uZVk9LNCO.C7GupnWaF7SJu2kohRFRwW', 2, NULL, 'suspendido', '2025-10-06 05:33:12', '2025-11-07 03:51:07'),
 (8, 'Nikopico', 'jefeplanta23@coraqua.com', '$2y$10$/G6Lt1YdWatx..eMqKuxcOcUS.wh1UQVt1HjWQA/hBULsxCbivtga', 3, NULL, 'suspendido', '2025-10-06 05:38:55', '2025-10-06 05:38:55'),
 (9, 'pedro', 'jefeplanta14@coraqua.com', '$2y$10$n8mHjMi01gf.EwbwEWaJpO9OaF2uOVZ0tHHcGmnAVEEeLt3VRbZc.', 2, NULL, 'suspendido', '2025-10-06 05:42:36', '2025-10-06 05:42:36'),
 (10, 'Chsmo', 'chamo@coraqua.com', '$2y$10$jcapVWSiLb8JA/XrFpd8OuwlQyQBraKrWSDaZX8esuu.WM.QObw2K', 3, NULL, 'suspendido', '2025-10-06 05:43:12', '2025-10-06 05:43:12'),
@@ -920,9 +1046,8 @@ INSERT INTO `usuarios` (`id_usuario`, `nombre`, `correo`, `password`, `id_rol`, 
 (13, 'Csmilo', '23jefeplanta@coraqua.com', '$2y$10$fLtcuzbxtkM9Jq/aEwr4Be1NjswWjxZxEQrU56wGbwrbGSiy5EUe6', 3, NULL, 'suspendido', '2025-10-06 05:54:04', '2025-10-06 05:54:04'),
 (14, 'Chsmooo', 'jtttefeplanta@coraqua.com', '$2y$10$S0Bipq7Iesm4.d/tyy5jjuWm1/BNZf6Fw076VctNdefsreaIXBrIG', 3, NULL, 'suspendido', '2025-10-06 05:54:20', '2025-10-06 05:54:20'),
 (15, 'Jajakaa', 'j4efeplanta@coraqua.com', '$2y$10$.HPRFJAMHkuZCdCzgUVSVuexU4y0KNGV3XTPtHv2.peYhnabAeEFe', 4, NULL, 'suspendido', '2025-10-06 05:56:33', '2025-10-06 05:56:33'),
-(16, 'Fffr', 'jtefeplanta@coraqua.com', '$2y$10$t60PSziIvR/CELNSQX2zluCPmd8i59nfKSHgk6clEyPtw7ynDvcK.', 3, NULL, 'suspendido', '2025-10-06 06:02:00', '2025-10-06 06:02:00'),
+(16, 'Fffr', 'jtefeplanta@coraqua.com', '$2y$10$t60PSziIvR/CELNSQX2zluCPmd8i59nfKSHgk6clEyPtw7ynDvcK.', 3, NULL, 'activo', '2025-10-06 06:02:00', '2025-11-07 03:50:55'),
 (17, 'Camaron', 'ajaa@coraqua.com', '$2y$10$PLAwTWMbmN3QdxpCIiF4P.UApHI47l3cGpQMWi7UkXbffpq/ILkAC', 3, NULL, 'activo', '2025-10-06 06:03:56', '2025-10-29 22:29:31'),
-(18, 'Nikopico4666', 'jetttfeplanta@coraqua.com', '$2y$10$eujY44s7lGWDxtrQ9ACKauIfVtilfT4nIelpLcxPLD1BtiDPVfW8u', 3, NULL, 'suspendido', '2025-10-06 06:07:45', '2025-10-06 06:07:45'),
 (19, 'Ghhgkhk', 'ffmfkffk@gmail.con', '$2y$10$CbTrg5RyITwsC0jeUPqQnuxhxyMT1cy4MCjzSZib5jT6KJNDI.m86', 4, NULL, 'suspendido', '2025-10-06 06:08:11', '2025-10-06 06:14:06'),
 (20, 'Carlos', 'administradores@coraqua.com', '$2y$10$t126h/WzokbKKaWnhpZ6r.8IeSssCQzr0TnEYc9q5es2XeNbH8wIy', 2, '/sistema-produccion/public/uploads/rostros/rostro_69029203385d8.webp', 'suspendido', '2025-10-29 22:15:31', '2025-10-29 22:15:31');
 
@@ -1237,7 +1362,7 @@ ALTER TABLE `backups`
 -- AUTO_INCREMENT de la tabla `control_alimento_almacen`
 --
 ALTER TABLE `control_alimento_almacen`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=90;
 
 --
 -- AUTO_INCREMENT de la tabla `control_alimento_proceso`
@@ -1387,7 +1512,7 @@ ALTER TABLE `mortalidad_diaria_larvas`
 -- AUTO_INCREMENT de la tabla `mortalidad_diaria_ovas`
 --
 ALTER TABLE `mortalidad_diaria_ovas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
 
 --
 -- AUTO_INCREMENT de la tabla `muestreo`
@@ -1423,7 +1548,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT de la tabla `sedes`
 --
 ALTER TABLE `sedes`
-  MODIFY `id_sede` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_sede` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `seleccion_fertilizacion_ovas`
