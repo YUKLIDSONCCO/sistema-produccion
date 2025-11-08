@@ -143,7 +143,8 @@ class PecesController {
                 $model->guardarBpa7($data);
             }
 
-            header("Location: index.php?controller=Peces&action=bpa7Listado");
+            // Permanecer en el formulario mostrando mensaje de éxito
+            header("Location: index.php?controller=Peces&action=bpa7&status=ok");
             exit;
         }
     }
@@ -235,7 +236,8 @@ class PecesController {
                 }
             }
             
-            header("Location: index.php?controller=Peces&action=bpa10");
+            // Permanecer en el formulario mostrando mensaje de éxito
+            header("Location: index.php?controller=Peces&action=bpa10&status=ok");
             exit;
         }
     }
