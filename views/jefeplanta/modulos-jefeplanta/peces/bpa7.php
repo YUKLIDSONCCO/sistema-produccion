@@ -168,11 +168,16 @@
   </style>
 </head>
 <body>
-  
+  <form id="formBpa7" action="index.php?controller=Peces&action=guardarBpa7" method="POST" style="display:none"></form>
 
   <!-- MAIN -->
   <main class="main">
     <div class="card">
+      <?php if(isset($_GET['status']) && $_GET['status']==='ok'): ?>
+        <div style="background:#d9f7d9;border:1px solid #4caf50;color:#256029;padding:10px 14px;border-radius:8px;font-weight:600;margin-bottom:12px;">
+          ✅ Registro(s) guardado(s) correctamente. Usa el botón "Ver Listado" para revisar.
+        </div>
+      <?php endif; ?>
       <header class="top">
         <div class="brand">
           <img src="/ruta/a/logo_coraqua.png" alt="Logo Coraqua" onerror="this.style.display='none'">
@@ -426,40 +431,8 @@
       alert('📁 (Simulado) Generando archivo: ' + (nombres[tipo] || 'Alimentacion_BPA7.xlsx'));
     }
 
-    // Ver listado: guardar en localStorage y redirigir al listado (simulado)
+    // Ver listado: redirigir al listado
     function verListado(){
-      // recolectar datos principales
-      const responsable = document.getElementById('responsable')?.value || '';
-      const fecha = document.getElementById('fecha')?.value || '';
-      const sede = document.getElementById('sede')?.value || '';
-      const turno = document.getElementById('turno')?.value || '';
-
-      const collectBlock = (id) => {
-        return Array.from(document.querySelectorAll(`#${id} tr`)).map(tr => {
-          return Array.from(tr.querySelectorAll('input')).map(i => i.value || '');
-        });
-      };
-
-      const data = {
-        responsable,
-        fecha,
-        sede,
-        turno,
-        bloques: {
-          b1: collectBlock('b1'),
-          b2: collectBlock('b2'),
-          b3: collectBlock('b3')
-        },
-        observaciones: document.getElementById('observaciones')?.value || '',
-        firma: document.getElementById('firma')?.value || ''
-      };
-
-      // guardar en localStorage bajo la key bpa7_registros
-      const registros = JSON.parse(localStorage.getItem('bpa7_registros') || '[]');
-      registros.push(data);
-      localStorage.setItem('bpa7_registros', JSON.stringify(registros));
-
-      // redirigir al listado
       window.location.href = 'index.php?controller=Peces&action=bpa7Listado';
     }
 
@@ -506,7 +479,7 @@
       }
     }
 
-    // Guardar (simulado)
+    // Guardar: construir POST y enviar al controlador
     function guardarDatos(){
       // simple validation
       const responsable = document.getElementById('responsable').value.trim();
@@ -518,32 +491,39 @@
         return;
       }
 
-      // collect data from blocks (basic)
-      const collectBlock = (id) => {
-        return Array.from(document.querySelectorAll(`#${id} tr`)).map(tr => {
-          return Array.from(tr.querySelectorAll('input')).map(inp => inp.value || '');
-        });
+      const add = (name, value) => {
+        const f = document.getElementById('formBpa7');
+        const i = document.createElement('input');
+        i.type = 'hidden'; i.name = name; i.value = value; f.appendChild(i);
       };
 
-      const data = {
-        responsable, fecha, sede, turno: document.getElementById('turno').value || '',
-        bloques: {
-          b1: collectBlock('b1'),
-          b2: collectBlock('b2'),
-          b3: collectBlock('b3')
-        },
-        observaciones: document.getElementById('observaciones').value || '',
-        firma: document.getElementById('firma').value || ''
+      // Campos generales
+      add('codigo_formato','CORAQUA BPA-7');
+      add('version','2.0');
+      add('fecha_registro', fecha);
+      add('responsable', responsable);
+      add('sede', sede);
+
+      const pushRow = (tr) => {
+        const inputs = Array.from(tr.querySelectorAll('input'));
+        if(inputs.length < 7) return; // up,lote,biomasa,ta,alsum,calibre,obs
+        const [up,lote,biomasa,ta,alsum,calibre,obs] = inputs.map(i => i.value || '');
+        if(!up && !lote && !biomasa && !ta && !alsum && !calibre && !obs) return;
+        add('up[]', up);
+        add('lote[]', lote);
+        add('biomasa[]', biomasa);
+        add('tasa_alimentacion[]', ta);
+        add('alimento_suministrado[]', alsum);
+        add('calibre[]', calibre);
+        add('observaciones[]', obs);
       };
 
-      console.log('DATOS BPA7 (simulado):', data);
+      ['b1','b2','b3'].forEach(id => {
+        document.querySelectorAll(`#${id} tr`).forEach(pushRow);
+      });
 
-      if(!confirm('¿Deseas guardar (simulado) los datos ingresados?')) return;
-
-      // Simulated success feedback
-      setTimeout(() => {
-        alert('✅ Datos guardados (simulado). Revisa la consola para ver el objeto con los datos.');
-      }, 200);
+      if(!confirm('¿Deseas guardar los datos ingresados?')) return;
+      document.getElementById('formBpa7').submit();
     }
 
     // Initialize default date and ensure blocks have at least 2 rows
