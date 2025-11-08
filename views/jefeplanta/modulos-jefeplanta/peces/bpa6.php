@@ -200,6 +200,12 @@
 </head>
 <body>
   <div class="container">
+    <?php if(isset($_GET['status']) && $_GET['status']==='ok'): ?>
+      <div style="background:#d9f7d9;border:1px solid #4caf50;color:#256029;padding:10px 14px;border-radius:8px;font-weight:600;margin-bottom:12px;">
+        ✅ Registro(s) guardado(s) correctamente. Usa el botón "Ver Listado Diario" para revisar.
+      </div>
+    <?php endif; ?>
+    <form id="formBpa6" action="index.php?controller=Peces&action=guardarBpa6" method="POST" style="display:none"></form>
 
     <!-- Encabezado -->
     <div class="header-row">
@@ -304,7 +310,7 @@
       <div class="left-actions">
         <button type="button" class="btn" onclick="agregarFila()">➕ Agregar fila</button>
         <button type="button" class="btn ghost" onclick="eliminarFila()">➖ Quitar fila</button>
-        <button type="button" class="btn secondary" onclick="verListado()">📖 Ver Listado Diario</button>
+  <button type="button" class="btn secondary" onclick="verListado()">📖 Ver Listado Diario</button>
       </div>
 
       <div class="right-actions">
@@ -389,33 +395,8 @@
 
     // ====== VER LISTADO ======
     function verListado() {
-  // recalcular totales antes de guardar
-  document.querySelectorAll('#bodyMortalidad tr').forEach(tr => recalcRow(tr));
-
-  const responsable = document.getElementById('responsable').value || '';
-  const fechaForm = document.getElementById('fecha').value || '';
-  const sede = document.getElementById('sede').value || '';
-  const especie = document.getElementById('especie').value || '';
-
-  const filas = Array.from(document.querySelectorAll('#bodyMortalidad tr')).map(tr => {
-    return {
-      up: tr.querySelector('.up')?.value || '',
-      lote: tr.querySelector('.lote')?.value || '',
-      mort: Number(tr.querySelector('.mort')?.value) || 0,
-      morb: Number(tr.querySelector('.morb')?.value) || 0,
-      total: Number(tr.querySelector('.total')?.value) || 0,
-      obs: tr.querySelector('.obs')?.value || ''
-    };
-  });
-
-  // Guardar datos simulados
-  const registros = JSON.parse(localStorage.getItem('bpa6_registros') || '[]');
-  registros.push({ responsable, fechaForm, sede, especie, filas });
-  localStorage.setItem('bpa6_registros', JSON.stringify(registros));
-
-  // Redirigir al listado
-  window.location.href = 'index.php?controller=Peces&action=bpa6Listado';
-}
+      window.location.href = 'index.php?controller=Peces&action=bpa6Listado';
+    }
 
 
     // ====== VOLVER ATRÁS ======
@@ -425,7 +406,7 @@
     }
 
     // ====== GUARDAR (simulado) ======
-    function guardarDatos(){
+  function guardarDatos(){
       // recalcular totales por si acaso
       document.querySelectorAll('#bodyMortalidad tr').forEach(tr => recalcRow(tr));
 
@@ -457,17 +438,33 @@
       }
 
       // simulación: mostrar resumen y log en consola
-      console.log({
-        responsable, fechaForm, sede, especie, filas
+      // construir POST y enviar al controlador
+      const form = document.getElementById('formBpa6');
+      form.innerHTML = '';
+      const add = (name, value) => {
+        const i = document.createElement('input');
+        i.type = 'hidden'; i.name = name; i.value = value; form.appendChild(i);
+      };
+      add('codigo_formato', 'CORAQUA BPA-6');
+      add('version', '2.0');
+      add('fecha_registro', fechaForm);
+      add('responsable', responsable);
+      add('sede', sede);
+      // soporte de IDs opcionales (crear in-situ si no existieran en backend)
+      add('id_especie', '');
+      add('id_lote', '');
+      add('id_sede', '');
+
+      filas.forEach(f => {
+        add('up[]', f.up);
+        add('lote[]', f.lote);
+        add('mortalidad[]', f.mort);
+        add('morbilidad[]', f.morb);
+        add('observaciones[]', f.obs);
       });
 
-      const ok = confirm('¿Deseas guardar (simulado) los datos ingresados?');
-      if(!ok) return;
-
-      // feedback simulado
-      setTimeout(() => {
-        alert('✅ Datos guardados (simulado). Revisa la consola para ver el objeto con los datos.');
-      }, 250);
+      if(!confirm('¿Deseas guardar los datos ingresados?')) return;
+      form.submit();
     }
 
     // Inicializar fecha con hoy
