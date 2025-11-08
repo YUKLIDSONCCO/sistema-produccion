@@ -130,6 +130,7 @@
   </style>
 </head>
 <body>
+  <form id="formBpa10" action="index.php?controller=Peces&action=guardarBpa10" method="POST" style="display:none"></form>
   <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <div class="logo">
@@ -157,6 +158,11 @@
   <!-- MAIN -->
   <main class="main">
     <div class="card" role="main">
+      <?php if(isset($_GET['status']) && $_GET['status']==='ok'): ?>
+        <div style="background:#d9f7d9;border:1px solid #4caf50;color:#256029;padding:10px 14px;border-radius:8px;font-weight:600;margin-bottom:12px;">
+          ✅ Registro(s) guardado(s) correctamente. Usa el botón "Ver Listado Diario" para revisar.
+        </div>
+      <?php endif; ?>
       <header class="top" aria-label="Encabezado del formato">
         <div class="brand">
           <img src="/ruta/a/logo_coraqua.png" alt="Logo Coraqua" onerror="this.style.display='none'">
@@ -345,28 +351,8 @@
       try{ row.scrollIntoView({ behavior:'smooth', block:'center' }); } catch(e){}
     }
 
-    // Ver listado: guardar en localStorage y redirigir al listado (simulado)
+    // Ver listado: redirigir al listado
     function verListado(){
-      const encargado = document.getElementById('encargado')?.value || '';
-      const sede = document.getElementById('sede')?.value || '';
-      const fecha = document.getElementById('fecha')?.value || '';
-      const hora = document.getElementById('hora')?.value || '';
-
-      const filas = Array.from(document.querySelectorAll('#bodyMuestreo tr')).map(tr => ({
-        up: tr.querySelector('.up')?.value || '',
-        p1: Number(tr.querySelector('.p1')?.value) || 0,
-        p2: Number(tr.querySelector('.p2')?.value) || 0,
-        p3: Number(tr.querySelector('.p3')?.value) || 0,
-        p4: Number(tr.querySelector('.p4')?.value) || 0,
-        long: Number(tr.querySelector('.long')?.value) || 0,
-        obs: tr.querySelector('.obs')?.value || ''
-      }));
-
-      const registro = { encargado, sede, fecha, hora, filas };
-      const registros = JSON.parse(localStorage.getItem('bpa10_registros') || '[]');
-      registros.push(registro);
-      localStorage.setItem('bpa10_registros', JSON.stringify(registros));
-
       window.location.href = 'index.php?controller=Peces&action=bpa10Listado';
     }
 
@@ -388,7 +374,7 @@
       alert(`📂 Generando y descargando ${archivo}...`);
     }
 
-    // Guardar (simulado) con validacion basica
+    // Guardar: construir POST y enviar al controlador
     function guardarDatos(){
       const encargado = document.getElementById('encargado').value.trim();
       const fecha = document.getElementById('fecha').value.trim();
@@ -397,25 +383,45 @@
         return;
       }
 
-      // Recolectar datos
-      const filas = Array.from(document.querySelectorAll('#bodyMuestreo tr')).map(tr => ({
-        up: tr.querySelector('.up').value || '',
-        p1: Number(tr.querySelector('.p1').value) || 0,
-        p2: Number(tr.querySelector('.p2').value) || 0,
-        p3: Number(tr.querySelector('.p3').value) || 0,
-        p4: Number(tr.querySelector('.p4').value) || 0,
-        long: Number(tr.querySelector('.long').value) || 0,
-        obs: tr.querySelector('.obs').value || ''
-      }));
+      const sede = document.getElementById('sede').value || '';
+      const hora = document.getElementById('hora').value || '';
 
-      console.log({ encargado, sede: document.getElementById('sede').value || '', fecha, hora: document.getElementById('hora').value || '', filas });
+      const add = (name, value) => {
+        const f = document.getElementById('formBpa10');
+        const i = document.createElement('input');
+        i.type = 'hidden'; i.name = name; i.value = value; f.appendChild(i);
+      };
+
+      // campos generales
+      add('codigo_formato','CORAQUA BPA-10');
+      add('version','2.0');
+      add('fecha_registro', fecha);
+      add('encargado', encargado);
+      add('sede', sede);
+      add('fecha_muestreo', fecha);
+      add('hora_muestreo', hora);
+
+      // filas
+      document.querySelectorAll('#bodyMuestreo tr').forEach(tr => {
+        const up = tr.querySelector('.up')?.value || '';
+        const p1 = Number(tr.querySelector('.p1')?.value) || 0;
+        const p2 = Number(tr.querySelector('.p2')?.value) || 0;
+        const p3 = Number(tr.querySelector('.p3')?.value) || 0;
+        const p4 = Number(tr.querySelector('.p4')?.value) || 0;
+        const obs = tr.querySelector('.obs')?.value || '';
+        if(!up && !p1 && !p2 && !p3 && !p4 && !obs) return;
+        const pesos = [p1,p2,p3,p4].filter(v => v>0);
+        const prom = pesos.length ? (pesos.reduce((a,b)=>a+b,0)/pesos.length) : 0;
+        add('up[]', up);
+        add('lote[]', up); // mientras no exista campo lote, usar up como referencia
+        add('peso_promedio[]', prom.toFixed(2));
+        add('coeficiente_variacion[]', 0);
+        add('factor_k[]', 0);
+        add('observaciones[]', obs);
+      });
 
       if(!confirm('¿Deseas guardar los datos ingresados?')) return;
-
-      // Simula guardado
-      setTimeout(() => {
-        alert('✅ Datos guardados correctamente.');
-      }, 300);
+      document.getElementById('formBpa10').submit();
     }
 
     // Inicializar fecha y hora con hoy/hora actual
