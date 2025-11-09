@@ -4,7 +4,7 @@ class PecesModel {
 
     public function obtenerConexion() {
         $db = new Database();
-        return $db->getConnection(); // usamos getConnection() como en inventario
+        return $db->getConnection();
     }
 
     public function obtenerEspecies() {
@@ -15,8 +15,7 @@ class PecesModel {
 
     public function agregarEspecieYObtenerID($data) {
         $conn = $this->obtenerConexion();
-        $sql = "INSERT INTO especies (nombre, nombre_comun, descripcion, fecha_creacion)
-                VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO especies (nombre, nombre_comun, descripcion, fecha_creacion) VALUES (?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
         $stmt->execute([
             $data['nombre'],
@@ -29,8 +28,6 @@ class PecesModel {
 
     public function guardarBpa6($data) {
         $conn = $this->obtenerConexion();
-        // La columna "total" es generada (mortalidad + morbilidad), no se inserta manualmente.
-        // Normalizar FKs vacíos a NULL para evitar violar restricciones.
         $id_lote = (isset($data['id_lote']) && is_numeric($data['id_lote']) && (int)$data['id_lote'] > 0) ? (int)$data['id_lote'] : null;
         $id_especie = (isset($data['id_especie']) && is_numeric($data['id_especie']) && (int)$data['id_especie'] > 0) ? (int)$data['id_especie'] : null;
         $id_sede = (isset($data['id_sede']) && is_numeric($data['id_sede']) && (int)$data['id_sede'] > 0) ? (int)$data['id_sede'] : null;
@@ -80,9 +77,6 @@ class PecesModel {
         return $stmt->execute([$id]);
     }
 
-    /* =========================================
-       BPA 7 - ALIMENTACIÓN DIARIA
-       ========================================= */
     public function guardarBpa7($data) {
         $conn = $this->obtenerConexion();
         $sql = "INSERT INTO alimentacion_diaria (
@@ -132,180 +126,183 @@ class PecesModel {
         return $stmt->execute([$id]);
     }
 
-    /* =========================================
-       BPA 10 - MUESTREO
-       ========================================= */
     public function guardarBpa10($data) {
-    $conn = $this->obtenerConexion();
-
-    // Campos requeridos
-    $campos_requeridos = [
-        'codigo_formato', 'version', 'fecha_registro', 'encargado', 'sede',
-        'fecha_muestreo', 'hora_muestreo', 'up', 'lote',
-        'peso_promedio', 'coeficiente_variacion', 'factor_k',
-        'creado_en', 'actualizado_en'
-    ];
-
-    // Campos opcionales con valores por defecto
-    $campos_opcionales = [
-        'observaciones' => '',
-        'id_lote' => null,
-        'id_especie' => null,
-        'id_sede' => null
-    ];
-
-    // Validar campos requeridos
-    foreach ($campos_requeridos as $campo) {
-        if (!isset($data[$campo]) || $data[$campo] === '') {
-            throw new Exception("Falta el campo requerido '$campo' en guardarBpa10()");
-        }
-    }
-
-    // Establecer valores por defecto para campos opcionales
-    foreach ($campos_opcionales as $campo => $valor_defecto) {
-        if (!isset($data[$campo]) || $data[$campo] === '') {
-            $data[$campo] = $valor_defecto;
-        }
-    }
-
-    foreach ($data as $key => $value) {
-        if (is_array($value)) {
-            $data[$key] = implode(',', $value);
-        }
-    }
-
-    $sql = "INSERT INTO muestreo (
-                codigo_formato, version, fecha_registro, encargado, sede,
-                fecha_muestreo, hora_muestreo, up, lote,
-                peso_promedio, coeficiente_variacion, factor_k, observaciones,
-                id_lote, id_especie, id_sede, creado_en, actualizado_en
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-    $stmt = $conn->prepare($sql);
-    $stmt->execute([
-        $data['codigo_formato'],
-        $data['version'],
-        $data['fecha_registro'],
-        $data['encargado'],
-        $data['sede'],
-        $data['fecha_muestreo'],
-        $data['hora_muestreo'],
-        $data['up'],
-        $data['lote'],
-        $data['peso_promedio'],
-        $data['coeficiente_variacion'],
-        $data['factor_k'],
-        $data['observaciones'],
-        $data['id_lote'],
-        $data['id_especie'],
-        $data['id_sede'],
-        $data['creado_en'],
-        $data['actualizado_en']
-    ]);
-}
-
-public function getBpa10List() {
-    $conn = $this->obtenerConexion();
-    $sql = "SELECT * FROM muestreo ORDER BY fecha_registro DESC, up ASC";
-    $stmt = $conn->query($sql);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
-public function getBpa10ById($id) {
-    $conn = $this->obtenerConexion();
-    $stmt = $conn->prepare("SELECT * FROM muestreo WHERE id = ? LIMIT 1");
-    $stmt->execute([$id]);
-    return $stmt->fetch(PDO::FETCH_ASSOC);
-}
-
-public function eliminarBpa10($id) {
-    $conn = $this->obtenerConexion();
-    $stmt = $conn->prepare("DELETE FROM muestreo WHERE id = ?");
-    return $stmt->execute([$id]);
-}
-
-    /* =========================================
-       BPA 12 - CONTROL DE PARÁMETROS
-       ========================================= */
-    public function guardarBpa12($data) {
         $conn = $this->obtenerConexion();
-        
-        // Primero guardamos el registro principal en control_parametros
-        $sqlControl = "INSERT INTO control_parametros (
-            codigo_formato, version, fecha_registro, mes, sede,
-            responsable, observaciones, creado_en, actualizado_en
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        
-        $stmt = $conn->prepare($sqlControl);
+        $sql = "INSERT INTO muestreo (
+                    codigo_formato, version, fecha_registro, encargado, sede,
+                    fecha_muestreo, hora_muestreo, up, lote,
+                    peso_promedio, coeficiente_variacion, factor_k, observaciones,
+                    id_lote, id_especie, id_sede, creado_en, actualizado_en
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
         $stmt->execute([
             $data['codigo_formato'],
             $data['version'],
             $data['fecha_registro'],
-            $data['mes'],
+            $data['encargado'],
             $data['sede'],
-            $data['responsable'],
+            $data['fecha_muestreo'],
+            $data['hora_muestreo'],
+            $data['up'],
+            $data['lote'],
+            $data['peso_promedio'],
+            $data['coeficiente_variacion'],
+            $data['factor_k'],
             $data['observaciones'],
-            date('Y-m-d H:i:s'),
-            date('Y-m-d H:i:s')
+            $data['id_lote'],
+            $data['id_especie'],
+            $data['id_sede'],
+            $data['creado_en'],
+            $data['actualizado_en']
         ]);
+    }
 
-        $id_control = $conn->lastInsertId();
+    public function getBpa10List() {
+        $conn = $this->obtenerConexion();
+        $sql = "SELECT * FROM muestreo ORDER BY fecha_registro DESC, up ASC";
+        $stmt = $conn->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
-        // Luego guardamos los detalles de parámetros
-        $sqlDetalle = "INSERT INTO detalle_control_parametros (
-            id_control, dia, 
-            temp_6_30, o2_6_30, sat_6_30, ph_6_30,
-            temp_12_00, o2_12_00, sat_12_00, ph_12_00,
-            temp_3_30, o2_3_30, sat_3_30, ph_3_30,
-            temp_prom, o2_prom, sat_prom, ph_prom,
-            observaciones, creado_en
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    public function getBpa10ById($id) {
+        $conn = $this->obtenerConexion();
+        $stmt = $conn->prepare("SELECT * FROM muestreo WHERE id = ? LIMIT 1");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 
-        $stmt = $conn->prepare($sqlDetalle);
+    public function eliminarBpa10($id) {
+        $conn = $this->obtenerConexion();
+        $stmt = $conn->prepare("DELETE FROM muestreo WHERE id = ?");
+        return $stmt->execute([$id]);
+    }
 
-        // Procesar cada día del mes
-        foreach ($data['dias'] as $dia => $parametros) {
-            // Calcular promedios
-            $temp_prom = ($parametros['temp_6_30'] + $parametros['temp_12_00'] + $parametros['temp_3_30']) / 3;
-            $o2_prom = ($parametros['o2_6_30'] + $parametros['o2_12_00'] + $parametros['o2_3_30']) / 3;
-            $sat_prom = ($parametros['sat_6_30'] + $parametros['sat_12_00'] + $parametros['sat_3_30']) / 3;
-            $ph_prom = ($parametros['ph_6_30'] + $parametros['ph_12_00'] + $parametros['ph_3_30']) / 3;
+    // =========================
+    // BPA12 - CONTROL DE PARÁMETROS (PECES)
+    // Se insertará en la tabla control_diario_parametros_peces (una fila por día)
+    // columnas esperadas: codigo_formato, version, fecha_registro, mes, sede, dia,
+    // t_0630, o2_0630, sat_0630, ph_0630, t_1200, o2_1200, sat_1200, ph_1200,
+    // t_1530, o2_1530, sat_1530, ph_1530, responsable, observacion, id_sede, creado_en
+    public function guardarBpa12($data) {
+        $conn = $this->obtenerConexion();
 
-            $stmt->execute([
-                $id_control,
-                $dia,
-                $parametros['temp_6_30'],
-                $parametros['o2_6_30'],
-                $parametros['sat_6_30'],
-                $parametros['ph_6_30'],
-                $parametros['temp_12_00'],
-                $parametros['o2_12_00'],
-                $parametros['sat_12_00'],
-                $parametros['ph_12_00'],
-                $parametros['temp_3_30'],
-                $parametros['o2_3_30'],
-                $parametros['sat_3_30'],
-                $parametros['ph_3_30'],
-                $temp_prom,
-                $o2_prom,
-                $sat_prom,
-                $ph_prom,
-                $parametros['observaciones'] ?? '',
-                date('Y-m-d H:i:s')
-            ]);
+        // Verificar que vengan dias
+        if (empty($data['dias']) || !is_array($data['dias'])) {
+            return false;
+        }
+
+        $sql = "INSERT INTO control_diario_parametros_peces (
+            codigo_formato, version, fecha_registro, mes, sede, dia,
+            t_0630, o2_0630, sat_0630, ph_0630,
+            t_1200, o2_1200, sat_1200, ph_1200,
+            t_1530, o2_1530, sat_1530, ph_1530,
+            responsable, observacion, id_sede, creado_en
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        $stmt = $conn->prepare($sql);
+
+        try {
+            $conn->beginTransaction();
+
+            foreach ($data['dias'] as $dia => $parametros) {
+            // Mapear desde los keys del controlador (temp_6_30, o2_6_30, ...)
+            $t0630 = isset($parametros['temp_6_30']) ? $parametros['temp_6_30'] : null;
+            $o20630 = isset($parametros['o2_6_30']) ? $parametros['o2_6_30'] : null;
+            $sat0630 = isset($parametros['sat_6_30']) ? $parametros['sat_6_30'] : null;
+            $ph0630 = isset($parametros['ph_6_30']) ? $parametros['ph_6_30'] : null;
+
+            $t1200 = isset($parametros['temp_12_00']) ? $parametros['temp_12_00'] : null;
+            $o21200 = isset($parametros['o2_12_00']) ? $parametros['o2_12_00'] : null;
+            $sat1200 = isset($parametros['sat_12_00']) ? $parametros['sat_12_00'] : null;
+            $ph1200 = isset($parametros['ph_12_00']) ? $parametros['ph_12_00'] : null;
+
+            $t1530 = isset($parametros['temp_3_30']) ? $parametros['temp_3_30'] : null;
+            $o21530 = isset($parametros['o2_3_30']) ? $parametros['o2_3_30'] : null;
+            $sat1530 = isset($parametros['sat_3_30']) ? $parametros['sat_3_30'] : null;
+            $ph1530 = isset($parametros['ph_3_30']) ? $parametros['ph_3_30'] : null;
+
+            $responsable = $parametros['responsable'] ?? ($data['responsable'] ?? null);
+            $observacion = $parametros['observaciones'] ?? null;
+
+            $id_sede = $data['id_sede'] ?? null;
+
+                $stmt->execute([
+                    $data['codigo_formato'] ?? 'CORAQUA BPA-12',
+                    $data['version'] ?? '2.0',
+                    $data['fecha_registro'] ?? date('Y-m-d'),
+                    $data['mes'] ?? '',
+                    $data['sede'] ?? '',
+                    $dia,
+                    $t0630,
+                    $o20630,
+                    $sat0630,
+                    $ph0630,
+                    $t1200,
+                    $o21200,
+                    $sat1200,
+                    $ph1200,
+                    $t1530,
+                    $o21530,
+                    $sat1530,
+                    $ph1530,
+                    $responsable,
+                    $observacion,
+                    $id_sede,
+                    date('Y-m-d H:i:s')
+                ]);
+            }
+
+            $conn->commit();
+            return true;
+        } catch (PDOException $e) {
+            // Rollback and log
+            try { $conn->rollBack(); } catch (Exception $x) {}
+            error_log('PecesModel::guardarBpa12 DB error: ' . $e->getMessage());
+            return false;
         }
     }
 
     public function getBpa12List() {
         $conn = $this->obtenerConexion();
-        
-        // Primero obtenemos los registros principales
+
+        // Preferir la tabla moderna control_diario_parametros_peces si tiene datos
+        try {
+            $check = $conn->query("SELECT COUNT(*) as c FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = 'control_diario_parametros_peces'")->fetch(PDO::FETCH_ASSOC);
+            $hasTable = ($check && $check['c'] > 0);
+        } catch (Exception $e) {
+            $hasTable = false;
+        }
+
+        if ($hasTable) {
+            // Agrupar por fecha/mes/sede para presentar un listado parecido al anterior
+            $sql = "SELECT fecha_registro, mes, sede, COUNT(*) as total_dias, MIN(id) as id_sample, MIN(creado_en) as creado_en
+                    FROM control_diario_parametros_peces
+                    GROUP BY fecha_registro, mes, sede
+                    ORDER BY fecha_registro DESC, sede ASC";
+            $stmt = $conn->query($sql);
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            // Normalizar estructura: proporcionar id and detalles will be fetched by getBpa12ById
+            $result = [];
+            foreach ($rows as $r) {
+                $result[] = [
+                    'id' => $r['id_sample'],
+                    'fecha_registro' => $r['fecha_registro'],
+                    'mes' => $r['mes'],
+                    'sede' => $r['sede'],
+                    'total_dias' => $r['total_dias'],
+                    'creado_en' => $r['creado_en']
+                ];
+            }
+            return $result;
+        }
+
+        // Fallback: esquema antiguo
         $sql = "SELECT cp.*, COUNT(dcp.id) as total_dias 
                 FROM control_parametros cp 
                 LEFT JOIN detalle_control_parametros dcp ON cp.id = dcp.id_control 
                 GROUP BY cp.id 
                 ORDER BY cp.fecha_registro DESC";
-        
+
         $stmt = $conn->query($sql);
         $registros = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -322,17 +319,78 @@ public function eliminarBpa10($id) {
         return $registros;
     }
 
+    /**
+     * Devuelve listado detallado de filas individuales (una fila por día) desde
+     * la tabla control_diario_parametros_peces si existe. Esto permite mostrar
+     * directamente columnas como t_0630, o2_0630, sat_0630, ph_0630, etc.
+     */
+    public function getBpa12ListDetailed() {
+        $conn = $this->obtenerConexion();
+        try {
+            $check = $conn->query("SELECT COUNT(*) as c FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = 'control_diario_parametros_peces'")->fetch(PDO::FETCH_ASSOC);
+            $hasTable = ($check && $check['c'] > 0);
+        } catch (Exception $e) {
+            $hasTable = false;
+        }
+
+        if ($hasTable) {
+            $sql = "SELECT id, codigo_formato, version, fecha_registro, mes, sede, dia,
+                           t_0630, o2_0630, sat_0630, ph_0630,
+                           t_1200, o2_1200, sat_1200, ph_1200,
+                           t_1530, o2_1530, sat_1530, ph_1530,
+                           responsable, observacion, id_sede, creado_en
+                    FROM control_diario_parametros_peces
+                    ORDER BY fecha_registro DESC, sede ASC, dia ASC";
+            $stmt = $conn->query($sql);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        // Fallback al esquema antiguo: devolver cada detalle individual como una fila
+        $sql = "SELECT cp.codigo_formato, cp.version, cp.fecha_registro, cp.mes, cp.sede,
+                       dcp.dia,
+                       dcp.temp_6_30 AS t_0630, dcp.o2_6_30 AS o2_0630, dcp.sat_6_30 AS sat_0630, dcp.ph_6_30 AS ph_0630,
+                       dcp.temp_12_00 AS t_1200, dcp.o2_12_00 AS o2_1200, dcp.sat_12_00 AS sat_1200, dcp.ph_12_00 AS ph_1200,
+                       dcp.temp_3_30 AS t_1530, dcp.o2_3_30 AS o2_1530, dcp.sat_3_30 AS sat_1530, dcp.ph_3_30 AS ph_1530,
+                       dcp.responsable, dcp.observaciones AS observacion, cp.id AS id, cp.id_sede, cp.creado_en
+                FROM control_parametros cp
+                JOIN detalle_control_parametros dcp ON cp.id = dcp.id_control
+                ORDER BY cp.fecha_registro DESC, cp.sede ASC, dcp.dia ASC";
+
+        $stmt = $conn->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getBpa12ById($id) {
         $conn = $this->obtenerConexion();
-        
-        // Obtener el registro principal
-        $sql = "SELECT * FROM control_parametros WHERE id = ?";
-        $stmt = $conn->prepare($sql);
+
+        // Primero intentar esquema moderno: si existe una fila con id en control_diario_parametros_peces
+        try {
+            $stmt = $conn->prepare("SELECT * FROM control_diario_parametros_peces WHERE id = ? LIMIT 1");
+            $stmt->execute([$id]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row) {
+                // Recuperar todos los registros con la misma fecha_registro y sede
+                $sqlDetalles = "SELECT * FROM control_diario_parametros_peces WHERE fecha_registro = ? AND sede = ? ORDER BY dia ASC";
+                $stmtDetalles = $conn->prepare($sqlDetalles);
+                $stmtDetalles->execute([$row['fecha_registro'], $row['sede']]);
+                return [
+                    'id' => $row['id'],
+                    'fecha_registro' => $row['fecha_registro'],
+                    'mes' => $row['mes'],
+                    'sede' => $row['sede'],
+                    'detalles' => $stmtDetalles->fetchAll(PDO::FETCH_ASSOC)
+                ];
+            }
+        } catch (Exception $e) {
+            // ignore and fallback
+        }
+
+        // Fallback to old schema
+        $stmt = $conn->prepare("SELECT * FROM control_parametros WHERE id = ?");
         $stmt->execute([$id]);
         $registro = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($registro) {
-            // Obtener los detalles
             $sqlDetalles = "SELECT * FROM detalle_control_parametros 
                            WHERE id_control = ? 
                            ORDER BY dia ASC";
