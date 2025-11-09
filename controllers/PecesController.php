@@ -261,50 +261,127 @@ class PecesController {
        BPA 12 - CONTROL DE PARÁMETROS
        ====================== */
     public function bpa12() {
-        require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa12/bpa12.php';
+        require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa12.php';
     }
 
     public function guardarBpa12() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $model = new PecesModel();
 
-            // Datos del registro principal
+            // Datos del registro principal (vienen desde la vista)
+            // Nota: la vista envía responsables por fila (responsable[]). Para el registro principal
+            // tomamos el primer responsable no vacío si existe, para evitar pasar un array al modelo.
+            $firstResponsable = '';
+            if (isset($_POST['responsable'])) {
+                if (is_array($_POST['responsable'])) {
+                    foreach ($_POST['responsable'] as $r) { if (trim($r) !== '') { $firstResponsable = $r; break; } }
+                } else {
+                    $firstResponsable = $_POST['responsable'];
+                }
+            }
+
             $data = [
                 'codigo_formato' => $_POST['codigo_formato'] ?? 'CORAQUA BPA-12',
                 'version' => $_POST['version'] ?? '2.0',
-                'fecha_registro' => $_POST['fecha_registro'] ?? '',
+                'fecha_registro' => $_POST['fecha_registro'] ?? date('Y-m-d'),
                 'mes' => $_POST['mes'] ?? '',
                 'sede' => $_POST['sede'] ?? '',
-                'responsable' => $_POST['responsable'] ?? '',
-                'observaciones' => $_POST['observaciones'] ?? '',
+                // responsable/observaciones generales: usar primer responsable de las filas si existe
+                'responsable' => $firstResponsable,
+                'observaciones' => ''
             ];
 
-            // Procesar los datos de cada día
+            // La vista actual usa tres tablas separadas y no envía `dia[]` como inputs.
+            // Tomamos la longitud máxima entre los arrays de cada horario y usamos el índice+1 como día.
             $dias = [];
-            for ($dia = 1; $dia <= 31; $dia++) {
-                if (isset($_POST["temp_6_30_$dia"])) { // Solo procesar si hay datos para este día
-                    $dias[$dia] = [
-                        'temp_6_30' => (float)$_POST["temp_6_30_$dia"] ?? 0,
-                        'o2_6_30' => (float)$_POST["o2_6_30_$dia"] ?? 0,
-                        'sat_6_30' => (float)$_POST["sat_6_30_$dia"] ?? 0,
-                        'ph_6_30' => (float)$_POST["ph_6_30_$dia"] ?? 0,
-                        'temp_12_00' => (float)$_POST["temp_12_00_$dia"] ?? 0,
-                        'o2_12_00' => (float)$_POST["o2_12_00_$dia"] ?? 0,
-                        'sat_12_00' => (float)$_POST["sat_12_00_$dia"] ?? 0,
-                        'ph_12_00' => (float)$_POST["ph_12_00_$dia"] ?? 0,
-                        'temp_3_30' => (float)$_POST["temp_3_30_$dia"] ?? 0,
-                        'o2_3_30' => (float)$_POST["o2_3_30_$dia"] ?? 0,
-                        'sat_3_30' => (float)$_POST["sat_3_30_$dia"] ?? 0,
-                        'ph_3_30' => (float)$_POST["ph_3_30_$dia"] ?? 0,
-                        'observaciones' => $_POST["observaciones_dia_$dia"] ?? ''
-                    ];
+
+            $t0630 = $_POST['t_0630'] ?? [];
+            $o20630 = $_POST['o2_0630'] ?? [];
+            $sat0630 = $_POST['sat_0630'] ?? [];
+            $ph0630 = $_POST['ph_0630'] ?? [];
+            $obs0630 = $_POST['obs_0630'] ?? [];
+
+            $t1200 = $_POST['t_1200'] ?? [];
+            $o21200 = $_POST['o2_1200'] ?? [];
+            $sat1200 = $_POST['sat_1200'] ?? [];
+            $ph1200 = $_POST['ph_1200'] ?? [];
+            $obs1200 = $_POST['obs_1200'] ?? [];
+
+            $t1530 = $_POST['t_1530'] ?? [];
+            $o21530 = $_POST['o2_1530'] ?? [];
+            $sat1530 = $_POST['sat_1530'] ?? [];
+            $ph1530 = $_POST['ph_1530'] ?? [];
+            $obs1530 = $_POST['obs_1530'] ?? [];
+
+            // Responsable global en la vista se llama responsable_global
+            $responsable_global = $_POST['responsable_global'] ?? ($firstResponsable ?? '');
+
+            $n = max(count($t0630), count($t1200), count($t1530));
+            for ($i = 0; $i < $n; $i++) {
+                $diaIndex = $i + 1;
+
+                $p = [
+                    'temp_6_30' => isset($t0630[$i]) && $t0630[$i] !== '' ? (float)$t0630[$i] : null,
+                    'o2_6_30' => isset($o20630[$i]) && $o20630[$i] !== '' ? (float)$o20630[$i] : null,
+                    'sat_6_30' => isset($sat0630[$i]) && $sat0630[$i] !== '' ? (float)$sat0630[$i] : null,
+                    'ph_6_30' => isset($ph0630[$i]) && $ph0630[$i] !== '' ? (float)$ph0630[$i] : null,
+
+                    'temp_12_00' => isset($t1200[$i]) && $t1200[$i] !== '' ? (float)$t1200[$i] : null,
+                    'o2_12_00' => isset($o21200[$i]) && $o21200[$i] !== '' ? (float)$o21200[$i] : null,
+                    'sat_12_00' => isset($sat1200[$i]) && $sat1200[$i] !== '' ? (float)$sat1200[$i] : null,
+                    'ph_12_00' => isset($ph1200[$i]) && $ph1200[$i] !== '' ? (float)$ph1200[$i] : null,
+
+                    'temp_3_30' => isset($t1530[$i]) && $t1530[$i] !== '' ? (float)$t1530[$i] : null,
+                    'o2_3_30' => isset($o21530[$i]) && $o21530[$i] !== '' ? (float)$o21530[$i] : null,
+                    'sat_3_30' => isset($sat1530[$i]) && $sat1530[$i] !== '' ? (float)$sat1530[$i] : null,
+                    'ph_3_30' => isset($ph1530[$i]) && $ph1530[$i] !== '' ? (float)$ph1530[$i] : null,
+
+                    // Preferir observación del mismo horario si existe, sino combinar
+                    'observaciones' => (isset($obs0630[$i]) && $obs0630[$i] !== '') ? $obs0630[$i] : ((isset($obs1200[$i]) && $obs1200[$i] !== '') ? $obs1200[$i] : ($obs1530[$i] ?? '')),
+                    'responsable' => $responsable_global
+                ];
+
+                // Añadir sólo si hay al menos un valor numérico o texto en la fila
+                $hasValues = false;
+                foreach (['temp_6_30','o2_6_30','sat_6_30','ph_6_30','temp_12_00','o2_12_00','sat_12_00','ph_12_00','temp_3_30','o2_3_30','sat_3_30','ph_3_30','observaciones','responsable'] as $k) {
+                    if ($p[$k] !== '' && $p[$k] !== 0 && $p[$k] !== null) { $hasValues = true; break; }
+                    if (in_array($k, ['observaciones','responsable']) && !empty($p[$k])) { $hasValues = true; break; }
+                }
+
+                if ($hasValues) {
+                    $dias[$diaIndex] = $p;
                 }
             }
-            
+
             $data['dias'] = $dias;
 
-            $model->guardarBpa12($data);
-            header("Location: index.php?controller=Peces&action=bpa12");
+            try {
+                // Debugging: persist a small trace of the payload to project logs for quick inspection
+                $count = is_array($data['dias']) ? count($data['dias']) : 0;
+                $dbg = "guardarBpa12 - dias_count=" . $count . "\n";
+                // also log keys present in POST and a sample row when available
+                $postKeys = array_keys($_POST);
+                $dbg .= "POST_KEYS=" . implode(',', $postKeys) . "\n";
+                if ($count > 0) {
+                    $first = reset($data['dias']);
+                    $dbg .= "FIRST_ROW=" . json_encode($first, JSON_UNESCAPED_UNICODE) . "\n";
+                }
+                file_put_contents(__DIR__ . '/../logs/bpa12_debug.log', $dbg, FILE_APPEND);
+
+                $ok = $model->guardarBpa12($data);
+                // log result
+                $resdbg = "guardarBpa12 - model_result=" . ($ok ? 'OK' : 'FAIL') . "\n";
+                file_put_contents(__DIR__ . '/../logs/bpa12_debug.log', $resdbg, FILE_APPEND);
+                if ($ok) {
+                    header("Location: index.php?controller=Peces&action=bpa12&status=ok");
+                } else {
+                    header("Location: index.php?controller=Peces&action=bpa12&error=save_failed");
+                }
+            } catch (Exception $e) {
+                // Log and redirect with error flag
+                error_log('Error guardarBpa12: ' . $e->getMessage());
+                header("Location: index.php?controller=Peces&action=bpa12&error=exception");
+            }
             exit;
         }
     }
@@ -312,7 +389,7 @@ class PecesController {
     public function bpa12Listado() {
         $model = new PecesModel();
         $registros = $model->getBpa12List();
-        require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa12/bpa12-listado.php';
+        require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa12-listado.php';
     }
 
     public function verBpa12() {
@@ -320,7 +397,7 @@ class PecesController {
             $model = new PecesModel();
             $registro = $model->getBpa12ById($_GET['id']);
             if ($registro) {
-                require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa12/bpa12-ver.php';
+                require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa12-ver.php';
             } else {
                 header('Location: index.php?controller=Peces&action=bpa12Listado&error=notfound');
             }
@@ -336,7 +413,7 @@ class PecesController {
             if ($registro) {
                 header('Content-Type: application/vnd.ms-excel');
                 header('Content-Disposition: attachment; filename="BPA12_' . $registro['fecha_registro'] . '.xls"');
-                require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa12/bpa12-excel.php';
+                require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa12-excel.php';
             } else {
                 header('Location: index.php?controller=Peces&action=bpa12Listado&error=notfound');
             }
