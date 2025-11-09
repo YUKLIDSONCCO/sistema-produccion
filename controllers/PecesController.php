@@ -341,14 +341,20 @@ class PecesController {
                     'responsable' => $responsable_global
                 ];
 
-                // Añadir sólo si hay al menos un valor numérico o texto en la fila
-                $hasValues = false;
-                foreach (['temp_6_30','o2_6_30','sat_6_30','ph_6_30','temp_12_00','o2_12_00','sat_12_00','ph_12_00','temp_3_30','o2_3_30','sat_3_30','ph_3_30','observaciones','responsable'] as $k) {
-                    if ($p[$k] !== '' && $p[$k] !== 0 && $p[$k] !== null) { $hasValues = true; break; }
-                    if (in_array($k, ['observaciones','responsable']) && !empty($p[$k])) { $hasValues = true; break; }
+                // Añadir sólo si hay al menos un valor de medición (temperatura, O2, %SAT o pH)
+                // No considerar "responsable" u "observaciones" como suficiente para guardar la fila.
+                $measurementKeys = [
+                    'temp_6_30','o2_6_30','sat_6_30','ph_6_30',
+                    'temp_12_00','o2_12_00','sat_12_00','ph_12_00',
+                    'temp_3_30','o2_3_30','sat_3_30','ph_3_30'
+                ];
+
+                $hasMeasurements = false;
+                foreach ($measurementKeys as $k) {
+                    if (isset($p[$k]) && $p[$k] !== '' && $p[$k] !== null) { $hasMeasurements = true; break; }
                 }
 
-                if ($hasValues) {
+                if ($hasMeasurements) {
                     $dias[$diaIndex] = $p;
                 }
             }
@@ -388,7 +394,8 @@ class PecesController {
 
     public function bpa12Listado() {
         $model = new PecesModel();
-        $registros = $model->getBpa12List();
+        // Usar listado detallado por fila para mostrar las columnas de medición en la vista
+        $registros = $model->getBpa12ListDetailed();
         require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa12-listado.php';
     }
 
