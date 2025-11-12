@@ -976,6 +976,39 @@ INSERT INTO `sedes` (`id_sede`, `nombre`, `ubicacion`, `contacto`, `fecha_creaci
 --
 -- Estructura de tabla para la tabla `seleccion_fertilizacion_ovas`
 --
+CREATE TABLE control_diario_parametros_peces (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    codigo_formato VARCHAR(50) DEFAULT 'CORAQUA_BPA_12',
+    version VARCHAR(10) DEFAULT '2.0',
+    fecha_registro DATE NOT NULL,
+    mes VARCHAR(50) NOT NULL,
+    sede VARCHAR(100) NOT NULL,
+    dia INT NOT NULL,
+
+    -- Parámetros de las 6:30 a.m.
+    t_0630 DECIMAL(5,2),
+    o2_0630 DECIMAL(5,2),
+    sat_0630 DECIMAL(5,2),
+    ph_0630 DECIMAL(5,2),
+
+    -- Parámetros de las 12:00 m.
+    t_1200 DECIMAL(5,2),
+    o2_1200 DECIMAL(5,2),
+    sat_1200 DECIMAL(5,2),
+    ph_1200 DECIMAL(5,2),
+
+    -- Parámetros de las 3:30 p.m.
+    t_1530 DECIMAL(5,2),
+    o2_1530 DECIMAL(5,2),
+    sat_1530 DECIMAL(5,2),
+    ph_1530 DECIMAL(5,2),
+
+    responsable VARCHAR(100),
+    observacion TEXT,
+
+    id_sede INT,
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 CREATE TABLE `seleccion_fertilizacion_ovas` (
   `id` int(11) NOT NULL,
