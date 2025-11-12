@@ -3,7 +3,6 @@
 //define('BASE_URL', 'http://172.40.15.34/sistema-produccion/public/');
 define('BASE_URL', 'http://localhost/sistema-produccion/public/');
 
-
 // Nombre de la aplicación
 define('APP_NAME', 'Sistema de Producción');
 

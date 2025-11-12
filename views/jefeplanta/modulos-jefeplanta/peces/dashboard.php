@@ -166,7 +166,6 @@ body {
     </section>
 
     <!-- FORMATOS PECES -->
-    <!-- FORMATOS PECES -->
 <section class="dashboard" id="formatosSection" style="display:none;">
   <div class="section-header">
     <h2>FORMATOS DE CONTROL DE PECES</h2>

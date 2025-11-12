@@ -14,37 +14,146 @@ $fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
     margin:0;
     background:linear-gradient(135deg,#fffaf2,#ffd9b3 60%);
     color:#333;
-    padding:30px 16px;
+    padding:40px 20px;
     min-height:100vh;
   }
   .container{
-    max-width:1100px;
+    max-width:1150px;
     margin:auto;
     background:#fff;
-    border-radius:14px;
-    padding:28px 32px;
-    box-shadow:0 8px 24px rgba(0,0,0,0.12);
-    border-top:7px solid #ff7b00;
+    border-radius:18px;
+    padding:40px 42px;
+    box-shadow:0 10px 28px rgba(0,0,0,0.15);
+    border-top:8px solid #ff7b00;
     animation:fadeIn .6s ease;
   }
-  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-  h1{text-align:center;color:#ff7b00;font-size:1.6rem;margin-bottom:20px;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  h1{text-align:center;color:#ff7b00;font-size:1.8rem;margin-bottom:25px;}
+
+  /* Panel de descarga */
+  .wizard-panel{
+    background:#fff6eb;
+    border:2px dashed #ffa94d;
+    padding:40px;
+    border-radius:16px;
+    text-align:center;
+    margin-bottom:30px;
+  }
+
+  .wizard{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    position:relative;
+    margin-bottom:35px;
+  }
+  .wizard::before{
+    content:"";
+    position:absolute;
+    top:50%;
+    left:10%;
+    right:10%;
+    height:4px;
+    background:#ffc180;
+    z-index:0;
+  }
+  .step{
+    text-align:center;
+    position:relative;
+    z-index:1;
+    cursor:pointer;
+    flex:1;
+  }
+  .circle{
+    width:50px;
+    height:50px;
+    line-height:50px;
+    border-radius:50%;
+    background:#ffb366;
+    color:#fff;
+    font-weight:700;
+    margin:auto;
+    font-size:1.2rem;
+    border:3px solid #ff7b00;
+    transition:all .2s ease;
+  }
+  .step.active .circle{
+    background:#ff7b00;
+    color:#fff;
+    transform:scale(1.1);
+  }
+  .label{
+    margin-top:6px;
+    font-weight:600;
+    font-size:0.9rem;
+    color:#ff7b00;
+  }
+
+  .wizard-content{display:none;}
+  .wizard-content.active{display:block;}
+
+  .download-btn{
+    background:#ff7b00;
+    color:#fff;
+    border:none;
+    padding:12px 20px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+    transition:all .2s;
+    margin-top:10px;
+    font-size:1rem;
+  }
+  .download-btn:hover{background:#e66e00;transform:translateY(-2px);}
+
+  /* Buscador */
   .search-bar{
-    display:flex;justify-content:center;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:12px;
+    margin-bottom:25px;
+    flex-wrap:wrap;
+  }
+  label{
+    font-weight:600;
+    color:#444;
+    font-size:1rem;
   }
   input[type="date"]{
-    padding:8px 10px;border-radius:8px;border:1px solid #ccc;font-size:1rem;
+    padding:10px 14px;
+    border-radius:10px;
+    border:2px solid #ffb366;
+    font-size:1rem;
+    background:#fffaf2;
+    color:#333;
+    transition:all .3s;
+  }
+  input[type="date"]:focus{
+    outline:none;
+    border-color:#ff7b00;
+    box-shadow:0 0 6px #ffb366;
   }
   button, .btn{
-    background:#ff7b00;color:#fff;border:none;padding:10px 16px;border-radius:8px;
-    cursor:pointer;font-weight:600;transition:all .2s;text-decoration:none;display:inline-block;
+    background:#ff7b00;
+    color:#fff;
+    border:none;
+    padding:10px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+    transition:all .2s;
+    text-decoration:none;
+    display:inline-block;
   }
   button:hover, .btn:hover{background:#e66e00;transform:translateY(-2px);}
+
+  /* Tabla */
   table{width:100%;border-collapse:collapse;margin-top:20px;}
   th,td{border:1px solid #e6e6e6;padding:8px;text-align:center;font-size:0.95rem;}
   th{background:#ff7b00;color:#fff;}
   tr:nth-child(even){background:#fff8f0;}
-  .back-btn{margin-top:20px;display:inline-block;text-decoration:none;background:#fff;color:#ff7b00;
+  .back-btn{margin-top:25px;display:inline-block;text-decoration:none;background:#fff;color:#ff7b00;
     border:2px solid #ff7b00;padding:10px 14px;border-radius:10px;font-weight:700;}
   .back-btn:hover{background:#ff7b00;color:#fff;}
   footer{text-align:center;margin-top:30px;color:#666;font-size:0.9rem;}
@@ -55,7 +164,38 @@ $fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
 <div class="container">
   <h1>📅 Listado Diario — Control de Sal en Almacén</h1>
 
-  <!-- Buscador por fecha -->
+  <!-- Panel de descarga (copiado de lista1) -->
+  <div class="wizard-panel">
+    <div class="wizard">
+      <div class="step active" onclick="mostrarPaso(1)">
+        <div class="circle">1</div>
+        <div class="label">Semanal</div>
+      </div>
+      <div class="step" onclick="mostrarPaso(2)">
+        <div class="circle">2</div>
+        <div class="label">Mensual</div>
+      </div>
+      <div class="step" onclick="mostrarPaso(3)">
+        <div class="circle">3</div>
+        <div class="label">Anual</div>
+      </div>
+    </div>
+
+    <div id="contenido1" class="wizard-content active">
+      <p>📅 Descargar reporte semanal en Excel</p>
+      <button class="download-btn" onclick="descargarExcel('semana')">Descargar Excel Semanal</button>
+    </div>
+    <div id="contenido2" class="wizard-content">
+      <p>🗓️ Descargar reporte mensual en Excel</p>
+      <button class="download-btn" onclick="descargarExcel('mes')">Descargar Excel Mensual</button>
+    </div>
+    <div id="contenido3" class="wizard-content">
+      <p>📊 Descargar reporte anual en Excel</p>
+      <button class="download-btn" onclick="descargarExcel('anio')">Descargar Excel Anual</button>
+    </div>
+  </div>
+
+  <!-- Buscador por fecha (MANTENIENDO los hidden inputs y "Ver todo" de lista2 original) -->
   <form method="GET" class="search-bar" action="/sistema-produccion/public/index.php">
     <input type="hidden" name="controller" value="Inventario">
     <input type="hidden" name="action" value="listarBPA2">
@@ -64,11 +204,11 @@ $fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
     <input type="date" id="fecha" name="fecha" value="<?php echo htmlspecialchars($fechaBusqueda); ?>" required>
     <button type="submit">🔍 Buscar</button>
 
-    <!-- ✅ Botón "Ver todo" que muestra todos los registros -->
+    <!-- Botón "Ver todo" de lista2 -->
     <a href="/sistema-produccion/public/index.php?controller=Inventario&action=listarBPA2&ver_todo=1" class="btn">📋 Ver todo</a>
   </form>
 
-  <!-- Tabla de registros -->
+  <!-- Tabla de registros (5 columnas, como en lista2 original) -->
   <table>
     <thead>
       <tr>
@@ -96,11 +236,24 @@ $fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
     </tbody>
   </table>
 
-  <!-- ✅ Este botón ahora lleva correctamente al formulario principal -->
+  <!-- Botón "Volver Atrás" original de lista2 -->
   <a href="/sistema-produccion/public/index.php?controller=Inventario&action=bpa2" class="back-btn">⬅️ Volver Atrás</a>
 
   <footer>CORAQUA © 2025 — Listado Diario de Control de Sal</footer>
 </div>
 
+<script>
+function mostrarPaso(n){
+  document.querySelectorAll('.step').forEach((el,i)=>{
+    el.classList.toggle('active', i+1===n);
+  });
+  document.querySelectorAll('.wizard-content').forEach((el,i)=>{
+    el.classList.toggle('active', i+1===n);
+  });
+}
+function descargarExcel(tipo){
+  alert("📁 Descargando reporte en Excel: " + tipo);
+}
+</script>
 </body>
 </html>
