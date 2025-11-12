@@ -39,15 +39,18 @@ class InventarioController {
     public function guardarBPA1()
 {
     require_once "../config/database.php";
-    session_start(); // Para acceder al usuario logueado
+    require_once "../models/InventarioModel.php";
+    session_start();
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $fecha = $_POST['fecha'] ?? '';
+        $fechaGeneral = $_POST['fecha'] ?? ''; // Fecha principal
         $sede = $_POST['sede'] ?? '';
         $encargado = $_POST['encargado'] ?? '';
         $mes = $_POST['mes'] ?? '';
-        $id_usuario = $_SESSION['id_usuario'] ?? null; // ID del usuario logueado
+        $id_usuario = $_SESSION['id_usuario'] ?? null;
 
+        // Arrays del formulario
+        $fechas = $_POST['fecha_fila'] ?? $_POST['fecha'] ?? []; // Soporte para fechas individuales o única
         $marcas = $_POST['marca'] ?? [];
         $calibres = $_POST['calibre'] ?? [];
         $cantidades = $_POST['cantidad'] ?? [];
@@ -56,39 +59,35 @@ class InventarioController {
 
         $database = new Database();
         $conn = $database->getConnection();
+        $model = new InventarioModel($conn);
 
-        $sql = "INSERT INTO control_alimento_almacen 
-                (fecha, sede, encargado, mes, marca, calibre, cantidad, nombre_alimento, observaciones, id_usuario)
-                VALUES (:fecha, :sede, :encargado, :mes, :marca, :calibre, :cantidad, :nombre_alimento, :observaciones, :id_usuario)";
-        $stmt = $conn->prepare($sql);
+        $successCount = 0;
 
+        // Insertar cada fila
         for ($i = 0; $i < count($marcas); $i++) {
+            $fecha = $fechas[$i] ?? $fechaGeneral; // Usa la fecha de la fila o la general
             $marca = trim($marcas[$i] ?? '');
             $calibre = trim($calibres[$i] ?? '');
-            $cantidad = (float) ($cantidades[$i] ?? 0);
+            $cantidad = (float)($cantidades[$i] ?? 0);
             $nombre_alimento = trim($nombres[$i] ?? '');
             $obs = trim($observaciones[$i] ?? '');
 
-            if ($marca !== '' && $cantidad > 0) {
-                $stmt->execute([
-                    ':fecha' => $fecha,
-                    ':sede' => $sede,
-                    ':encargado' => $encargado,
-                    ':mes' => $mes,
-                    ':marca' => $marca,
-                    ':calibre' => $calibre,
-                    ':cantidad' => $cantidad,
-                    ':nombre_alimento' => $nombre_alimento,
-                    ':observaciones' => $obs,
-                    ':id_usuario' => $id_usuario
-                ]);
+            if ($marca !== '' && $cantidad > 0 && !empty($fecha)) {
+                if ($model->guardarBPA1($fecha, $sede, $encargado, $mes, $marca, $calibre, $cantidad, $nombre_alimento, $obs)) {
+                    $successCount++;
+                }
             }
         }
 
-        header("Location: /sistema-produccion/public/Inventario/bpa1?success=1");
+        if ($successCount > 0) {
+            header("Location: /sistema-produccion/public/Inventario/bpa1?success=" . $successCount);
+        } else {
+            header("Location: /sistema-produccion/public/Inventario/bpa1?error=1");
+        }
         exit;
     }
 }
+
 
 public function listarBPA1() {
     require_once "../config/database.php";
@@ -311,12 +310,14 @@ public function bpa4() {
     
     include "../views/jefeplanta/modulos-jefeplanta/inventario/bpa4.php";
 }
-
 public function guardarBPA4() {
     require_once "../config/database.php";
     
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $fecha = $_POST['fecha'] ?? '';
+        $sede = $_POST['sede'] ?? '';
+        $encargado = $_POST['encargado'] ?? '';
+        $mes = $_POST['mes'] ?? '';
         
         // Obtener los arrays de datos de la tabla
         $medicamentos = $_POST['medicamento_suplemento'] ?? [];
@@ -327,9 +328,9 @@ public function guardarBPA4() {
         $responsables = $_POST['responsable'] ?? [];
         $observaciones = $_POST['observaciones'] ?? [];
         
-        // Validar fecha obligatoria
-        if (empty($fecha)) {
-            header("Location: /sistema-produccion/public/Inventario/bpa4?error=1&message=Fecha obligatoria");
+        // Validar campos obligatorios
+        if (empty($fecha) || empty($sede) || empty($encargado) || empty($mes)) {
+            header("Location: /sistema-produccion/public/Inventario/bpa4?error=1&message=Complete todos los campos del formulario");
             exit;
         }
         
@@ -341,17 +342,17 @@ public function guardarBPA4() {
         
         // Insertar cada fila de la tabla
         for ($i = 0; $i < count($medicamentos); $i++) {
-            $medicamento_suplemento = $medicamentos[$i] ?? '';
+            $medicamento_suplemento = trim($medicamentos[$i] ?? '');
             $dosis = $dosis_gr[$i] ?? 0;
             $dias = $dias_tratamiento[$i] ?? 0;
-            $lote_alevines = $lotes_alevines[$i] ?? '';
-            $sala = $salas[$i] ?? '';
-            $responsable = $responsables[$i] ?? '';
-            $obs = $observaciones[$i] ?? '';
+            $lote_alevines_val = trim($lotes_alevines[$i] ?? '');
+            $sala_val = trim($salas[$i] ?? '');
+            $responsable_val = trim($responsables[$i] ?? '');
+            $obs = trim($observaciones[$i] ?? '');
             
             // Validar que tenga al menos medicamento y dosis
             if (!empty($medicamento_suplemento) && !empty($dosis)) {
-                if ($model->guardarBPA4($fecha, $medicamento_suplemento, $dosis, $dias, $lote_alevines, $sala, $responsable, $obs)) {
+                if ($model->guardarBPA4($fecha, $medicamento_suplemento, $dosis, $dias, $lote_alevines_val, $sala_val, $responsable_val, $obs)) {
                     $successCount++;
                 }
             }
@@ -361,7 +362,7 @@ public function guardarBPA4() {
         if ($successCount > 0) {
             header("Location: /sistema-produccion/public/Inventario/bpa4?success=" . $successCount);
         } else {
-            header("Location: /sistema-produccion/public/Inventario/bpa4?error=1&message=No se pudieron guardar los datos");
+            header("Location: /sistema-produccion/public/Inventario/bpa4?error=1&message=No se pudieron guardar los datos. Verifique que haya al menos una fila con medicamento y dosis válidos");
         }
         exit;
     }

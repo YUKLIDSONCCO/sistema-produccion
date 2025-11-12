@@ -5,364 +5,294 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>MORTALIDAD DIARIA - LARVAS — CORAQUA</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
-        :root {
-            --cora-orange: #ff7b00;
-            --cora-dark: #0f2b2b;
-            --bg-1: linear-gradient(135deg, #fffaf2 0%, #fff1e0 40%, #f6fbff 100%);
-            --card-bg: rgba(255, 255, 255, 0.98);
-            --muted: #6b6b6b;
-            --accent: #0f5660;
-            --radius: 12px;
-            --soft-shadow: 0 8px 30px rgba(15, 43, 43, 0.06);
-        }
+:root {
+    --cora-orange: #ff7b00;
+    --cora-dark: #0f2b2b;
+    --bg-1: linear-gradient(135deg, #fffaf2 0%, #fff1e0 40%, #f6fbff 100%);
+    --card-bg: rgba(255, 255, 255, 0.98);
+    --muted: #6b6b6b;
+    --accent: #0f5660;
+    --radius: 12px;
+    --soft-shadow: 0 8px 30px rgba(15, 43, 43, 0.06);
+}
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-        html, body {
-            height: 100%;
-            font-family: Inter, Poppins, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-            background: var(--bg-1);
-            color: var(--cora-dark);
-            -webkit-font-smoothing: antialiased;
-            overflow: hidden;
-        }
+html, body {
+    height: 100%;
+    font-family: Inter, Poppins, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: var(--bg-1);
+    color: var(--cora-dark);
+    -webkit-font-smoothing: antialiased;
+    overflow-y: auto;
+}
 
-        body {
-            display: flex;
-            flex-direction: column;
-            padding: 0;
-        }
+body {
+    display: flex;
+    flex-direction: row;
+    min-height: 100vh;
+}
 
-        .app-header {
-            background: var(--card-bg);
-            padding: 12px 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-            border-bottom: 3px solid var(--cora-orange);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            z-index: 100;
-        }
+/* === Sidebar === */
+.sidebar {
+    width: 250px;
+    background: #0f2b2b;
+    color: #fff;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    box-shadow: 4px 0 12px rgba(0,0,0,0.1);
+}
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
 
-        .logo {
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
-            background: linear-gradient(180deg, #fff, #fffdf9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(15, 43, 43, 0.08);
-            border: 1px solid rgba(15, 43, 43, 0.04);
-        }
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.logo i { font-size: 1.5rem; color: var(--cora-orange); }
+.logo span { font-weight: 700; }
 
-        .logo img {
-            width: 44px;
-            height: auto;
-        }
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
 
-        .title-col h1 {
-            margin: 0;
-            font-size: 1.1rem;
-            font-weight: 700;
-            line-height: 1.2;
-            text-transform: uppercase;
-        }
+.sidebar-nav li a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+    text-decoration: none;
+    padding: 12px 18px;
+    transition: all 0.2s ease;
+}
 
-        .meta {
-            color: var(--muted);
-            font-size: 0.82rem;
-            margin-top: 2px;
-        }
+.sidebar-nav li a:hover, .sidebar-nav li a.active {
+    background: rgba(255,255,255,0.1);
+    color: var(--cora-orange);
+}
 
-        .btn {
-            background: var(--cora-orange);
-            color: white;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            box-shadow: 0 4px 12px rgba(255, 123, 0, 0.18);
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.9rem;
-            white-space: nowrap;
-        }
+/* === Contenedor principal === */
+.main-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
 
-        .btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(255, 123, 0, 0.25);
-        }
+/* === Header fijo === */
+.app-header {
+    background: var(--card-bg);
+    padding: 12px 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    border-bottom: 3px solid var(--cora-orange);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    z-index: 100;
+    position: sticky;
+    top: 0;
+}
 
-        .btn.secondary {
-            background: transparent;
-            color: var(--cora-orange);
-            border: 2px solid var(--cora-orange);
-        }
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
 
-        .btn.ghost {
-            background: transparent;
-            color: var(--muted);
-            border: 1px solid #ddd;
-        }
+.logo-header {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    background: linear-gradient(180deg, #fff, #fffdf9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(15,43,43,0.08);
+    border: 1px solid rgba(15,43,43,0.04);
+}
 
-        .main-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            padding: 16px;
-        }
+.logo-header img { width: 44px; height: auto; }
 
-        .form-container {
-            background: var(--card-bg);
-            border-radius: 14px;
-            padding: 20px;
-            box-shadow: var(--soft-shadow);
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
+.title-col h1 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
 
-        .section {
-            margin-bottom: 20px;
-        }
+.meta { color: var(--muted); font-size: .82rem; }
 
-        .section h3 {
-            margin: 0 0 12px 0;
-            font-size: 1rem;
-            color: var(--cora-dark);
-            font-weight: 700;
-            padding-bottom: 6px;
-            border-bottom: 1px solid rgba(15, 43, 43, 0.06);
-        }
+.btn {
+    background: var(--cora-orange);
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(255,123,0,0.18);
+    transition: all .2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: .9rem;
+}
 
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
-        }
+.btn:hover { transform: translateY(-1px); }
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
+.btn.secondary {
+    background: transparent;
+    color: var(--cora-orange);
+    border: 2px solid var(--cora-orange);
+}
 
-        .form-group label {
-            font-size: 0.85rem;
-            font-weight: 500;
-            margin-bottom: 6px;
-            color: var(--cora-dark);
-        }
+.btn.ghost {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid #ddd;
+}
 
-        input[type="text"],
-        input[type="number"],
-        input[type="date"],
-        select {
-            width: 100%;
-            padding: 8px 10px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            font-size: 0.9rem;
-            transition: border-color 0.2s;
-        }
+/* ✅ hacemos scroll solo del contenido interior */
+.main-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    overflow-y: auto;
+}
 
-        input:focus,
-        select:focus {
-            outline: none;
-            border-color: var(--cora-orange);
-            box-shadow: 0 0 0 2px rgba(255, 123, 0, 0.1);
-        }
+.form-container {
+    background: var(--card-bg);
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: var(--soft-shadow);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
 
-        .table-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            border-radius: 10px;
-            border: 1px solid #eee;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
-        }
+/* Secciones */
+.section { margin-bottom: 20px; }
+.section h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(15,43,43,0.06);
+}
 
-        .table-wrapper {
-            flex: 1;
-            overflow: auto;
-        }
+/* Form grid */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+    gap: 12px;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 1200px;
-        }
+input, select, textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: .9rem;
+}
 
-        th, td {
-            padding: 8px 10px;
-            border-bottom: 1px solid #f2f2f2;
-            text-align: center;
-            font-size: 0.85rem;
-        }
+input:focus, select:focus, textarea:focus {
+    border-color: var(--cora-orange);
+    box-shadow: 0 0 0 2px rgba(255,123,0,0.1);
+}
 
-        thead th {
-            background: linear-gradient(90deg, var(--cora-orange), #ff9a4a);
-            color: white;
-            font-weight: 700;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
+/* ✅ tabla scroll */
+.table-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    border: 1px solid #eee;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+}
 
-        thead tr:first-child th {
-            background: linear-gradient(90deg, var(--cora-orange), #ff9a4a);
-        }
+.table-wrapper { flex: 1; overflow: auto; }
 
-        thead tr:nth-child(2) th {
-            background: rgba(255, 154, 74, 0.9);
-        }
+table {
+    width: 100%;
+    min-width: 1200px;
+    border-collapse: collapse;
+}
 
-        tbody tr:nth-child(even) {
-            background-color: #fcfcfc;
-        }
+th, td {
+    padding: 8px;
+    text-align: center;
+    font-size: .85rem;
+}
 
-        tbody tr:hover {
-            background-color: #f8f8f8;
-        }
+thead th {
+    background: linear-gradient(90deg, var(--cora-orange), #ff9a4a);
+    color: white;
+    font-weight: 700;
+    position: sticky;
+    top: 0;
+}
 
-        .total-cell {
-            background-color: #f9f9f9;
-            font-weight: bold;
-        }
+/* Footer & actions */
+.form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    padding-top: 16px;
+    border-top: 1px solid #f0f0f0;
+}
 
-        .copy-btn {
-            background: #0f5660;
-            color: white;
-            border: none;
-            padding: 4px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.75rem;
-            margin: 2px;
-            width: 100%;
-        }
+footer {
+    text-align: center;
+    padding: 12px;
+    color: var(--muted);
+    font-size: .8rem;
+    background: var(--card-bg);
+    border-top: 1px solid #eee;
+}
 
-        .copy-btn:hover {
-            background: #0d4a52;
-        }
+/* Responsive */
+@media (max-width: 768px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .table-controls, .form-actions { justify-content: center; }
+    .btn { padding: 6px 10px; }
+}
 
-        .row-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            min-width: 100px;
-        }
-
-        .table-controls {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-
-        textarea {
-            width: 100%;
-            border-radius: 10px;
-            border: 1px solid #ddd;
-            padding: 10px;
-            font-size: 0.9rem;
-            min-height: 80px;
-            resize: vertical;
-        }
-
-        .form-actions {
-            display: flex;
-            justify-content: center;
-            gap: 14px;
-            flex-wrap: wrap;
-            padding-top: 16px;
-            border-top: 1px solid #f0f0f0;
-            margin-top: 10px;
-        }
-
-        footer {
-            text-align: center;
-            padding: 12px;
-            color: var(--muted);
-            font-size: 0.8rem;
-            background: var(--card-bg);
-            border-top: 1px solid #eee;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .app-header {
-                padding: 10px 15px;
-            }
-            
-            .brand {
-                margin-bottom: 8px;
-            }
-            
-            .header-actions {
-                width: 100%;
-                justify-content: flex-end;
-            }
-            
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .table-controls, .form-actions {
-                justify-content: center;
-            }
-            
-            .btn {
-                padding: 6px 10px;
-                font-size: 0.85rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .main-container {
-                padding: 10px;
-            }
-            
-            .form-container {
-                padding: 15px;
-            }
-            
-            .table-controls {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .table-controls .btn {
-                width: 100%;
-                justify-content: center;
-            }
-        }
+@media (max-width: 480px) {
+    .main-container { padding: 10px; }
+    .form-container { padding: 15px; }
+    .table-controls { flex-direction: column; }
+}
     </style>
+
 </head>
 <body>
+
+  <!-- Sidebar -->
+
+
+  <!-- Contenedor principal -->
+  <div class="main-wrapper">
     <header class="app-header">
         <div class="brand">
-            <div class="logo">
-                <img src="img/logo-coraqua.png" alt="Logo CORAQUA">
+            <div class="logo-header">
+                <img src="/sistema-produccion/public/img/coraqua.png" alt="Logo CORAQUA">
             </div>
             <div class="title-col">
                 <h1>MORTALIDAD DIARIA - LARVAS</h1>
@@ -380,24 +310,6 @@
         <form id="formOvas" method="POST" class="form-container">
             <div class="section">
                 <h3>DATOS GENERALES</h3>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="encargado">ENCARGADO</label>
-                        <input type="text" id="encargado" name="encargado" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="lote">LOTE</label>
-                        <input type="text" id="lote" name="lote" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="sede">SEDE</label>
-                        <input type="text" id="sede" name="sede" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="cantsiembra">CANT. SIEMBRA</label>
-                        <input type="number" id="cantsiembra" name="cantidad_siembra" required>
-                    </div>
-                </div>
             </div>
 
             <div class="section" style="flex: 1; display: flex; flex-direction: column;">
@@ -444,7 +356,7 @@
                         </table>
                     </div>
                 </div>
-                <div class="table-controls">
+                <div class="table-controls" style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
                     <button class="btn secondary" type="button" onclick="agregarFila()">➕ Agregar fila</button>
                     <button class="btn secondary" type="button" onclick="agregarMultiplesFilas(5)">➕ Agregar 5 filas</button>
                     <button class="btn ghost" type="button" onclick="eliminarFila()">➖ Quitar fila</button>
@@ -454,7 +366,7 @@
 
             <div class="section">
                 <h3>OBSERVACIONES GENERALES</h3>
-                <textarea id="observaciones" name="observacion"></textarea>
+                <textarea id="observaciones" name="observacion" style="min-height:80px; padding:8px; border-radius:8px; border:1px solid #ddd;"></textarea>
             </div>
 
             <input type="hidden" name="id_lote" value="1">
@@ -476,11 +388,12 @@
     <footer>
         CORAQUA © MORTALIDAD DIARIA DE LARVAS
     </footer>
+  </div>
 
-    <script>
+  <script>
         // Inicializar la tabla con 5 filas al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
-            inicializarTabla(5);
+            inicializarTabla(2);
             
             // Configurar el botón de volver
             document.getElementById('volverBtn').addEventListener('click', function() {
@@ -541,7 +454,7 @@
                         alert('✅ ' + data.message);
                         document.getElementById('formOvas').reset();
                         document.querySelector('#tablaLarvas tbody').innerHTML = '';
-                        inicializarTabla(5);
+                        inicializarTabla(2);
                     } else {
                         alert('❌ Error: ' + (data.error || 'No se guardaron los datos'));
                     }
@@ -560,7 +473,7 @@
                 if (confirm('¿Limpiar todo el formulario?')) {
                     document.getElementById('formOvas').reset();
                     document.querySelector('#tablaLarvas tbody').innerHTML = '';
-                    inicializarTabla(5);
+                    inicializarTabla(2);
                 }
             });
         });
@@ -679,6 +592,6 @@
             // Recalcular el total para la fila actual
             calcularTotal(filaActual);
         }
-    </script>
+  </script>
 </body>
 </html>

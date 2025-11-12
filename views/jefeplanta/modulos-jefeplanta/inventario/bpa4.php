@@ -1,3 +1,12 @@
+<?php
+if (isset($_GET['success'])) {
+    echo "<script>alert('Se guardaron " . $_GET['success'] . " registros correctamente');</script>";
+}
+if (isset($_GET['error'])) {
+    $message = $_GET['message'] ?? 'Error al guardar los registros';
+    echo "<script>alert('" . addslashes($message) . "');</script>";
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -236,7 +245,6 @@ function limpiarFormulario() {
     for (let i = 0; i < 5; i++) agregarFila();
   }
 }
-
 function guardarDatos() {
   const fecha = document.getElementById('fecha').value;
   const sede = document.getElementById('sede').value;
@@ -254,12 +262,39 @@ function guardarDatos() {
     return;
   }
 
-  const form = document.getElementById('formBPA4');
-  document.getElementById('hiddenFecha').value = fecha;
-  document.getElementById('hiddenSede').value = sede;
-  document.getElementById('hiddenEncargado').value = encargado;
-  document.getElementById('hiddenMes').value = mes;
+  // Crear un formulario dinámico con todos los datos
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = '/sistema-produccion/public/Inventario/guardarBPA4';
+  
+  // Agregar campos básicos
+  const addField = (name, value) => {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = name;
+    input.value = value;
+    form.appendChild(input);
+  };
 
+  addField('fecha', fecha);
+  addField('sede', sede);
+  addField('encargado', encargado);
+  addField('mes', mes);
+
+  // Agregar datos de cada fila
+  filas.forEach((fila, index) => {
+    const inputs = fila.querySelectorAll('input');
+    addField(`medicamento_suplemento[]`, inputs[2].value);
+    addField(`dosis_gr[]`, inputs[3].value);
+    addField(`dias_tratamiento[]`, inputs[4].value);
+    addField(`lote_alevines[]`, inputs[5].value);
+    addField(`sala[]`, inputs[6].value);
+    addField(`responsable[]`, inputs[7].value);
+    addField(`observaciones[]`, inputs[8].value);
+  });
+
+  document.body.appendChild(form);
+  
   if (confirm('¿Desea guardar los registros?')) form.submit();
 }
 

@@ -209,7 +209,7 @@
       <tbody id="bodyAlimentos">
         <tr>
           <td>1</td>
-          <td><input type="date" id="fechaFila1"></td>
+          <td><input type="date" name="fecha_fila[]" id="fechaFila1" class="form-control" required></td>
           <td><input type="text" placeholder="Marca"></td>
           <td><input type="text" placeholder="Calibre"></td>
           <td><input type="number" step="0.01" placeholder="Kg / Unid"></td>
@@ -250,7 +250,7 @@ function agregarFilaAlimentos() {
   const fila = document.createElement('tr');
   fila.innerHTML = `
     <td>${n}</td>
-    <td><input type="date" value="${hoy}"></td>
+    <td><input type="date" name="fecha_fila[]" value="${hoy}" class="form-control" required></td>
     <td><input type="text" placeholder="Marca"></td>
     <td><input type="text" placeholder="Calibre"></td>
     <td><input type="number" step="0.01" placeholder="Kg / Unid"></td>

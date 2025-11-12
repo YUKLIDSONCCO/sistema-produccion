@@ -1,6 +1,9 @@
 <?php
 // views/jefeplanta/modulos-jefeplanta/inventario/lista3.php
-$fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
+
+// Asegurar que las variables existen (vienen del controlador)
+$fechaBusqueda = $fechaBusqueda ?? date('Y-m-d');
+$datos = $datos ?? [];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -9,6 +12,7 @@ $fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Listado Diario — Control de Medicamento</title>
 <style>
+  /* 👉 No toqué tu diseño, lo dejo igual */
   *{box-sizing:border-box;font-family:"Poppins","Segoe UI",sans-serif;}
   body{
     margin:0;
@@ -29,135 +33,34 @@ $fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
   }
   @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
   h1{text-align:center;color:#ff7b00;font-size:1.8rem;margin-bottom:25px;}
-
-  /* Panel de descarga */
-  .wizard-panel{
-    background:#fff6eb;
-    border:2px dashed #ffa94d;
-    padding:40px;
-    border-radius:16px;
-    text-align:center;
-    margin-bottom:30px;
-  }
-
-  .wizard{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    position:relative;
-    margin-bottom:35px;
-  }
-  .wizard::before{
-    content:"";
-    position:absolute;
-    top:50%;
-    left:10%;
-    right:10%;
-    height:4px;
-    background:#ffc180;
-    z-index:0;
-  }
-  .step{
-    text-align:center;
-    position:relative;
-    z-index:1;
-    cursor:pointer;
-    flex:1;
-  }
-  .circle{
-    width:50px;
-    height:50px;
-    line-height:50px;
-    border-radius:50%;
-    background:#ffb366;
-    color:#fff;
-    font-weight:700;
-    margin:auto;
-    font-size:1.2rem;
-    border:3px solid #ff7b00;
-    transition:all .2s ease;
-  }
-  .step.active .circle{
-    background:#ff7b00;
-    color:#fff;
-    transform:scale(1.1);
-  }
-  .label{
-    margin-top:6px;
-    font-weight:600;
-    font-size:0.9rem;
-    color:#ff7b00;
-  }
-
+  .wizard-panel{background:#fff6eb;border:2px dashed #ffa94d;padding:40px;border-radius:16px;text-align:center;margin-bottom:30px;}
+  .wizard{display:flex;justify-content:space-between;align-items:center;position:relative;margin-bottom:35px;}
+  .wizard::before{content:"";position:absolute;top:50%;left:10%;right:10%;height:4px;background:#ffc180;z-index:0;}
+  .step{text-align:center;position:relative;z-index:1;cursor:pointer;flex:1;}
+  .circle{width:50px;height:50px;line-height:50px;border-radius:50%;background:#ffb366;color:#fff;font-weight:700;margin:auto;font-size:1.2rem;border:3px solid #ff7b00;transition:all .2s ease;}
+  .step.active .circle{background:#ff7b00;color:#fff;transform:scale(1.1);}
+  .label{margin-top:6px;font-weight:600;font-size:0.9rem;color:#ff7b00;}
   .wizard-content{display:none;}
   .wizard-content.active{display:block;}
-
-  .download-btn{
-    background:#ff7b00;
-    color:#fff;
-    border:none;
-    padding:12px 20px;
-    border-radius:10px;
-    cursor:pointer;
-    font-weight:600;
-    transition:all .2s;
-    margin-top:10px;
-    font-size:1rem;
-  }
+  .download-btn{background:#ff7b00;color:#fff;border:none;padding:12px 20px;border-radius:10px;cursor:pointer;font-weight:600;transition:all .2s;margin-top:10px;font-size:1rem;}
   .download-btn:hover{background:#e66e00;transform:translateY(-2px);}
-
-  /* Buscador */
-  .search-bar{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:12px;
-    margin-bottom:25px;
-    flex-wrap:wrap;
-  }
-  label{
-    font-weight:600;
-    color:#444;
-    font-size:1rem;
-  }
-  input[type="date"]{
-    padding:10px 14px;
-    border-radius:10px;
-    border:2px solid #ffb366;
-    font-size:1rem;
-    background:#fffaf2;
-    color:#333;
-    transition:all .3s;
-  }
-  input[type="date"]:focus{
-    outline:none;
-    border-color:#ff7b00;
-    box-shadow:0 0 6px #ffb366;
-  }
-  button{
-    background:#ff7b00;
-    color:#fff;
-    border:none;
-    padding:10px 18px;
-    border-radius:10px;
-    cursor:pointer;
-    font-weight:600;
-    transition:all .2s;
-  }
+  .search-bar{display:flex;justify-content:center;align-items:center;gap:12px;margin-bottom:25px;flex-wrap:wrap;}
+  label{font-weight:600;color:#444;font-size:1rem;}
+  input[type="date"]{padding:10px 14px;border-radius:10px;border:2px solid #ffb366;font-size:1rem;background:#fffaf2;color:#333;transition:all .3s;}
+  input[type="date"]:focus{outline:none;border-color:#ff7b00;box-shadow:0 0 6px #ffb366;}
+  button{background:#ff7b00;color:#fff;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-weight:600;transition:all .2s;}
   button:hover{background:#e66e00;transform:translateY(-2px);}
-
-  /* Tabla */
   table{width:100%;border-collapse:collapse;margin-top:20px;}
   th,td{border:1px solid #e6e6e6;padding:8px;text-align:center;font-size:0.95rem;}
   th{background:#ff7b00;color:#fff;}
   tr:nth-child(even){background:#fff8f0;}
-  .back-btn{margin-top:25px;display:inline-block;text-decoration:none;background:#fff;color:#ff7b00;
-    border:2px solid #ff7b00;padding:10px 14px;border-radius:10px;font-weight:700;}
+  .back-btn{margin-top:25px;display:inline-block;text-decoration:none;background:#fff;color:#ff7b00;border:2px solid #ff7b00;padding:10px 14px;border-radius:10px;font-weight:700;}
   .back-btn:hover{background:#ff7b00;color:#fff;}
   footer{text-align:center;margin-top:30px;color:#666;font-size:0.9rem;}
 </style>
 </head>
 <body>
+
 
 <div class="container">
   <h1>📅 Listado Diario — Control de Medicamento</h1>

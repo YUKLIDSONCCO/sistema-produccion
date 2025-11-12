@@ -357,7 +357,7 @@
     <header class="app-header">
         <div class="brand">
             <div class="logo">
-                <img src="img/logo-coraqua.png" alt="Logo CORAQUA">
+                <img src="/sistema-produccion/public/img/coraqua.png" alt="Logo CORAQUA">
             </div>
             <div class="title-col">
                 <h1>MORTALIDAD DIARIA - OVAS</h1>
