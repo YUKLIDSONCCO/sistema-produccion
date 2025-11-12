@@ -219,24 +219,25 @@ $fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
     </thead>
     <tbody>
       <?php if (!empty($datos)): ?>
-        <?php $i=1; foreach ($datos as $row): ?>
-          <tr>
-            <td><?php echo $i++; ?></td>
-            <td><?php echo htmlspecialchars($row['fecha']); ?></td>
-            <td><?php echo htmlspecialchars($row['marca']); ?></td>
-            <td><?php echo htmlspecialchars($row['calibre']); ?></td>
-            <td><?php echo htmlspecialchars($row['cantidad']); ?></td>
-            <td><?php echo htmlspecialchars($row['nombre']); ?></td>
-            <td><?php echo htmlspecialchars($row['obs']); ?></td>
-          </tr>
-        <?php endforeach; ?>
+     <?php $i=1; foreach ($datos as $row): ?>
+      <tr>
+        <td><?php echo $i++; ?></td>
+        <td><?php echo htmlspecialchars($row['fecha']); ?></td>
+        <td><?php echo htmlspecialchars($row['marca']); ?></td>
+        <td><?php echo htmlspecialchars($row['calibre']); ?></td>
+        <td><?php echo htmlspecialchars($row['cantidad']); ?></td>
+        <td><?php echo htmlspecialchars($row['nombre']); ?></td>
+        <td><?php echo htmlspecialchars($row['obs']); ?></td>
+      </tr>
+    <?php endforeach; ?>
+
       <?php else: ?>
         <tr><td colspan="7">❌ No hay registros para esta fecha.</td></tr>
       <?php endif; ?>
     </tbody>
   </table>
 
-  <a href="javascript:history.back()" class="back-btn">⬅️ Volver Atrás</a>
+  <a href="/sistema-produccion/public/index.php?controller=Inventario&action=dashboard" class="back-btn">⬅️ Volver al Inventario</a>
 
   <footer>CORAQUA © 2025 — Listado Diario de Control de Alimento</footer>
 </div>

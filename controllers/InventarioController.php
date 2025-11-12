@@ -3,6 +3,10 @@ require_once "../config/database.php";
 require_once "../models/InventarioModel.php";
 class InventarioController {
 
+    public function dashboard() {
+    include "../views/jefeplanta/modulos-jefeplanta/inventario/dashboard.php";
+}
+
     public function bpa1() {
     // Mostrar mensajes de éxito/error
     if (isset($_GET['success'])) {
@@ -17,9 +21,9 @@ class InventarioController {
     public function obtenerDatosBPA1() {
         global $conexion;
 
-        $sql = "SELECT fecha, sede, encargado, mes, marca, calibre, cantidad, nombre, obs 
-                FROM control_alimento_almacen
-                ORDER BY id DESC";
+     $sql = "SELECT fecha, sede, encargado, mes, marca, calibre, cantidad, nombre_alimento, observaciones 
+        FROM control_alimento_almacen
+        ORDER BY id DESC";
 
         $result = $conexion->query($sql);
         $datos = [];

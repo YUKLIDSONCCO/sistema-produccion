@@ -196,7 +196,7 @@ $fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
   <!-- Buscador CORREGIDO (evita el error de enrutador) -->
   <form method="GET" class="search-bar" action="/sistema-produccion/public/index.php">
     <input type="hidden" name="controller" value="Inventario">
-    <input type="hidden" name="action" value="listarBPA4"> <!-- AJUSTA SI EL NOMBRE ES DISTINTO -->
+    <input type="hidden" name="action" value="listarBPA3"> <!-- AJUSTA SI EL NOMBRE ES DISTINTO -->
 
     <label for="fecha"><strong>Seleccionar fecha:</strong></label>
     <input type="date" id="fecha" name="fecha" value="<?php echo htmlspecialchars($fechaBusqueda); ?>" required>
@@ -232,7 +232,7 @@ $fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
     </tbody>
   </table>
 
-  <a href="javascript:history.back()" class="back-btn">⬅️ Volver Atrás</a>
+  <a href="/sistema-produccion/public/index.php?controller=Inventario&action=dashboard" class="back-btn">⬅️ Volver al Inventario</a>
 
   <footer>CORAQUA © 2025 — Listado Diario de Control de Medicamento</footer>
 </div>

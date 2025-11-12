@@ -282,7 +282,7 @@ function guardarDatos() {
   filas.forEach(tr => {
     const inputs = tr.querySelectorAll('input');
     const fila = {
-      fecha: inputs[0].value,   // 🔹 renombramos para no confundir con la fecha principal
+      fecha: inputs[0].value,   
       marca: inputs[1].value,
       calibre: inputs[2].value,
       cantidad: inputs[3].value,

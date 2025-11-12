@@ -239,7 +239,7 @@ $fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
     </tbody>
   </table>
 
-  <a href="javascript:history.back()" class="back-btn">⬅️ Volver Atrás</a>
+  <a href="/sistema-produccion/public/index.php?controller=Inventario&action=dashboard" class="back-btn">⬅️ Volver al Inventario</a>
 
   <footer>CORAQUA © 2025 — Listado Diario de Control de Dosificación</footer>
 </div>

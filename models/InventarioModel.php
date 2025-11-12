@@ -28,20 +28,20 @@ class InventarioModel {
 
     public function guardarBPA1($fecha, $sede, $encargado, $mes, $marca, $calibre, $cantidad, $nombre_alimento, $observaciones) {
         $sql = "INSERT INTO control_alimento_almacen 
-                (fecha, sede, encargado, mes, marca, calibre, cantidad, nombre_alimento, observaciones) 
-                VALUES (:fecha, :sede, :encargado, :mes, :marca, :calibre, :cantidad, :nombre_alimento, :observaciones)";
-        $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([
-            ':fecha' => $fecha,
-            ':sede' => $sede,
-            ':encargado' => $encargado,
-            ':mes' => $mes,
-            ':marca' => $marca,
-            ':calibre' => $calibre,
-            ':cantidad' => $cantidad,
-            ':nombre_alimento' => $nombre_alimento,
-            ':observaciones' => $observaciones
-        ]);
+                        (fecha, sede, encargado, mes, marca, calibre, cantidad, nombre_alimento, observaciones) 
+                        VALUES (:fecha, :sede, :encargado, :mes, :marca, :calibre, :cantidad, :nombre_alimento, :observaciones)";
+                $stmt = $this->conn->prepare($sql);
+                return $stmt->execute([
+                    ':fecha' => $fecha,
+                    ':sede' => $sede,
+                    ':encargado' => $encargado,
+                    ':mes' => $mes,
+                    ':marca' => $marca,
+                    ':calibre' => $calibre,
+                    ':cantidad' => $cantidad,
+                    ':nombre_alimento' => $nombre_alimento,
+                    ':observaciones' => $observaciones
+                ]);
     }
 
     // ============================
