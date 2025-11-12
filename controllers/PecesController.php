@@ -5,14 +5,8 @@ require_once "../models/PecesModel.php";
 class PecesController {
 
     public function bpa6() {
-<<<<<<< HEAD
         // Carga de formulario BPA6
         require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa6.php';
-=======
-        $model = new PecesModel();
-        $especies = $model->obtenerEspecies();
-        include "../views/jefeplanta/modulos-jefeplanta/peces/bpa6.php";
->>>>>>> 6c2638a (Aun falta hacer cambios)
     }
 
     public function guardarBpa6() {
@@ -101,6 +95,11 @@ class PecesController {
         require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa7.php';
     }
 
+    // Alias por compatibilidad: algunos enlaces usan 'bpa06' o 'bpa06Listado'
+    public function bpa06() {
+        return $this->bpa6();
+    }
+
     public function guardarBpa7() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $model = new PecesModel();
@@ -159,7 +158,6 @@ class PecesController {
         $model = new PecesModel();
         $registros = $model->getBpa7List();
         require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa7-listado.php';
-<<<<<<< HEAD
     }
 
     public function eliminarBpa7() {
@@ -169,8 +167,6 @@ class PecesController {
         }
         header("Location: index.php?controller=Peces&action=bpa7Listado");
         exit;
-=======
->>>>>>> 6c2638a (Aun falta hacer cambios)
     }
 
     /* ======================
@@ -255,9 +251,13 @@ class PecesController {
         $model = new PecesModel();
         $registros = $model->getBpa10List();
         require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa10-listado.php';
-<<<<<<< HEAD
     }
 
+
+    // Alias para rutas que usan 'bpa06Listado'
+    public function bpa06Listado() {
+        return $this->bpa6Listado();
+    }
     public function eliminarBpa10() {
         if (isset($_GET['id'])) {
             $model = new PecesModel();
@@ -265,8 +265,6 @@ class PecesController {
         }
         header("Location: index.php?controller=Peces&action=bpa10Listado");
         exit;
-=======
->>>>>>> 6c2638a (Aun falta hacer cambios)
     }
 
     /* ======================
@@ -403,18 +401,12 @@ class PecesController {
             exit;
         }
     }
-
     public function bpa12Listado() {
         $model = new PecesModel();
-<<<<<<< HEAD
         // Usar listado detallado por fila para mostrar las columnas de medición en la vista
         $registros = $model->getBpa12ListDetailed();
-=======
-        $registros = $model->getBpa12List();
->>>>>>> 6c2638a (Aun falta hacer cambios)
         require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa12-listado.php';
     }
-
     public function verBpa12() {
         if (isset($_GET['id'])) {
             $model = new PecesModel();
@@ -428,7 +420,6 @@ class PecesController {
             header('Location: index.php?controller=Peces&action=bpa12Listado&error=noid');
         }
     }
-
     public function exportarBpa12() {
         if (isset($_GET['id'])) {
             $model = new PecesModel();
@@ -444,7 +435,5 @@ class PecesController {
             header('Location: index.php?controller=Peces&action=bpa12Listado&error=noid');
         }
     }
-
-
 }
 ?>
