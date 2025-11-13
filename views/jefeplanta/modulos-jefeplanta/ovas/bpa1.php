@@ -216,11 +216,40 @@
     .wizard{flex-wrap:wrap; gap:8px;}
     .progress{order:100; width:100%; margin:8px 0 0 0;}
   }
+  #Formularios {
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+  font-size: 0.95rem;
+  background: linear-gradient(180deg, #fff, #fffdf9);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+  transition: border 0.2s, box-shadow 0.2s;
+  appearance: none; /* para ocultar flecha por defecto si se quiere personalizar */
+  cursor: pointer;
+}
+#Formularios:focus {
+  outline: none;
+  border-color: var(--cora-orange);
+  box-shadow: 0 0 0 3px rgba(255, 123, 0, 0.15);
+}
+
 </style>
 </head>
 <body>
 
 <div class="container" role="main">
+  <div style="flex:1; min-width:160px">
+    <label for="Formularios">Formularios</label>
+    <select id="Formularios">
+      <option value="" disabled selected>Seleccione Formularios</option>
+      <option value="dashboard">Panel</option>
+      <option value="bpa1">bpa1</option>
+      <option value="bpa2">bpa2</option>
+      <option value="bpa3">bpa3</option>
+      <option value="bpa4">bpa4</option>
+    </select>
+  </div>
   <div class="header">
     <div class="brand">
       <div class="logo" aria-hidden="true"><img src="img/logo-coraqua.png" alt="Logo CORAQUA"></div>
@@ -316,6 +345,7 @@
           </table>
         </div>
       </div>
+      
 
       <!-- ✅ SECCIÓN VOLUMEN: primera fila con texto fijo -->
       <div class="section" id="secVolumen">
@@ -536,6 +566,19 @@
   document.getElementById('verListaBtn').addEventListener('click', function(){
   window.location.href = '/sistema-produccion/views/jefeplanta/modulos-jefeplanta/ovas/lista1.php';
 });
+// ✅ Redirección al cambiar de formulario
+document.getElementById('Formularios').addEventListener('change', function() {
+  const val = this.value;
+  if (!val) return;
+
+  // Redirige según la opción seleccionada
+  if (val === 'dashboard') {
+    window.location.href = '/sistema-produccion/views/jefeplanta/modulos-jefeplanta/ovas/dashboard.php';
+  } else {
+    window.location.href = `/sistema-produccion/views/jefeplanta/modulos-jefeplanta/ovas/${val}.php`;
+  }
+});
+
 
 </script>
 </body>

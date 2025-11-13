@@ -176,6 +176,23 @@ td.actions{
   background:var(--naranja);
   color:white;
 }
+  #Formularios {
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+  font-size: 0.95rem;
+  background: linear-gradient(180deg, #fff, #fffdf9);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+  transition: border 0.2s, box-shadow 0.2s;
+  appearance: none; /* para ocultar flecha por defecto si se quiere personalizar */
+  cursor: pointer;
+}
+#Formularios:focus {
+  outline: none;
+  border-color: var(--cora-orange);
+  box-shadow: 0 0 0 3px rgba(255, 123, 0, 0.15);
+}
 
 /* FOOTER */
 footer{text-align:center;margin-top:30px;color:var(--gris);font-size:0.9rem;}
@@ -184,9 +201,20 @@ footer{text-align:center;margin-top:30px;color:var(--gris);font-size:0.9rem;}
 <body>
 
 <div class="container">
+    <div style="flex:1; min-width:160px">
+    <label for="Formularios">Formularios</label>
+    <select id="Formularios">
+      <option value="" disabled selected>Seleccione Formularios</option>
+      <option value="dashboard">Panel</option>
+      <option value="bpa1">bpa1</option>
+      <option value="bpa2">bpa2</option>
+      <option value="bpa3">bpa3</option>
+      <option value="bpa4">bpa4</option>
+    </select>
+  </div>
   <div class="header">
     <div class="brand">
-      <img src="img/logo-coraqua.png" alt="Logo">
+      <img src="/sistema-produccion/public/img/coraqua.png" alt="Logo">
       <div class="title">
         <h1>LISTADO — SELECCIÓN Y FERTILIZACIÓN DE OVAS</h1>
         <div class="meta">CORAQUA | Control diario de parámetros</div>

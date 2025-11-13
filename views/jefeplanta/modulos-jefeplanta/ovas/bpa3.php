@@ -291,6 +291,17 @@ footer {
   <div class="main-wrapper">
     <header class="app-header">
         <div class="brand">
+              <div style="flex:1; min-width:160px">
+    <label for="Formularios">Formularios</label>
+    <select id="Formularios">
+      <option value="" disabled selected>Seleccione Formularios</option>
+      <option value="dashboard">Panel</option>
+      <option value="bpa1">bpa1</option>
+      <option value="bpa2">bpa2</option>
+      <option value="bpa3">bpa3</option>
+      <option value="bpa4">bpa4</option>
+    </select>
+  </div>
             <div class="logo-header">
                 <img src="/sistema-produccion/public/img/coraqua.png" alt="Logo CORAQUA">
             </div>
@@ -592,6 +603,19 @@ footer {
             // Recalcular el total para la fila actual
             calcularTotal(filaActual);
         }
+        // ✅ Redirección al cambiar de formulario
+document.getElementById('Formularios').addEventListener('change', function() {
+  const val = this.value;
+  if (!val) return;
+
+  // Redirige según la opción seleccionada
+  if (val === 'dashboard') {
+    window.location.href = '/sistema-produccion/views/jefeplanta/modulos-jefeplanta/ovas/dashboard.php';
+  } else {
+    window.location.href = `/sistema-produccion/views/jefeplanta/modulos-jefeplanta/ovas/${val}.php`;
+  }
+});
+
   </script>
 </body>
 </html>
