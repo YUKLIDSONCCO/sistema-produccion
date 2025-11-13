@@ -27,9 +27,11 @@
 
       <nav class="sidebar-nav">
         <ul>
-          <li><a href="index.php?controller=JefePlanta&action=dashboard">
-        <i class="fas fa-circle-arrow-left"></i> Volver atrás
-      </a></li>
+         <li>
+            <a href="index.php?controller=JefePlanta&action=dashboard">
+              <i class="fas fa-circle-arrow-left"></i> Volver al panel principal
+            </a>
+          </li>
 
           <li><a href="#" id="inicioBtn" class="active"><i class="fas fa-house-chimney"></i> Inicio</a></li>
           <li><a href="#" id="formatosBtn"><i class="fas fa-folder-open"></i> Formatos MPA</a></li>

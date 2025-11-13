@@ -3,7 +3,7 @@
 $formularios = [
     [
         'id' => 'global',
-        'emoji' => '',
+        'emoji' => '🌍',
         'titulo' => 'LISTA GLOBAL',
         'descripcion' => 'Ver todos los registros BPA (1, 2, 3 y 4) por día, semana o mes',
         'pendientes' => 0,
@@ -11,7 +11,7 @@ $formularios = [
     ],
     [
         'id' => 'bpa1',
-        'emoji' => '',
+        'emoji' => '📦',
         'titulo' => 'MPA-1',
         'descripcion' => 'Control de alimentos en almacén',
         'pendientes' => 3,
@@ -19,7 +19,7 @@ $formularios = [
     ],
     [
         'id' => 'bpa2',
-        'emoji' => '',
+        'emoji' => '🔄',
         'titulo' => 'MPA-2',
         'descripcion' => 'Control de alimentos en proceso',
         'pendientes' => 0,
@@ -27,7 +27,7 @@ $formularios = [
     ],
     [
         'id' => 'bpa3',
-        'emoji' => '',
+        'emoji' => '✅',
         'titulo' => 'MPA-3',
         'descripcion' => 'Control de producto terminado',
         'pendientes' => 1,
@@ -35,7 +35,7 @@ $formularios = [
     ],
     [
         'id' => 'bpa4',
-        'emoji' => '',
+        'emoji' => '🏷️',
         'titulo' => 'MPA-4',
         'descripcion' => 'Control de materiales de empaque',
         'pendientes' => 0,
@@ -50,111 +50,229 @@ $formularios = [
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Módulo de Inventario - BPA</title>
     
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        :root {
+            --bg: #ffffff;
+            --muted: #6b7a7a;
+            --card: #ffffff;
+            --accent1: #f49340;       /* Naranja principal */
+            --accent1-light: #fbdcaf;
+            --accent1-dark: #d87e2c;
+            --accent-contrast: #ffffff;
+            --radius: 16px;
+            --shadow-idle: 0 4px 12px rgba(0, 0, 0, 0.06);
+            --shadow-hover: 0 12px 24px rgba(244, 147, 64, 0.25);
+            --border-color: #dbe7e7;
+            --border-hover: #f49340;
+            --bg-image: url('https://www.coleccionantamina.com/static/media/book_3/page_2/Pag_152-153.jpg');
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #fff8f2 0%, #ffe8d1 100%);
-        }
 
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background:    linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(255, 252, 248, 0.72)),
+    /* Imagen de fondo */
+    var(--bg-image);
+            color: #1e293b;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+            padding: 32px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        
         header h1 {
-            background: linear-gradient(90deg, #ff7b00, #ffae42);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--accent1);
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            color: var(--muted);
+            font-size: 17px;
+        }
+        
+        .divider {
+            width: 60px;
+            height: 4px;
+            background: var(--accent1);
+            margin: 16px auto;
+            border-radius: 2px;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 28px;
         }
 
-        .card-shadow {
-            box-shadow: 0 6px 16px rgba(255, 122, 0, 0.15);
+        /* Tarjeta completa como enlace interactivo */
+        .card-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            height: 100%;
         }
 
-        .card-shadow:hover {
-            box-shadow: 0 10px 25px rgba(255, 122, 0, 0.25);
-            transform: translateY(-4px);
+        .card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 26px;
+            box-shadow: var(--shadow-idle);
+            border: 1px solid var(--border-color);
+            transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
         }
 
-        .orange-btn {
-            background: linear-gradient(90deg, #ff7b00, #ff9900);
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--border-hover);
         }
 
-        .orange-btn:hover {
-            background: linear-gradient(90deg, #ff6a00, #ff8800);
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
         }
 
-        .orange-badge {
-            background: #fff4e5;
-            color: #d97706;
-            border: 1px solid #fbbf24;
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .green-badge {
-            background: #ecfdf5;
-            color: #047857;
-            border: 1px solid #6ee7b7;
+        .badge {
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            white-space: nowrap;
         }
 
-        /* Transiciones suaves */
-        .transition-all {
-            transition: all 0.3s ease;
+        .badge-orange {
+            background: var(--accent1-light);
+            color: var(--accent1-dark);
+            border: 1px solid var(--accent1);
+        }
+
+        .badge-white {
+            background: #f8f9fa;
+            color: var(--muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .card-desc {
+            color: var(--muted);
+            margin-bottom: 20px;
+            line-height: 1.55;
+            font-size: 15px;
+        }
+
+        .card-footer {
+            padding-top: 18px;
+            border-top: 1px solid var(--border-color);
+            opacity: 0.9;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover .card-footer {
+            opacity: 1;
+        }
+
+        /* Cursor interacción */
+        .card-link:hover {
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 16px;
+            }
+            
+            header h1 {
+                font-size: 26px;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center p-4">
-
-    <div class="max-w-5xl w-full mx-auto p-6 md:p-10">
-
+<body>
+    <div class="container">
         <!-- Encabezado -->
-        <header class="text-center mb-10">
-            <h1 class="text-3xl md:text-4xl font-bold mb-2">
-                📦MÓDULO DEL INVENTARIO
-            </h1>
-            <p class="text-lg text-gray-700">Formularios de Buenas Prácticas (BPA)</p>
-            <div class="w-24 h-1 bg-gradient-to-r from-orange-500 to-orange-400 mx-auto mt-3 rounded-full"></div>
+        <header>
+            <h1>📦 Módulo del Inventario</h1>
+            <p>Formularios de Buenas Prácticas (BPA)</p>
+            <div class="divider"></div>
         </header>
 
         <!-- Grid de Formularios -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid">
             <?php foreach ($formularios as $form): ?>
                 <?php
-                    $badgeClass = $form['pendientes'] > 0
-                        ? 'orange-badge'
-                        : 'green-badge';
+                    $badgeClass = $form['pendientes'] > 0 ? 'badge-orange' : 'badge-white';
                     $badgeTexto = $form['pendientes'] . ' ' . ($form['pendientes'] == 1 ? 'Pendiente' : 'Pendientes');
                 ?>
 
-                <!-- Card -->
-                <div class="bg-white rounded-xl card-shadow overflow-hidden transition-all duration-300 flex flex-col border border-orange-100">
-
-                    <div class="p-6 flex-grow">
-                        <div class="flex items-start justify-between mb-4">
-                            <h2 class="text-2xl font-semibold text-gray-900 flex items-center">
-                                <span class="text-3xl mr-3"><?= htmlspecialchars($form['emoji']) ?></span>
-                                <?= htmlspecialchars($form['titulo']) ?>
+                <!-- Tarjeta como enlace interactivo -->
+                <a href="<?php echo htmlspecialchars($form['url']); ?>" class="card-link" title="Ir a <?php echo htmlspecialchars($form['titulo']); ?>">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <span style="font-size: 26px;"><?php echo htmlspecialchars($form['emoji']); ?></span>
+                                <?php echo htmlspecialchars($form['titulo']); ?>
                             </h2>
-                            <span class="text-sm font-bold px-3 py-1 rounded-full <?= $badgeClass ?> whitespace-nowrap">
-                                <?= $badgeTexto ?>
+                            <span class="badge <?php echo $badgeClass; ?>">
+                                <?php echo $badgeTexto; ?>
                             </span>
                         </div>
 
-                        <p class="text-gray-600">
-                            <?= htmlspecialchars($form['descripcion']) ?>
+                        <p class="card-desc">
+                            <?php echo htmlspecialchars($form['descripcion']); ?>
                         </p>
-                    </div>
 
-                    <div class="p-6 bg-orange-50">
-                        <a href="<?= htmlspecialchars($form['url']) ?>" 
-                           class="orange-btn flex items-center justify-center w-full text-white text-center font-semibold py-3 px-4 rounded-lg transition-all duration-200 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50">
-                            Ver Reportes
-                            <svg class="w-5 h-5 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-                            </svg>
-                        </a>
+                        <div class="card-footer">
+                            <em>Ver reportes →</em>
+                        </div>
                     </div>
-                </div>
+                </a>
             <?php endforeach; ?>
         </div>
     </div>
 
+    <!-- Script para activar el acceso al pasar el mouse (opcional, pero mejora UX en algunos navegadores) -->
+    <script>
+        document.querySelectorAll('.card-link').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                // Opcional: puedes añadir sonido o feedback visual extra aquí
+            });
+        });
+    </script>
 </body>
 </html>
