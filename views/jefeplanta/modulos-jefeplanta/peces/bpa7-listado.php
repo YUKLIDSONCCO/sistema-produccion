@@ -12,9 +12,17 @@
           <a href="index.php?controller=Peces&action=bpa7Formulario" class="btn-principal">
             ➕ Nuevo Registro
           </a>
-          <a href="index.php?controller=JefePlanta&action=moduloPeces" class="btn-secundario">
-            ⬅️ Volver al Panel
-          </a>
+                          <div style="flex:1; min-width:160px">
+  <label for="Formularios">Formularios</label>
+  <select id="Formularios" onchange="redirigirFormulario()">
+    <option value="" disabled selected>Seleccione Formularios</option>
+    <option value="dashboard">Panel</option>
+    <option value="bpa6-listado">BPA-6-listado</option>
+    <option value="bpa7-listado">BPA-7-listado</option>
+    <option value="bpa10-listado">BPA-10-listado</option>
+    <option value="bpa12-listado">BPA-12-lista</option>
+  </select>
+</div>
         </div>
       </div>
 
@@ -239,3 +247,45 @@
     background: #23272b;
   }
 </style>
+<style>
+        #Formularios {
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+  font-size: 0.95rem;
+  background: linear-gradient(180deg, #fff, #fffdf9);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+  transition: border 0.2s, box-shadow 0.2s;
+  appearance: none; /* para ocultar flecha por defecto si se quiere personalizar */
+  cursor: pointer;
+}
+#Formularios:focus {
+  outline: none;
+  border-color: var(--cora-orange);
+  box-shadow: 0 0 0 3px rgba(255, 123, 0, 0.15);
+}
+</style>
+  <script>
+  function redirigirFormulario() {
+    const valor = document.getElementById('Formularios').value;
+
+    // Obtener la raíz base del proyecto sin importar desde dónde se acceda
+    const base = window.location.origin + "/sistema-produccion/views/jefeplanta/modulos-jefeplanta/peces/";
+
+    const rutas = {
+      'dashboard': base + 'dashboard.php',
+      'bpa6-listado': base + 'bpa6-listado.php',
+      'bpa7-listado': base + 'bpa7-listado.php',
+      'bpa10-listado': base + 'bpa10-listado.php',
+      'bpa12-listado': base + 'bpa12-listado.php'
+    };
+
+    if (rutas[valor]) {
+      window.location.href = rutas[valor];
+    } else {
+      alert('Ruta no configurada.');
+    }
+  }
+</script>
+

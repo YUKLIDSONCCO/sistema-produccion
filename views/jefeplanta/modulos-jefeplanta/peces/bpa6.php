@@ -187,6 +187,24 @@
     .btn { transition: transform .12s ease, box-shadow .12s ease; }
     .btn:active { transform: translateY(1px) scale(.998); }
     .btn:hover { box-shadow: 0 10px 24px rgba(0,0,0,0.06); }
+      #Formularios {
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+  font-size: 0.95rem;
+  background: linear-gradient(180deg, #fff, #fffdf9);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+  transition: border 0.2s, box-shadow 0.2s;
+  appearance: none; /* para ocultar flecha por defecto si se quiere personalizar */
+  cursor: pointer;
+}
+#Formularios:focus {
+  outline: none;
+  border-color: var(--cora-orange);
+  box-shadow: 0 0 0 3px rgba(255, 123, 0, 0.15);
+}
+
   </style>
 </head>
 <body>
@@ -196,14 +214,25 @@
         ✅ Registro(s) guardado(s) correctamente. Usa el botón "Ver Listado Diario" para revisar.
       </div>
     <?php endif; ?>
-    <form id="formBpa6" action="index.php?controller=Peces&action=guardarBpa6" method="POST" style="display:none"></form>
-      <button class="btn-back" onclick="volverAtras()">⬅️ Atrás</button>
+    <form id="formBpa6" action="/sistema-produccion/public/index.php?controller=Peces&action=guardarBpa6" method="POST" style="display:none"></form>
     <!-- Encabezado -->
     <div class="header-row">
       <div class="logo">
         <!-- reemplaza por tu logo si quieres -->
-        <img src="img/logo-coraqua.png" alt="Logo CORAQUA" onerror="this.style.display='none'"/>
+        <img src="/sistema-produccion/public/img/coraqua.png" alt="Logo CORAQUA" onerror="this.style.display='none'"/>
+
       </div>
+      <div style="flex:1; min-width:160px">
+  <label for="Formularios">Formularios</label>
+  <select id="Formularios" onchange="redirigirFormulario()">
+    <option value="" disabled selected>Seleccione Formularios</option>
+    <option value="dashboard">Panel</option>
+    <option value="bpa6">BPA-6</option>
+    <option value="bpa7">BPA-7</option>
+    <option value="bpa10">BPA-10</option>
+    <option value="bpa12">BPA-12</option>
+  </select>
+</div>
 
       <div class="title-block">
         
@@ -214,23 +243,7 @@
           <span><strong>VERSIÓN:</strong> 2.0</span>
         </div>
       </div>
-    </div>
-
-    <!-- Breadcrumb + Route + Back -->
-    <div class="breadcrumb" role="navigation" aria-label="Breadcrumb">
-      <a href="index.php?controller=JefePlanta&action=moduloPeces">Panel de Peces</a>
-      <span>›</span>
-      <a href="index.php?controller=Peces&action=bpa6Listado">Listado BPA-6</a>
-      <span>›</span>
-      <span aria-current="page">Nuevo Registro BPA-6</span>
-      
-
-    </div>
-
-    <div id="routeDisplay" class="small muted" style="margin-bottom:8px;">
-      Ruta: <span id="currentRoute">Cargando...</span>
-    </div>
-
+    </div>s
     <!-- Formulario -->
     <div class="info-grid" aria-label="Información general">
       <div>
@@ -472,5 +485,28 @@
       } catch(e){ console.error(e); }
     })();
   </script>
+  <script>
+  function redirigirFormulario() {
+    const valor = document.getElementById('Formularios').value;
+
+    // Obtener la raíz base del proyecto sin importar desde dónde se acceda
+    const base = window.location.origin + "/sistema-produccion/views/jefeplanta/modulos-jefeplanta/peces/";
+
+    const rutas = {
+      'dashboard': base + 'dashboard.php',
+      'bpa6': base + 'bpa6.php',
+      'bpa7': base + 'bpa7.php',
+      'bpa10': base + 'bpa10.php',
+      'bpa12': base + 'bpa12.php'
+    };
+
+    if (rutas[valor]) {
+      window.location.href = rutas[valor];
+    } else {
+      alert('Ruta no configurada.');
+    }
+  }
+</script>
+
 </body>
 </html>

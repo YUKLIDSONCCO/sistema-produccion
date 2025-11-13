@@ -141,6 +141,23 @@
 .btn-back:hover::before {
   transform: translateX(-6px);
 }
+      #Formularios {
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+  font-size: 0.95rem;
+  background: linear-gradient(180deg, #fff, #fffdf9);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+  transition: border 0.2s, box-shadow 0.2s;
+  appearance: none;
+  cursor: pointer;
+}
+#Formularios:focus {
+  outline: none;
+  border-color: #ff7e00;
+  box-shadow: 0 0 0 3px rgba(255, 123, 0, 0.15);
+}
   </style>
 </head>
 
@@ -154,12 +171,21 @@
       <h3 class="mb-0 fw-bold">🐟 BPA 12 - Control Diario de Parámetros</h3>
       <p class="mb-0 fst-italic text-light">CORAQUA - Versión 2.0</p>
     </div>
+    
+    <div style="flex:1; min-width:160px; padding: 20px;">
+      <label for="Formularios">Formularios</label>
+      <select id="Formularios" onchange="redirigirFormulario()">
+        <option value="" disabled selected>Seleccione Formularios</option>
+        <option value="dashboard">Panel</option>
+        <option value="bpa6">BPA-6 (Mortalidad Alevinos)</option>
+        <option value="bpa7">BPA-7</option>
+        <option value="bpa10">BPA-10</option>
+        <option value="bpa12">BPA-12</option>
+      </select>
+    </div>
 
     <div class="card-body px-5 py-4">
-      <button class="btn-back" onclick="volverAtras()">⬅️ Atrás</button>
-      
-      
-      <form id="bpa12Form" method="post" action="index.php?controller=Peces&action=guardarBpa12" novalidate>
+      <form id="bpa12Form" method="post" action="/sistema-produccion/public/index.php?controller=Peces&action=guardarBpa12" novalidate>
         <input type="hidden" name="codigo_formato" value="CORAQUA BPA-12">
         <input type="hidden" name="version" value="2.0">
 
@@ -342,5 +368,66 @@ function actualizarDias() {
 for (let i = 0; i < 5; i++) agregarFila();
 btnAgregar.addEventListener("click", agregarFila);
 
+// Manejar el envío del formulario
+document.getElementById('bpa12Form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Validar campos requeridos
+    const fecha = document.querySelector('input[name="fecha_registro"]').value;
+    const mes = document.querySelector('input[name="mes"]').value;
+    const sede = document.querySelector('input[name="sede"]').value;
+    const responsable = document.querySelector('input[name="responsable_global"]').value;
+    
+    if (!fecha || !mes || !sede || !responsable) {
+        alert('Por favor complete todos los campos generales (Fecha, Mes, Sede, Responsable)');
+        return;
+    }
+    
+    // Verificar que haya al menos una fila con datos
+    let tieneDatos = false;
+    ['0630', '1200', '1530'].forEach(horario => {
+        const filas = document.querySelectorAll(`#tabla-${horario}-body tr`);
+        filas.forEach(fila => {
+            const inputs = fila.querySelectorAll('input[type="text"]');
+            inputs.forEach(input => {
+                if (input.value.trim() !== '') {
+                    tieneDatos = true;
+                }
+            });
+        });
+    });
+    
+    if (!tieneDatos) {
+        alert('Por favor ingrese al menos un parámetro en alguna de las tablas');
+        return;
+    }
+    
+    // Mostrar confirmación
+    if (confirm('¿Está seguro de que desea guardar todos los datos?')) {
+        // Enviar formulario
+        this.submit();
+    }
+});
 
+function redirigirFormulario() {
+    const valor = document.getElementById('Formularios').value;
+
+    const rutas = {
+        'dashboard': '/sistema-produccion/public/index.php?controller=Peces&action=dashboard',
+        'bpa6': '/sistema-produccion/public/index.php?controller=Peces&action=bpa6',
+        'bpa7': '/sistema-produccion/public/index.php?controller=Peces&action=bpa7',
+        'bpa10': '/sistema-produccion/public/index.php?controller=Peces&action=bpa10',
+        'bpa12': '/sistema-produccion/public/index.php?controller=Peces&action=bpa12'
+    };
+
+    if (rutas[valor]) {
+        window.location.href = rutas[valor];
+    } else {
+        alert('Ruta no configurada.');
+    }
+}
+
+console.log('Formulario BPA12 cargado correctamente');
 </script>
+</body>
+</html>

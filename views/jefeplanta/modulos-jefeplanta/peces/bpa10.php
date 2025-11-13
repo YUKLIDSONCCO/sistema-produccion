@@ -152,18 +152,43 @@
 .btn-back:hover::before {
   transform: translateX(-6px);
 }
-    
+      #Formularios {
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+  font-size: 0.95rem;
+  background: linear-gradient(180deg, #fff, #fffdf9);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+  transition: border 0.2s, box-shadow 0.2s;
+  appearance: none; /* para ocultar flecha por defecto si se quiere personalizar */
+  cursor: pointer;
+}
+#Formularios:focus {
+  outline: none;
+  border-color: var(--cora-orange);
+  box-shadow: 0 0 0 3px rgba(255, 123, 0, 0.15);
+} 
   </style>
 </head>
 <body>
-  <form id="formBpa10" action="index.php?controller=Peces&action=guardarBpa10" method="POST" style="display:none"></form>
-
+  <form id="formBpa10" action="/sistema-produccion/public/index.php?controller=Peces&action=guardarBpa10" method="POST" style="display:none"></form>
 
   <!-- MAIN -->
   <main class="main">
     
     <div class="card" role="main">
-            <button class="btn-back" onclick="volverAtras()">⬅️ Atrás</button>
+            <div style="flex:1; min-width:160px">
+  <label for="Formularios">Formularios</label>
+  <select id="Formularios" onchange="redirigirFormulario()">
+    <option value="" disabled selected>Seleccione Formularios</option>
+    <option value="dashboard">Panel</option>
+    <option value="bpa6">BPA-6 (Mortalidad Alevinos)</option>
+    <option value="bpa7">BPA-7</option>
+    <option value="bpa10">BPA-10</option>
+    <option value="bpa12">BPA-12</option>
+  </select>
+</div>
       <?php if(isset($_GET['status']) && $_GET['status']==='ok'): ?>
         <div style="background:#d9f7d9;border:1px solid #4caf50;color:#256029;padding:10px 14px;border-radius:8px;font-weight:600;margin-bottom:12px;">
           ✅ Registro(s) guardado(s) correctamente. Usa el botón "Ver Listado Diario" para revisar.
@@ -409,5 +434,25 @@
       }
     })();
   </script>
+    <script>
+  function redirigirFormulario() {
+    const valor = document.getElementById('Formularios').value;
+
+    // Rutas absolutas de los formularios
+    const rutas = {
+      'dashboard': 'http://localhost/sistema-produccion/views/jefeplanta/modulos-jefeplanta/peces/dashboard.php',
+      'bpa6': 'http://localhost/sistema-produccion/views/jefeplanta/modulos-jefeplanta/peces/bpa6.php',
+      'bpa7': 'http://localhost/sistema-produccion/views/jefeplanta/modulos-jefeplanta/peces/bpa7.php',
+      'bpa10': 'http://localhost/sistema-produccion/views/jefeplanta/modulos-jefeplanta/peces/bpa10.php',
+      'bpa12': 'http://localhost/sistema-produccion/views/jefeplanta/modulos-jefeplanta/peces/bpa12.php'
+    };
+
+    if (rutas[valor]) {
+      window.location.href = rutas[valor];
+    } else {
+      alert('Ruta no configurada.');
+    }
+  }
+</script>
 </body>
 </html>

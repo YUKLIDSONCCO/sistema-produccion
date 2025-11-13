@@ -29,26 +29,28 @@
       color: #222;
       display: flex;
       justify-content: center;
-      align-items: center;
-      padding: 20px;
+      align-items: flex-start;
+      padding: 0;
+      overflow-x: hidden;
     }
 
-    /* Contenedor principal centrado */
+    /* Contenedor principal que ocupa toda la pantalla */
     .main{
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
       width: 100%;
-      max-width: 1400px;
+      min-height: 100vh;
+      padding: 0;
     }
 
     .card{
       width: 100%;
-      max-width: 1200px;
+      min-height: 100vh;
       background: #fff;
-      border-radius: 14px;
-      padding: 28px 32px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      border-radius: 0;
+      padding: 20px;
+      box-shadow: none;
       border-top: 7px solid var(--orange);
       animation: fadeIn 0.6s ease;
     }
@@ -87,7 +89,6 @@
       min-width:200px;
     }
 
- 
     .step{ display:flex; flex-direction:column; align-items:center; cursor:pointer; position:relative; }
     .step .circle{ width:44px; height:44px; border-radius:50%; background:#eee; display:grid; place-items:center; font-weight:700; }
     .step.active .circle{ background:var(--orange); color:#fff; }
@@ -148,12 +149,12 @@
       .meta-box{ text-align:center; min-width:auto; }
       .title h1{ font-size:16px; }
       .wizard{ gap:20px; }
-      .card{ padding:20px; }
+      .card{ padding:15px; }
     }
 
     @media (max-width:600px){
-      body{ padding:10px; }
-      .card{ padding:18px; }
+      body{ padding:0; }
+      .card{ padding:12px; }
       .brand img{ width:60px; height:60px; }
       .actions{ flex-direction:column; align-items:center; }
       .btn{ width:100%; }
@@ -194,16 +195,43 @@
 .btn-back:hover::before {
   transform: translateX(-6px);
 }
+      #Formularios {
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+  font-size: 0.95rem;
+  background: linear-gradient(180deg, #fff, #fffdf9);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+  transition: border 0.2s, box-shadow 0.2s;
+  appearance: none; /* para ocultar flecha por defecto si se quiere personalizar */
+  cursor: pointer;
+}
+#Formularios:focus {
+  outline: none;
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px rgba(255, 123, 0, 0.15);
+}
   </style>
 </head>
 <body>
-  <form id="formBpa7" action="index.php?controller=Peces&action=guardarBpa7" method="POST" style="display:none"></form>
-
-  
+  <!-- REEMPLAZAR LÍNEA 25 EN bpa7.php -->
+   <form id="formBpa7" action="/sistema-produccion/public/index.php?controller=Peces&action=guardarBpa7" method="POST" style="display:none"></form>
   <!-- MAIN -->
   <main class="main">
     <div class="card">
-       <button class="btn-back" onclick="volverAtras()">⬅️ Atrás</button>
+            <div style="flex:1; min-width:160px">
+  <label for="Formularios">Formularios</label>
+  <select id="Formularios" onchange="redirigirFormulario()">
+    <option value="" disabled selected>Seleccione Formularios</option>
+    <option value="dashboard">Panel</option>
+    <option value="bpa6">BPA-6 (Mortalidad Alevinos)</option>
+    <option value="bpa7">BPA-7</option>
+    <option value="bpa10">BPA-10</option>
+    <option value="bpa12">BPA-12</option>
+  </select>
+</div>
+       
       <?php if(isset($_GET['status']) && $_GET['status']==='ok'): ?>
         <div style="background:#d9f7d9;border:1px solid #4caf50;color:#256029;padding:10px 14px;border-radius:8px;font-weight:600;margin-bottom:12px;">
           ✅ Registro(s) guardado(s) correctamente. Usa el botón "Ver Listado" para revisar.
@@ -213,7 +241,7 @@
            
 
         <div class="brand">
-          <img src="/ruta/a/logo_coraqua.png" alt="Logo Coraqua" onerror="this.style.display='none'">
+          <img src="/sistema-produccion/public/img/coraqua.png" alt="Logo Coraqua" onerror="this.style.display='none'">
         </div>
 
         <div class="title">
@@ -398,8 +426,6 @@
   </main>
 
   <script>
-
-
     // Add/remove row functions for blocks
     function agregarFilaBloque(tbodyId){
       const tbody = document.getElementById(tbodyId);
@@ -550,5 +576,25 @@
     })();
 
   </script>
+    <script>
+  function redirigirFormulario() {
+    const valor = document.getElementById('Formularios').value;
+
+    // Rutas absolutas de los formularios
+    const rutas = {
+      'dashboard': 'http://localhost/sistema-produccion/views/jefeplanta/modulos-jefeplanta/peces/dashboard.php',
+      'bpa6': 'http://localhost/sistema-produccion/views/jefeplanta/modulos-jefeplanta/peces/bpa6.php',
+      'bpa7': 'http://localhost/sistema-produccion/views/jefeplanta/modulos-jefeplanta/peces/bpa7.php',
+      'bpa10': 'http://localhost/sistema-produccion/views/jefeplanta/modulos-jefeplanta/peces/bpa10.php',
+      'bpa12': 'http://localhost/sistema-produccion/views/jefeplanta/modulos-jefeplanta/peces/bpa12.php'
+    };
+
+    if (rutas[valor]) {
+      window.location.href = rutas[valor];
+    } else {
+      alert('Ruta no configurada.');
+    }
+  }
+</script>
 </body>
 </html>

@@ -166,6 +166,7 @@ body {
     </section>
 
     <!-- FORMATOS PECES -->
+     <!-- FORMATOS PECES -->
 <section class="dashboard" id="formatosSection" style="display:none;">
   <div class="section-header">
     <h2>FORMATOS DE CONTROL DE PECES</h2>
@@ -174,65 +175,65 @@ body {
 
   <div class="bpa-grid">
     <!-- BPA 01 - Mortalidad Diaria de Alevinos -->
-    <div class="project-card" onclick="window.location.href='index.php?controller=Peces&action=bpa6'">
+    <div class="project-card" 
+         onclick="window.location.href='/sistema-produccion/views/jefeplanta/modulos-jefeplanta/peces/bpa6.php'">
       <i class="fas fa-fish fa-3x" style="color:#0077b6;"></i>
       <h3>BPA 01 - Mortalidad Diaria de Alevinos</h3>
       <p>Registro detallado de alevines fallecidos para control sanitario.</p>
     </div>
 
     <!-- BPA 02 - Alimentación Diaria -->
-    <div class="project-card" onclick="window.location.href='index.php?controller=Peces&action=bpa7'">
+    <div class="project-card" 
+         onclick="window.location.href='/sistema-produccion/views/jefeplanta/modulos-jefeplanta/peces/bpa7.php'">
       <i class="fas fa-bowl-food fa-3x" style="color:#00b4d8;"></i>
       <h3>BPA 02 - Alimentación Diaria</h3>
       <p>Registro de la alimentación diaria de los peces.</p>
     </div>
 
     <!-- BPA 03 - Muestreo -->
-    <div class="project-card" onclick="window.location.href='index.php?controller=Peces&action=bpa10'">
+    <div class="project-card" 
+         onclick="window.location.href='/sistema-produccion/views/jefeplanta/modulos-jefeplanta/peces/bpa10.php'">
       <i class="fas fa-vial fa-3x" style="color:#48cae4;"></i>
       <h3>BPA 03 - Muestreo</h3>
       <p>Registro de muestreos realizados a los peces.</p>
     </div>
 
     <!-- BPA 04 - Control Diario de Parámetros -->
-    <div class="project-card" onclick="window.location.href='index.php?controller=Peces&action=bpa12'">
+    <div class="project-card" 
+         onclick="window.location.href='/sistema-produccion/views/jefeplanta/modulos-jefeplanta/peces/bpa12.php'">
       <i class="fas fa-temperature-high fa-3x" style="color:#ff6b6b;"></i>
       <h3>BPA 04 - Control Diario de Parámetros</h3>
       <p>Registros de parámetros de agua de peces.</p>
     </div>
   </div>
 </section>
-    <!-- LISTADO -->
-<section class="dashboard" id="listadoSection" style="display:none;">
-  <div class="section-header">
-    <h2>LISTADO DE FORMATOS DE PECES</h2>
-    <p>Consulta y administra los registros diarios de control y monitoreo de peces.</p>
-  </div>
 
+    <!-- LISTADO -->
+     <section class="dashboard" id="listadoSection" style="display:none;">
   <div class="bpa-grid">
-    <!-- BPA 01 - Mortalidad Diaria de Alevinos -->
-    <div class="project-card" onclick="window.location.href='index.php?controller=Peces&action=bpa06Listado'">
+    <div class="project-card" 
+         onclick="window.location.href='/sistema-produccion/views/jefeplanta/modulos-jefeplanta/peces/bpa6-listado.php'">
       <i class="fas fa-fish fa-3x" style="color:#0077b6;"></i>
       <h3>BPA 01 - Mortalidad Diaria de Alevinos</h3>
       <p>Visualiza el listado de los registros de alevines fallecidos.</p>
     </div>
 
-    <!-- BPA 02 - Alimentación Diaria -->
-    <div class="project-card" onclick="window.location.href='index.php?controller=Peces&action=bpa7Listado'">
+    <div class="project-card" 
+         onclick="window.location.href='/sistema-produccion/views/jefeplanta/modulos-jefeplanta/peces/bpa7-listado.php'">
       <i class="fas fa-bowl-food fa-3x" style="color:#00b4d8;"></i>
       <h3>BPA 02 - Alimentación Diaria</h3>
       <p>Listado general de la alimentación diaria de los peces.</p>
     </div>
 
-    <!-- BPA 03 - Muestreo -->
-    <div class="project-card" onclick="window.location.href='index.php?controller=Peces&action=bpa10Listado'">
+    <div class="project-card" 
+         onclick="window.location.href='/sistema-produccion/views/jefeplanta/modulos-jefeplanta/peces/bpa10-listado.php'">
       <i class="fas fa-vial fa-3x" style="color:#48cae4;"></i>
       <h3>BPA 03 - Muestreo</h3>
       <p>Listado del registro del muestreo diario de los peces.</p>
     </div>
 
-    <!-- BPA 04 - Control Diario de Parámetros -->
-    <div class="project-card" onclick="window.location.href='index.php?controller=Peces&action=bpa12Listado'">
+    <div class="project-card" 
+         onclick="window.location.href='/sistema-produccion/views/jefeplanta/modulos-jefeplanta/peces/bpa12-listado.php'">
       <i class="fas fa-temperature-high fa-3x" style="color:#ff6b6b;"></i>
       <h3>BPA 04 - Control Diario de Parámetros</h3>
       <p>Listado de los registros de parámetros de agua de peces.</p>
