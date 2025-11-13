@@ -187,6 +187,32 @@ class InventarioModel {
         ':observaciones' => $observaciones
     ]);
 }
+public function insertarControlDosificacion($data) {
+    try {
+        $sql = "INSERT INTO control_dosificacion 
+            (fecha, medicamento_suplemento, dosis_gr, dias_tratamiento,
+             lote_alevines, sala, responsable, observaciones)
+            VALUES 
+            (:fecha, :medicamento_suplemento, :dosis_gr, :dias_tratamiento,
+             :lote_alevines, :sala, :responsable, :observaciones)";
+        
+        $stmt = $this->conn->prepare($sql);
+
+        $stmt->bindParam(':fecha', $data['fecha']);
+        $stmt->bindParam(':medicamento_suplemento', $data['medicamento_suplemento']);
+        $stmt->bindParam(':dosis_gr', $data['dosis_gr']);
+        $stmt->bindParam(':dias_tratamiento', $data['dias_tratamiento']);
+        $stmt->bindParam(':lote_alevines', $data['lote_alevines']);
+        $stmt->bindParam(':sala', $data['sala']);
+        $stmt->bindParam(':responsable', $data['responsable']);
+        $stmt->bindParam(':observaciones', $data['observaciones']);
+
+        $stmt->execute();
+        return true;
+    } catch (PDOException $e) {
+        throw new Exception("Error al insertar registro: " . $e->getMessage());
+    }
+}
 
 
     // ============================

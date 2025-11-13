@@ -312,62 +312,53 @@ public function bpa4() {
 }
 public function guardarBPA4() {
     require_once "../config/database.php";
-    
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $fecha = $_POST['fecha'] ?? '';
-        $sede = $_POST['sede'] ?? '';
-        $encargado = $_POST['encargado'] ?? '';
-        $mes = $_POST['mes'] ?? '';
-        
-        // Obtener los arrays de datos de la tabla
-        $medicamentos = $_POST['medicamento_suplemento'] ?? [];
-        $dosis_gr = $_POST['dosis_gr'] ?? [];
-        $dias_tratamiento = $_POST['dias_tratamiento'] ?? [];
-        $lotes_alevines = $_POST['lote_alevines'] ?? [];
-        $salas = $_POST['sala'] ?? [];
-        $responsables = $_POST['responsable'] ?? [];
-        $observaciones = $_POST['observaciones'] ?? [];
-        
-        // Validar campos obligatorios
-        if (empty($fecha) || empty($sede) || empty($encargado) || empty($mes)) {
-            header("Location: /sistema-produccion/public/Inventario/bpa4?error=1&message=Complete todos los campos del formulario");
-            exit;
-        }
-        
-        // Crear conexión PDO
-        $database = new Database();
-        $conn = $database->getConnection();
-        $model = new InventarioModel($conn);
-        $successCount = 0;
-        
-        // Insertar cada fila de la tabla
-        for ($i = 0; $i < count($medicamentos); $i++) {
-            $medicamento_suplemento = trim($medicamentos[$i] ?? '');
-            $dosis = $dosis_gr[$i] ?? 0;
-            $dias = $dias_tratamiento[$i] ?? 0;
-            $lote_alevines_val = trim($lotes_alevines[$i] ?? '');
-            $sala_val = trim($salas[$i] ?? '');
-            $responsable_val = trim($responsables[$i] ?? '');
-            $obs = trim($observaciones[$i] ?? '');
-            
-            // Validar que tenga al menos medicamento y dosis
-            if (!empty($medicamento_suplemento) && !empty($dosis)) {
-                if ($model->guardarBPA4($fecha, $medicamento_suplemento, $dosis, $dias, $lote_alevines_val, $sala_val, $responsable_val, $obs)) {
-                    $successCount++;
+    require_once __DIR__ . '/../models/InventarioModel.php';
+    $database = new Database();
+    $conn = $database->getConnection();
+    $model = new InventarioModel($conn);
+    try {
+        // Asegurarse de que los datos sean arrays
+        $fechas = isset($_POST['fecha']) && is_array($_POST['fecha']) ? $_POST['fecha'] : [];
+        $medicamentos = isset($_POST['medicamento_suplemento']) && is_array($_POST['medicamento_suplemento']) ? $_POST['medicamento_suplemento'] : [];
+        $dosis = isset($_POST['dosis_gr']) && is_array($_POST['dosis_gr']) ? $_POST['dosis_gr'] : [];
+        $dias = isset($_POST['dias_tratamiento']) && is_array($_POST['dias_tratamiento']) ? $_POST['dias_tratamiento'] : [];
+        $lotes = isset($_POST['lote_alevines']) && is_array($_POST['lote_alevines']) ? $_POST['lote_alevines'] : [];
+        $salas = isset($_POST['sala']) && is_array($_POST['sala']) ? $_POST['sala'] : [];
+        $responsables = isset($_POST['responsable']) && is_array($_POST['responsable']) ? $_POST['responsable'] : [];
+        $observaciones = isset($_POST['observaciones']) && is_array($_POST['observaciones']) ? $_POST['observaciones'] : [];
+        $contador = 0;
+        // Verificar que tenemos datos para procesar
+        if (count($medicamentos) > 0) {
+            for ($i = 0; $i < count($medicamentos); $i++) {
+                // Validar que la fila no esté vacía
+                if (empty(trim($medicamentos[$i]))) continue;
+                $data = [
+                    'fecha' => $fechas[$i] ?? date('Y-m-d'),
+                    'medicamento_suplemento' => $medicamentos[$i] ?? '',
+                    'dosis_gr' => $dosis[$i] ?? 0,
+                    'dias_tratamiento' => $dias[$i] ?? 0,
+                    'lote_alevines' => $lotes[$i] ?? '',
+                    'sala' => $salas[$i] ?? '',
+                    'responsable' => $responsables[$i] ?? '',
+                    'observaciones' => $observaciones[$i] ?? ''
+                ];
+                if ($model->insertarControlDosificacion($data)) {
+                    $contador++;
                 }
             }
         }
-        
-        // Redirigir después de guardar
-        if ($successCount > 0) {
-            header("Location: /sistema-produccion/public/Inventario/bpa4?success=" . $successCount);
+        if ($contador > 0) {
+            header("Location: /sistema-produccion/public/Inventario/bpa4?success={$contador}");
         } else {
-            header("Location: /sistema-produccion/public/Inventario/bpa4?error=1&message=No se pudieron guardar los datos. Verifique que haya al menos una fila con medicamento y dosis válidos");
+            header("Location: /sistema-produccion/public/Inventario/bpa4?error=1&message=No se pudieron guardar los registros");
         }
+        exit;
+    } catch (Exception $e) {
+        $msg = urlencode($e->getMessage());
+        header("Location: /sistema-produccion/public/Inventario/bpa4?error=1&message={$msg}");
         exit;
     }
 }
-
 public function listarBPA4() {
     require_once "../config/database.php";
     $fecha = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');

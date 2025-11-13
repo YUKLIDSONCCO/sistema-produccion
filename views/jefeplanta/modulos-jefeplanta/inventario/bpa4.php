@@ -261,13 +261,9 @@ function guardarDatos() {
     alert('Agregue al menos una fila.');
     return;
   }
-
-  // Crear un formulario dinámico con todos los datos
   const form = document.createElement('form');
   form.method = 'POST';
   form.action = '/sistema-produccion/public/Inventario/guardarBPA4';
-  
-  // Agregar campos básicos
   const addField = (name, value) => {
     const input = document.createElement('input');
     input.type = 'hidden';
@@ -275,37 +271,49 @@ function guardarDatos() {
     input.value = value;
     form.appendChild(input);
   };
-
   addField('fecha', fecha);
   addField('sede', sede);
   addField('encargado', encargado);
   addField('mes', mes);
-
   // Agregar datos de cada fila
+  let filasValidas = 0;
   filas.forEach((fila, index) => {
     const inputs = fila.querySelectorAll('input');
-    addField(`medicamento_suplemento[]`, inputs[2].value);
-    addField(`dosis_gr[]`, inputs[3].value);
-    addField(`dias_tratamiento[]`, inputs[4].value);
-    addField(`lote_alevines[]`, inputs[5].value);
-    addField(`sala[]`, inputs[6].value);
-    addField(`responsable[]`, inputs[7].value);
-    addField(`observaciones[]`, inputs[8].value);
+    // Verificamos que haya suficientes inputs (8 por fila)
+    if (inputs.length < 8) {
+      console.warn(`Fila ${index + 1} incompleta, tiene solo ${inputs.length} campos.`);
+      return; // saltar esta fila
+    }
+    // Solo contar filas que tengan medicamento
+    if (inputs[1].value.trim() !== '') {
+      addField('fecha[]', inputs[0].value || fecha);
+      addField('medicamento_suplemento[]', inputs[1].value || '');
+      addField('dosis_gr[]', inputs[2].value || '0');
+      addField('dias_tratamiento[]', inputs[3].value || '0');
+      addField('lote_alevines[]', inputs[4].value || '');
+      addField('sala[]', inputs[5].value || '');
+      addField('responsable[]', inputs[6].value || '');
+      addField('observaciones[]', inputs[7].value || '');
+      filasValidas++;
+    }
   });
-
+  if (filasValidas === 0) {
+    alert('Debe ingresar al menos un medicamento/suplemento.');
+    return;
+  }
   document.body.appendChild(form);
-  
-  if (confirm('¿Desea guardar los registros?')) form.submit();
+  if (confirm(`¿Desea guardar ${filasValidas} registro(s)?`)) {
+    form.submit();
+  } else {
+    document.body.removeChild(form);
+  }
 }
-
 function verListado() {
   window.location.href = "/sistema-produccion/public/Inventario/listarBPA4";
 }
-
 function volverAtras() {
   window.history.back();
 }
-
 document.addEventListener('DOMContentLoaded', () => {
   const hoy = new Date().toISOString().split('T')[0];
   document.getElementById('fecha').value = hoy;
