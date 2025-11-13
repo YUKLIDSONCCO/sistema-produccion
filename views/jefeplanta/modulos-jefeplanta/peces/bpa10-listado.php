@@ -1,3 +1,17 @@
+<?php 
+$fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
+?>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Listado de Muestreo - CORAQUA PERÚ</title>
+  <link rel="stylesheet" href="/sistema-produccion/public/css/style_peces.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
 <main id="main" class="main">
   <section class="section-listado">
     <div class="container">
@@ -12,27 +26,82 @@
           <a href="index.php?controller=Peces&action=bpa10" class="btn-principal">
             ➕ Nuevo Registro
           </a>
-                          <div style="flex:1; min-width:160px">
-  <label for="Formularios">Formularios</label>
-  <select id="Formularios" onchange="redirigirFormulario()">
-    <option value="" disabled selected>Seleccione Formularios</option>
-    <option value="dashboard">Panel</option>
-    <option value="bpa6-listado">BPA-6-listado</option>
-    <option value="bpa7-listado">BPA-7-listado</option>
-    <option value="bpa10-listado">BPA-10-listado</option>
-    <option value="bpa12-listado">BPA-12-lista</option>
-  </select>
-</div>
+          <a href="index.php?controller=JefePlanta&action=moduloPeces" class="btn-secundario">
+            ⬅️ Volver al Panel
+          </a>
+        </div>
+      </div>
+
+      <!-- PANEL WIZARD DE REPORTES -->
+      <div class="wizard-panel">
+        <h3>📊 Generar Reportes de Muestreo</h3>
+        <div class="wizard">
+          <div class="step active" onclick="mostrarPaso(1)">
+            <div class="circle">1</div>
+            <div class="label">Semanal</div>
+          </div>
+          <div class="step" onclick="mostrarPaso(2)">
+            <div class="circle">2</div>
+            <div class="label">Mensual</div>
+          </div>
+          <div class="step" onclick="mostrarPaso(3)">
+            <div class="circle">3</div>
+            <div class="label">Anual</div>
+          </div>
+        </div>
+
+        <!-- PASO 1 -->
+        <div id="contenido1" class="wizard-content active">
+          <p>📅 Selecciona una fecha para generar el <strong>reporte semanal</strong>:</p>
+          <form onsubmit="descargarExcel(event, 'semana')">
+            <input type="date" name="fecha_semana" required class="input-fecha">
+            <button type="submit" class="download-btn">Descargar Excel Semanal</button>
+          </form>
+        </div>
+
+        <!-- PASO 2 -->
+        <div id="contenido2" class="wizard-content">
+          <p>🗓️ Selecciona el mes del <strong>reporte mensual</strong>:</p>
+          <form onsubmit="descargarExcel(event, 'mes')">
+            <input type="month" name="fecha_mes" required class="input-fecha">
+            <button type="submit" class="download-btn">Descargar Excel Mensual</button>
+          </form>
+        </div>
+
+        <!-- PASO 3 -->
+        <div id="contenido3" class="wizard-content">
+          <p>📈 Selecciona el año del <strong>reporte anual</strong>:</p>
+          <form onsubmit="descargarExcel(event, 'anio')">
+            <input type="number" name="fecha_anio" min="2020" max="2030" placeholder="Ejemplo: 2025" required class="input-fecha">
+            <button type="submit" class="download-btn">Descargar Excel Anual</button>
+          </form>
         </div>
       </div>
 
       <!-- CONTENEDOR PRINCIPAL -->
       <div class="card shadow-lg">
-        <div class="card-header">
+        <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
           <h4>📋 Registros de Muestreo</h4>
+
+          <!-- BUSCADOR POR FECHA -->
+          <form class="buscador-fecha" onsubmit="buscarPorFecha(event)">
+            <label for="fechaBusqueda">Seleccionar fecha:</label>
+            <input type="date" id="fechaBusqueda" name="fechaBusqueda" value="<?= isset($_GET['fechaBusqueda']) ? htmlspecialchars($_GET['fechaBusqueda']) : '' ?>" required>
+            <button type="submit" class="btn-buscar">🔍 Buscar</button>
+            <?php if (isset($_GET['fechaBusqueda'])): ?>
+              <a href="index.php?controller=Peces&action=bpa10Listado" class="btn-limpiar" title="Limpiar filtro">✖️ Limpiar</a>
+            <?php endif; ?>
+          </form>
         </div>
 
         <div class="card-body">
+          <?php if (isset($_GET['fechaBusqueda'])): ?>
+            <div class="filtro-activo">
+              📅 Mostrando registros del: <strong><?= htmlspecialchars($_GET['fechaBusqueda']) ?></strong>
+              <a href="index.php?controller=Peces&action=bpa10Listado" class="btn-limpiar-inline">Mostrar todos</a>
+            </div>
+          <?php endif; ?>
+
           <div class="table-responsive">
             <table class="table table-striped table-hover align-middle text-center">
               <thead>
@@ -78,7 +147,7 @@
                     </tr>
                   <?php endforeach; ?>
                 <?php else: ?>
-                  <tr><td colspan="12" class="text-muted py-3">No existen registros disponibles.</td></tr>
+                  <tr><td colspan="13" class="text-muted py-3">No existen registros disponibles.</td></tr>
                 <?php endif; ?>
               </tbody>
             </table>
@@ -95,198 +164,32 @@
   </section>
 </main>
 
-<style>
-  /* === ESTILOS GENERALES === */
-  body {
-    background: linear-gradient(120deg, #e9f3ff, #f9fbff);
-    font-family: "Poppins", sans-serif;
-  }
 
-  .section-listado {
-    padding: 40px 0;
-  }
 
-  .container {
-    max-width: 1300px;
-    margin: 0 auto;
-  }
-
-  /* === ENCABEZADO === */
-  .encabezado {
-    background: #004b8d;
-    color: white;
-    border-radius: 15px;
-    padding: 25px 30px;
-    margin-bottom: 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  .encabezado .titulo h2 {
-    margin: 0;
-    font-weight: 700;
-    font-size: 1.7rem;
-  }
-
-  .encabezado .titulo p {
-    margin: 0;
-    font-size: 0.95rem;
-    opacity: 0.9;
-  }
-
-  .acciones-superior .btn-principal,
-  .acciones-superior .btn-secundario {
-    text-decoration: none;
-    padding: 10px 18px;
-    border-radius: 8px;
-    font-weight: 500;
-    transition: 0.3s ease;
-    margin-left: 10px;
-  }
-
-  .btn-principal {
-    background: #00aaff;
-    color: white;
-  }
-
-  .btn-principal:hover {
-    background: #008ed6;
-  }
-
-  .btn-secundario {
-    background: white;
-    color: #004b8d;
-    border: 2px solid #004b8d;
-  }
-
-  .btn-secundario:hover {
-    background: #004b8d;
-    color: white;
-  }
-
-  /* === TARJETA PRINCIPAL === */
-  .card {
-    background: #ffffff;
-    border-radius: 15px;
-    overflow: hidden;
-  }
-
-  .card-header {
-    background: #007bff;
-    color: white;
-    padding: 15px 25px;
-    font-weight: 600;
-    font-size: 1.1rem;
-  }
-
-  .card-body {
-    padding: 25px;
-  }
-
-  .card-footer {
-    padding: 15px 25px;
-    background: #f8f9fa;
-    border-top: 1px solid #dee2e6;
-  }
-
-  /* === TABLA === */
-  .table {
-    border: 1px solid #dee2e6;
-    font-size: 0.9rem;
-  }
-
-  .table thead {
-    background-color: #e3f2fd;
-    font-weight: 600;
-  }
-
-  .table tbody tr:hover {
-    background-color: #f1f8ff;
-  }
-
-  /* === BOTONES === */
-  .btn-eliminar {
-    color: white;
-    background: #dc3545;
-    padding: 6px 12px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-size: 0.85rem;
-    display: inline-block;
-  }
-
-  .btn-eliminar:hover {
-    background: #b02a37;
-  }
-
-  .btn-ir-bpa,
-  .btn-volver {
-    text-decoration: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: 500;
-    transition: 0.3s;
-    margin-left: 8px;
-  }
-
-  .btn-ir-bpa {
-    background: #007bff;
-    color: white;
-  }
-
-  .btn-ir-bpa:hover {
-    background: #005fcc;
-  }
-
-  .btn-volver {
-    background: #343a40;
-    color: white;
-  }
-
-  .btn-volver:hover {
-    background: #23272b;
-  }
-</style>
-<style>
-        #Formularios {
-  width: 100%;
-  padding: 11px 14px;
-  border-radius: 10px;
-  border: 1px solid #e0e0e0;
-  font-size: 0.95rem;
-  background: linear-gradient(180deg, #fff, #fffdf9);
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
-  transition: border 0.2s, box-shadow 0.2s;
-  appearance: none; /* para ocultar flecha por defecto si se quiere personalizar */
-  cursor: pointer;
+<!-- ======= SCRIPT ======= -->
+<script>
+function mostrarPaso(n) {
+  document.querySelectorAll('.step').forEach((el, i) => {
+    el.classList.toggle('active', i + 1 === n);
+  });
+  document.querySelectorAll('.wizard-content').forEach((el, i) => {
+    el.classList.toggle('active', i + 1 === n);
+  });
 }
-#Formularios:focus {
-  outline: none;
-  border-color: var(--cora-orange);
-  box-shadow: 0 0 0 3px rgba(255, 123, 0, 0.15);
+
+function descargarExcel(event, tipo) {
+  event.preventDefault();
+  let valor = event.target.querySelector('input').value;
+  alert("📁 Descargando reporte en Excel: " + tipo + "\\nFecha seleccionada: " + valor);
 }
-</style>
-  <script>
-  function redirigirFormulario() {
-    const valor = document.getElementById('Formularios').value;
 
-    // Obtener la raíz base del proyecto sin importar desde dónde se acceda
-    const base = window.location.origin + "/sistema-produccion/views/jefeplanta/modulos-jefeplanta/peces/";
-
-    const rutas = {
-      'dashboard': base + 'dashboard.php',
-      'bpa6-listado': base + 'bpa6-listado.php',
-      'bpa7-listado': base + 'bpa7-listado.php',
-      'bpa10-listado': base + 'bpa10-listado.php',
-      'bpa12-listado': base + 'bpa12-listado.php'
-    };
-
-    if (rutas[valor]) {
-      window.location.href = rutas[valor];
-    } else {
-      alert('Ruta no configurada.');
-    }
+function buscarPorFecha(event) {
+  event.preventDefault();
+  let fecha = document.getElementById('fechaBusqueda').value;
+  if (fecha) {
+    window.location.href = 'index.php?controller=Peces&action=bpa10Listado&fechaBusqueda=' + encodeURIComponent(fecha);
+  } else {
+    alert('⚠️ Por favor selecciona una fecha');
   }
+}
 </script>
