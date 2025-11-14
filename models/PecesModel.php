@@ -57,10 +57,27 @@ class PecesModel {
         ]);
     }
 
-    public function getBpa6List() {
+    public function getBpa6List($fecha = null) {
         $conn = $this->obtenerConexion();
-        $sql = "SELECT * FROM mortalidad_alevines ORDER BY fecha_registro DESC, up ASC";
-        $stmt = $conn->query($sql);
+        if ($fecha) {
+            $sql = "SELECT * FROM mortalidad_alevines WHERE fecha_registro = ? ORDER BY fecha_registro DESC, up ASC";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([$fecha]);
+        } else {
+            $sql = "SELECT * FROM mortalidad_alevines ORDER BY fecha_registro DESC, up ASC";
+            $stmt = $conn->query($sql);
+        }
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Obtiene registros entre dos fechas (inclusive)
+     */
+    public function getBpa6Between(string $startDate, string $endDate): array {
+        $conn = $this->obtenerConexion();
+        $sql = "SELECT * FROM mortalidad_alevines WHERE fecha_registro BETWEEN ? AND ? ORDER BY fecha_registro ASC, up ASC";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([$startDate, $endDate]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -106,10 +123,27 @@ class PecesModel {
         ]);
     }
 
-    public function getBpa7List() {
+    public function getBpa7List($fecha = null) {
         $conn = $this->obtenerConexion();
-        $sql = "SELECT * FROM alimentacion_diaria ORDER BY fecha_registro DESC";
-        $stmt = $conn->query($sql);
+        if ($fecha) {
+            $sql = "SELECT * FROM alimentacion_diaria WHERE fecha_registro = ? ORDER BY fecha_registro DESC";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([$fecha]);
+        } else {
+            $sql = "SELECT * FROM alimentacion_diaria ORDER BY fecha_registro DESC";
+            $stmt = $conn->query($sql);
+        }
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Obtiene registros de alimentación entre dos fechas (inclusive)
+     */
+    public function getBpa7Between(string $startDate, string $endDate): array {
+        $conn = $this->obtenerConexion();
+        $sql = "SELECT * FROM alimentacion_diaria WHERE fecha_registro BETWEEN ? AND ? ORDER BY fecha_registro ASC";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([$startDate, $endDate]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -324,39 +358,27 @@ class PecesModel {
      * la tabla control_diario_parametros_peces si existe. Esto permite mostrar
      * directamente columnas como t_0630, o2_0630, sat_0630, ph_0630, etc.
      */
-    public function getBpa12ListDetailed() {
+    public function getBpa12ListDetailed($fecha = null) {
         $conn = $this->obtenerConexion();
-        try {
-            $check = $conn->query("SELECT COUNT(*) as c FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = 'control_diario_parametros_peces'")->fetch(PDO::FETCH_ASSOC);
-            $hasTable = ($check && $check['c'] > 0);
-        } catch (Exception $e) {
-            $hasTable = false;
-        }
-
-        if ($hasTable) {
-            $sql = "SELECT id, codigo_formato, version, fecha_registro, mes, sede, dia,
-                           t_0630, o2_0630, sat_0630, ph_0630,
-                           t_1200, o2_1200, sat_1200, ph_1200,
-                           t_1530, o2_1530, sat_1530, ph_1530,
-                           responsable, observacion, id_sede, creado_en
-                    FROM control_diario_parametros_peces
-                    ORDER BY fecha_registro DESC, sede ASC, dia ASC";
+        if ($fecha) {
+            $sql = "SELECT * FROM control_diario_parametros_peces WHERE fecha_registro = ? ORDER BY fecha_registro DESC, dia ASC";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([$fecha]);
+        } else {
+            $sql = "SELECT * FROM control_diario_parametros_peces ORDER BY fecha_registro DESC, dia ASC";
             $stmt = $conn->query($sql);
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
-        // Fallback al esquema antiguo: devolver cada detalle individual como una fila
-        $sql = "SELECT cp.codigo_formato, cp.version, cp.fecha_registro, cp.mes, cp.sede,
-                       dcp.dia,
-                       dcp.temp_6_30 AS t_0630, dcp.o2_6_30 AS o2_0630, dcp.sat_6_30 AS sat_0630, dcp.ph_6_30 AS ph_0630,
-                       dcp.temp_12_00 AS t_1200, dcp.o2_12_00 AS o2_1200, dcp.sat_12_00 AS sat_1200, dcp.ph_12_00 AS ph_1200,
-                       dcp.temp_3_30 AS t_1530, dcp.o2_3_30 AS o2_1530, dcp.sat_3_30 AS sat_1530, dcp.ph_3_30 AS ph_1530,
-                       dcp.responsable, dcp.observaciones AS observacion, cp.id AS id, cp.id_sede, cp.creado_en
-                FROM control_parametros cp
-                JOIN detalle_control_parametros dcp ON cp.id = dcp.id_control
-                ORDER BY cp.fecha_registro DESC, cp.sede ASC, dcp.dia ASC";
-
-        $stmt = $conn->query($sql);
+    /**
+     * Obtiene registros de control de parámetros entre dos fechas (inclusive)
+     */
+    public function getBpa12Between(string $startDate, string $endDate): array {
+        $conn = $this->obtenerConexion();
+        $sql = "SELECT * FROM control_diario_parametros_peces WHERE fecha_registro BETWEEN ? AND ? ORDER BY fecha_registro ASC, dia ASC";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([$startDate, $endDate]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
