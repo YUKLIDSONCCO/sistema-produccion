@@ -107,7 +107,11 @@ body {
 
     <nav class="sidebar-nav">
       <ul>
-        <li><a href="javascript:history.back()"><i class="fas fa-circle-arrow-left"></i> Volver atrás</a></li>
+        <li>
+            <a href="index.php?controller=JefePlanta&action=dashboard">
+              <i class="fas fa-circle-arrow-left"></i> Volver al panel principal
+            </a>
+          </li>
         <li><a href="#" id="inicioBtn" class="active"><i class="fas fa-house-chimney"></i> Inicio</a></li>
         <li><a href="#" id="formatosBtn"><i class="fas fa-folder-open"></i> Formatos PECES</a></li>
         <li><a href="#" id="listadoBtn"><i class="fas fa-list-check"></i> Listado PECES</a></li>
@@ -262,3 +266,4 @@ body {
   <script src="/sistema-produccion/public/js/script_peces.js"></script>
 </body>
 </html>
+
