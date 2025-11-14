@@ -75,7 +75,8 @@ class PecesController {
 
     public function bpa6Listado() {
         $model = new PecesModel();
-        $registros = $model->getBpa6List();
+        $fechaBusqueda = isset($_GET['fechaBusqueda']) ? $_GET['fechaBusqueda'] : null;
+        $registros = $model->getBpa6List($fechaBusqueda);
         require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa6-listado.php';
     }
 
@@ -93,6 +94,113 @@ class PecesController {
        ====================== */
     public function bpa7() {
         require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa7.php';
+    }
+
+    /* ======================
+       Exportaciones Excel BPA 6
+       ====================== */
+    public function exportBpa6ExcelSemana() {
+        if (!isset($_GET['fecha_semana']) || empty($_GET['fecha_semana'])) {
+            header("Location: index.php?controller=Peces&action=bpa6Listado");
+            exit;
+        }
+        $fecha = $_GET['fecha_semana'];
+        try {
+            $dt = new DateTimeImmutable($fecha);
+        } catch (Exception $e) {
+            header("Location: index.php?controller=Peces&action=bpa6Listado");
+            exit;
+        }
+        $inicio = $dt->modify('monday this week')->format('Y-m-d');
+        $fin    = $dt->modify('sunday this week')->format('Y-m-d');
+
+        $model = new PecesModel();
+        $registros = $model->getBpa6Between($inicio, $fin);
+        $titulo = "Mortalidad Alevinos - Semana del $inicio al $fin";
+        $filename = "Mortalidad_Alevinos_Semanal_{$inicio}_{$fin}.xls";
+        $this->emitirExcelBpa6($registros, $titulo, $filename);
+    }
+
+    public function exportBpa6ExcelMes() {
+        if (!isset($_GET['fecha_mes']) || empty($_GET['fecha_mes'])) {
+            header("Location: index.php?controller=Peces&action=bpa6Listado");
+            exit;
+        }
+        // fecha_mes formato YYYY-MM
+        $ym = preg_replace('/[^0-9\-]/', '', $_GET['fecha_mes']);
+        $start = DateTimeImmutable::createFromFormat('Y-m-d', $ym . '-01');
+        if (!$start) {
+            header("Location: index.php?controller=Peces&action=bpa6Listado");
+            exit;
+        }
+        $inicio = $start->format('Y-m-d');
+        $fin = $start->modify('last day of this month')->format('Y-m-d');
+
+        $model = new PecesModel();
+        $registros = $model->getBpa6Between($inicio, $fin);
+        $titulo = "Mortalidad Alevinos - Mes {$start->format('Y-m')}";
+        $filename = "Mortalidad_Alevinos_Mensual_{$start->format('Y-m')}.xls";
+        $this->emitirExcelBpa6($registros, $titulo, $filename);
+    }
+
+    public function exportBpa6ExcelAnio() {
+        if (!isset($_GET['fecha_anio']) || empty($_GET['fecha_anio'])) {
+            header("Location: index.php?controller=Peces&action=bpa6Listado");
+            exit;
+        }
+        $anio = (int)$_GET['fecha_anio'];
+        if ($anio < 2000 || $anio > 2100) {
+            header("Location: index.php?controller=Peces&action=bpa6Listado");
+            exit;
+        }
+        $inicio = sprintf('%04d-01-01', $anio);
+        $fin    = sprintf('%04d-12-31', $anio);
+
+        $model = new PecesModel();
+        $registros = $model->getBpa6Between($inicio, $fin);
+        $titulo = "Mortalidad Alevinos - Año {$anio}";
+        $filename = "Mortalidad_Alevinos_Anual_{$anio}.xls";
+        $this->emitirExcelBpa6($registros, $titulo, $filename);
+    }
+
+    private function emitirExcelBpa6(array $registros, string $titulo, string $filename): void {
+        header('Content-Type: application/vnd.ms-excel; charset=UTF-8');
+        header('Content-Disposition: attachment; filename=' . $filename);
+        header('Pragma: no-cache');
+        header('Expires: 0');
+
+        echo "\xEF\xBB\xBF"; // BOM UTF-8 para Excel
+        echo '<html><head><meta charset="UTF-8"><title>' . htmlspecialchars($titulo) . "</title></head><body>";
+        echo '<h3 style="font-family:Segoe UI,Arial,sans-serif">' . htmlspecialchars($titulo) . '</h3>';
+        echo '<table border="1" cellspacing="0" cellpadding="4">';
+        echo '<thead style="background:#cfe2ff;font-weight:bold">';
+        echo '<tr>';
+        $cols = ['ID','Código Formato','Versión','Fecha Registro','Responsable','Sede','UP','Lote','Mortalidad','Morbilidad','Total','Observaciones'];
+        foreach ($cols as $c) echo '<th>' . htmlspecialchars($c) . '</th>';
+        echo '</tr></thead><tbody>';
+        if (!empty($registros)) {
+            foreach ($registros as $r) {
+                echo '<tr>';
+                echo '<td>' . htmlspecialchars((string)$r['id']) . '</td>';
+                echo '<td>' . htmlspecialchars((string)$r['codigo_formato']) . '</td>';
+                echo '<td>' . htmlspecialchars((string)$r['version']) . '</td>';
+                echo '<td>' . htmlspecialchars((string)$r['fecha_registro']) . '</td>';
+                echo '<td>' . htmlspecialchars((string)$r['responsable']) . '</td>';
+                echo '<td>' . htmlspecialchars((string)$r['sede']) . '</td>';
+                echo '<td>' . htmlspecialchars((string)$r['up']) . '</td>';
+                echo '<td>' . htmlspecialchars((string)$r['lote']) . '</td>';
+                echo '<td>' . htmlspecialchars((string)$r['mortalidad']) . '</td>';
+                echo '<td>' . htmlspecialchars((string)$r['morbilidad']) . '</td>';
+                echo '<td>' . htmlspecialchars((string)($r['total'] ?? '')) . '</td>';
+                echo '<td>' . htmlspecialchars((string)($r['observaciones'] ?? '')) . '</td>';
+                echo '</tr>';
+            }
+        } else {
+            echo '<tr><td colspan="12">Sin registros en el periodo seleccionado</td></tr>';
+        }
+        echo '</tbody></table>';
+        echo '</body></html>';
+        exit;
     }
 
     // Alias por compatibilidad: algunos enlaces usan 'bpa06' o 'bpa06Listado'
@@ -156,7 +264,8 @@ class PecesController {
 
     public function bpa7Listado() {
         $model = new PecesModel();
-        $registros = $model->getBpa7List();
+        $fechaBusqueda = isset($_GET['fechaBusqueda']) ? $_GET['fechaBusqueda'] : null;
+        $registros = $model->getBpa7List($fechaBusqueda);
         require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa7-listado.php';
     }
 
@@ -166,6 +275,111 @@ class PecesController {
             $model->eliminarBpa7($_GET['id']);
         }
         header("Location: index.php?controller=Peces&action=bpa7Listado");
+        exit;
+    }
+
+    /* ======================
+       Exportaciones Excel BPA 7
+       ====================== */
+    public function exportBpa7ExcelSemana() {
+        if (!isset($_GET['fecha_semana']) || empty($_GET['fecha_semana'])) {
+            header("Location: index.php?controller=Peces&action=bpa7Listado");
+            exit;
+        }
+        $fecha = $_GET['fecha_semana'];
+        try {
+            $dt = new DateTimeImmutable($fecha);
+        } catch (Exception $e) {
+            header("Location: index.php?controller=Peces&action=bpa7Listado");
+            exit;
+        }
+        $inicio = $dt->modify('monday this week')->format('Y-m-d');
+        $fin    = $dt->modify('sunday this week')->format('Y-m-d');
+
+        $model = new PecesModel();
+        $registros = $model->getBpa7Between($inicio, $fin);
+        $titulo = "Alimentación Diaria - Semana del $inicio al $fin";
+        $filename = "Alimentacion_Diaria_Semanal_{$inicio}_{$fin}.xls";
+        $this->emitirExcelBpa7($registros, $titulo, $filename);
+    }
+
+    public function exportBpa7ExcelMes() {
+        if (!isset($_GET['fecha_mes']) || empty($_GET['fecha_mes'])) {
+            header("Location: index.php?controller=Peces&action=bpa7Listado");
+            exit;
+        }
+        $ym = preg_replace('/[^0-9\-]/', '', $_GET['fecha_mes']);
+        $start = DateTimeImmutable::createFromFormat('Y-m-d', $ym . '-01');
+        if (!$start) {
+            header("Location: index.php?controller=Peces&action=bpa7Listado");
+            exit;
+        }
+        $inicio = $start->format('Y-m-d');
+        $fin = $start->modify('last day of this month')->format('Y-m-d');
+
+        $model = new PecesModel();
+        $registros = $model->getBpa7Between($inicio, $fin);
+        $titulo = "Alimentación Diaria - Mes {$start->format('Y-m')}";
+        $filename = "Alimentacion_Diaria_Mensual_{$start->format('Y-m')}.xls";
+        $this->emitirExcelBpa7($registros, $titulo, $filename);
+    }
+
+    public function exportBpa7ExcelAnio() {
+        if (!isset($_GET['fecha_anio']) || empty($_GET['fecha_anio'])) {
+            header("Location: index.php?controller=Peces&action=bpa7Listado");
+            exit;
+        }
+        $anio = (int)$_GET['fecha_anio'];
+        if ($anio < 2000 || $anio > 2100) {
+            header("Location: index.php?controller=Peces&action=bpa7Listado");
+            exit;
+        }
+        $inicio = sprintf('%04d-01-01', $anio);
+        $fin    = sprintf('%04d-12-31', $anio);
+
+        $model = new PecesModel();
+        $registros = $model->getBpa7Between($inicio, $fin);
+        $titulo = "Alimentación Diaria - Año {$anio}";
+        $filename = "Alimentacion_Diaria_Anual_{$anio}.xls";
+        $this->emitirExcelBpa7($registros, $titulo, $filename);
+    }
+
+    private function emitirExcelBpa7(array $registros, string $titulo, string $filename): void {
+        header('Content-Type: application/vnd.ms-excel; charset=UTF-8');
+        header('Content-Disposition: attachment; filename=' . $filename);
+        header('Pragma: no-cache');
+        header('Expires: 0');
+
+        echo "\xEF\xBB\xBF"; // BOM UTF-8 para Excel
+        echo '<html><head><meta charset="UTF-8"><title>' . htmlspecialchars($titulo) . "</title></head><body>";
+        echo '<h3 style="font-family:Segoe UI,Arial,sans-serif">' . htmlspecialchars($titulo) . '</h3>';
+        echo '<table border="1" cellspacing="0" cellpadding="4">';
+        echo '<thead style="background:#cfe2ff;font-weight:bold">';
+        echo '<tr>';
+        $cols = ['ID','Fecha','Responsable','Sede','UP','Lote','Biomasa','Tasa Alimentación','Alimento Suministrado','Calibre','Observaciones'];
+        foreach ($cols as $c) echo '<th>' . htmlspecialchars($c) . '</th>';
+        echo '</tr></thead><tbody>';
+        if (!empty($registros)) {
+            foreach ($registros as $r) {
+                echo '<tr>';
+                echo '<td>' . htmlspecialchars((string)$r['id']) . '</td>';
+                echo '<td>' . htmlspecialchars((string)$r['fecha_registro']) . '</td>';
+                echo '<td>' . htmlspecialchars((string)$r['responsable']) . '</td>';
+                echo '<td>' . htmlspecialchars((string)$r['sede']) . '</td>';
+                echo '<td>' . htmlspecialchars((string)$r['up']) . '</td>';
+                echo '<td>' . htmlspecialchars((string)$r['lote']) . '</td>';
+                echo '<td>' . htmlspecialchars((string)$r['biomasa']) . '</td>';
+                echo '<td>' . htmlspecialchars((string)$r['tasa_alimentacion']) . '</td>';
+                echo '<td>' . htmlspecialchars((string)$r['alimento_suministrado']) . '</td>';
+                echo '<td>' . htmlspecialchars((string)$r['calibre']) . '</td>';
+                echo '<td>' . htmlspecialchars((string)($r['observaciones'] ?? '')) . '</td>';
+                echo '</tr>';
+            }
+        } else {
+            echo '<tr><td colspan="11">Sin registros en el periodo seleccionado</td></tr>';
+        }
+        echo '</tbody></table>';
+        echo '</body></html>';
         exit;
     }
 
@@ -404,7 +618,8 @@ class PecesController {
     public function bpa12Listado() {
         $model = new PecesModel();
         // Usar listado detallado por fila para mostrar las columnas de medición en la vista
-        $registros = $model->getBpa12ListDetailed();
+        $fechaBusqueda = isset($_GET['fecha']) && !empty($_GET['fecha']) ? $_GET['fecha'] : null;
+        $registros = $model->getBpa12ListDetailed($fechaBusqueda);
         require_once __DIR__ . '/../views/jefeplanta/modulos-jefeplanta/peces/bpa12-listado.php';
     }
     public function verBpa12() {
@@ -434,6 +649,119 @@ class PecesController {
         } else {
             header('Location: index.php?controller=Peces&action=bpa12Listado&error=noid');
         }
+    }
+
+    public function exportBpa12ExcelSemana() {
+        if (!isset($_GET['fecha_semana']) || empty($_GET['fecha_semana'])) {
+            header("Location: index.php?controller=Peces&action=bpa12Listado");
+            exit;
+        }
+        $fecha = $_GET['fecha_semana'];
+        try {
+            $dt = new DateTimeImmutable($fecha);
+        } catch (Exception $e) {
+            header("Location: index.php?controller=Peces&action=bpa12Listado");
+            exit;
+        }
+        $inicio = $dt->modify('monday this week')->format('Y-m-d');
+        $fin    = $dt->modify('sunday this week')->format('Y-m-d');
+
+        $model = new PecesModel();
+        $registros = $model->getBpa12Between($inicio, $fin);
+        $titulo = "Control Parámetros Diarios - Semana del $inicio al $fin";
+        $filename = "Control_Parametros_Semanal_{$inicio}_{$fin}.xls";
+        $this->emitirExcelBpa12($registros, $titulo, $filename);
+    }
+
+    public function exportBpa12ExcelMes() {
+        if (!isset($_GET['fecha_mes']) || empty($_GET['fecha_mes'])) {
+            header("Location: index.php?controller=Peces&action=bpa12Listado");
+            exit;
+        }
+        // fecha_mes formato YYYY-MM
+        $ym = preg_replace('/[^0-9\-]/', '', $_GET['fecha_mes']);
+        $start = DateTimeImmutable::createFromFormat('Y-m-d', $ym . '-01');
+        if (!$start) {
+            header("Location: index.php?controller=Peces&action=bpa12Listado");
+            exit;
+        }
+        $inicio = $start->format('Y-m-d');
+        $fin = $start->modify('last day of this month')->format('Y-m-d');
+
+        $model = new PecesModel();
+        $registros = $model->getBpa12Between($inicio, $fin);
+        $titulo = "Control Parámetros Diarios - Mes {$start->format('Y-m')}";
+        $filename = "Control_Parametros_Mensual_{$start->format('Y-m')}.xls";
+        $this->emitirExcelBpa12($registros, $titulo, $filename);
+    }
+
+    public function exportBpa12ExcelAnio() {
+        if (!isset($_GET['fecha_anio']) || empty($_GET['fecha_anio'])) {
+            header("Location: index.php?controller=Peces&action=bpa12Listado");
+            exit;
+        }
+        $anio = (int)$_GET['fecha_anio'];
+        if ($anio < 2000 || $anio > 2100) {
+            header("Location: index.php?controller=Peces&action=bpa12Listado");
+            exit;
+        }
+        $inicio = sprintf('%04d-01-01', $anio);
+        $fin    = sprintf('%04d-12-31', $anio);
+
+        $model = new PecesModel();
+        $registros = $model->getBpa12Between($inicio, $fin);
+        $titulo = "Control Parámetros Diarios - Año {$anio}";
+        $filename = "Control_Parametros_Anual_{$anio}.xls";
+        $this->emitirExcelBpa12($registros, $titulo, $filename);
+    }
+
+    private function emitirExcelBpa12(array $registros, string $titulo, string $filename): void {
+        header('Content-Type: application/vnd.ms-excel; charset=UTF-8');
+        header('Content-Disposition: attachment; filename=' . $filename);
+        header('Pragma: no-cache');
+        header('Expires: 0');
+
+        echo "\xEF\xBB\xBF"; // BOM UTF-8 para Excel
+        echo '<html><head><meta charset="UTF-8"><title>' . htmlspecialchars($titulo) . "</title></head><body>";
+        echo '<h3 style="font-family:Segoe UI,Arial,sans-serif">' . htmlspecialchars($titulo) . '</h3>';
+        echo '<table border="1" cellspacing="0" cellpadding="4">';
+        echo '<thead style="background:#cfe2ff;font-weight:bold">';
+        echo '<tr>';
+        $cols = ['ID','Código Formato','Versión','Fecha Registro','Mes','Sede','Día','T° (6:30)','O₂ (6:30)','Sat. (6:30)','pH (6:30)','T° (12:00)','O₂ (12:00)','Sat. (12:00)','pH (12:00)','T° (15:30)','O₂ (15:30)','Sat. (15:30)','pH (15:30)','Responsable','Observaciones'];
+        foreach ($cols as $c) echo '<th>' . htmlspecialchars($c) . '</th>';
+        echo '</tr></thead><tbody>';
+        if (!empty($registros)) {
+            foreach ($registros as $r) {
+                echo '<tr>';
+                echo '<td>' . htmlspecialchars((string)$r['id']) . '</td>';
+                echo '<td>' . htmlspecialchars((string)$r['codigo_formato']) . '</td>';
+                echo '<td>' . htmlspecialchars((string)$r['version']) . '</td>';
+                echo '<td>' . htmlspecialchars((string)$r['fecha_registro']) . '</td>';
+                echo '<td>' . htmlspecialchars((string)$r['mes']) . '</td>';
+                echo '<td>' . htmlspecialchars((string)$r['sede']) . '</td>';
+                echo '<td>' . htmlspecialchars((string)$r['dia']) . '</td>';
+                echo '<td>' . htmlspecialchars((string)($r['temperatura_am'] ?? '')) . '</td>';
+                echo '<td>' . htmlspecialchars((string)($r['oxigeno_am'] ?? '')) . '</td>';
+                echo '<td>' . htmlspecialchars((string)($r['saturacion_am'] ?? '')) . '</td>';
+                echo '<td>' . htmlspecialchars((string)($r['ph_am'] ?? '')) . '</td>';
+                echo '<td>' . htmlspecialchars((string)($r['temperatura_md'] ?? '')) . '</td>';
+                echo '<td>' . htmlspecialchars((string)($r['oxigeno_md'] ?? '')) . '</td>';
+                echo '<td>' . htmlspecialchars((string)($r['saturacion_md'] ?? '')) . '</td>';
+                echo '<td>' . htmlspecialchars((string)($r['ph_md'] ?? '')) . '</td>';
+                echo '<td>' . htmlspecialchars((string)($r['temperatura_pm'] ?? '')) . '</td>';
+                echo '<td>' . htmlspecialchars((string)($r['oxigeno_pm'] ?? '')) . '</td>';
+                echo '<td>' . htmlspecialchars((string)($r['saturacion_pm'] ?? '')) . '</td>';
+                echo '<td>' . htmlspecialchars((string)($r['ph_pm'] ?? '')) . '</td>';
+                echo '<td>' . htmlspecialchars((string)$r['responsable']) . '</td>';
+                echo '<td>' . htmlspecialchars((string)($r['observaciones'] ?? '')) . '</td>';
+                echo '</tr>';
+            }
+        } else {
+            echo '<tr><td colspan="21">Sin registros en el periodo seleccionado</td></tr>';
+        }
+        echo '</tbody></table>';
+        echo '</body></html>';
+        exit;
     }
 }
 ?>
