@@ -423,6 +423,49 @@ class PecesModel {
         
         return $registro;
     }
+
+    /**
+     * Elimina un registro BPA12. Si existe la tabla moderna `control_diario_parametros_peces`
+     * elimina todas las filas con la misma fecha_registro y sede (grupo mostrado en el listado).
+     * Si no existe, intenta eliminar el esquema antiguo (control_parametros + detalle_control_parametros).
+     */
+    public function eliminarBpa12($id) {
+        $conn = $this->obtenerConexion();
+        try {
+            $conn->beginTransaction();
+
+            // Intentar esquema moderno
+            $stmt = $conn->prepare("SELECT fecha_registro, sede FROM control_diario_parametros_peces WHERE id = ? LIMIT 1");
+            $stmt->execute([$id]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row) {
+                $del = $conn->prepare("DELETE FROM control_diario_parametros_peces WHERE fecha_registro = ? AND sede = ?");
+                $del->execute([$row['fecha_registro'], $row['sede']]);
+                $conn->commit();
+                return true;
+            }
+
+            // Fallback esquema antiguo
+            $stmt2 = $conn->prepare("SELECT id FROM control_parametros WHERE id = ? LIMIT 1");
+            $stmt2->execute([$id]);
+            $old = $stmt2->fetch(PDO::FETCH_ASSOC);
+            if ($old) {
+                $delDet = $conn->prepare("DELETE FROM detalle_control_parametros WHERE id_control = ?");
+                $delDet->execute([$id]);
+                $delMain = $conn->prepare("DELETE FROM control_parametros WHERE id = ?");
+                $delMain->execute([$id]);
+                $conn->commit();
+                return true;
+            }
+
+            $conn->rollBack();
+            return false;
+        } catch (Exception $e) {
+            try { $conn->rollBack(); } catch (Exception $_) {}
+            error_log('PecesModel::eliminarBpa12 error: ' . $e->getMessage());
+            return false;
+        }
+    }
 }
 
 ?>
