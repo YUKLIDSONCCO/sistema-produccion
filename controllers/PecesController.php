@@ -635,6 +635,15 @@ class PecesController {
             header('Location: index.php?controller=Peces&action=bpa12Listado&error=noid');
         }
     }
+
+    public function eliminarBpa12() {
+        if (isset($_GET['id'])) {
+            $model = new PecesModel();
+            $model->eliminarBpa12($_GET['id']);
+        }
+        header("Location: index.php?controller=Peces&action=bpa12Listado");
+        exit;
+    }
     public function exportarBpa12() {
         if (isset($_GET['id'])) {
             $model = new PecesModel();
