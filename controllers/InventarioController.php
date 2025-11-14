@@ -91,31 +91,38 @@ class InventarioController {
 
 public function listarBPA1() {
     require_once "../config/database.php";
+
+    // Obtener fecha enviada por el buscador
     $fecha = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
 
     $database = new Database();
     $conn = $database->getConnection();
+
+    // FILTRADO CORRECTO POR FECHA
     $sql = "SELECT 
-            id,
-            fecha,
-            marca,
-            calibre,
-            cantidad,
-            nombre_alimento AS nombre,
-            observaciones AS obs
-        FROM control_alimento_almacen
-        WHERE estado = 'pendiente'
-        ORDER BY fecha DESC";
-
-
+                id,
+                fecha,
+                marca,
+                calibre,
+                cantidad,
+                nombre_alimento AS nombre,
+                observaciones AS obs
+            FROM control_alimento_almacen
+            WHERE DATE(fecha) = :fecha   -- 👈 FILTRA CORRECTO
+            ORDER BY fecha DESC";
 
     $stmt = $conn->prepare($sql);
+    $stmt->bindParam(":fecha", $fecha);
     $stmt->execute();
+
     $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    // Pasar la fecha a la vista
     $fechaBusqueda = $fecha;
+
     include "../views/jefeplanta/modulos-jefeplanta/inventario/lista1.php";
 }
+
 
 // Agregar estos métodos en la clase InventarioController
 
@@ -359,25 +366,24 @@ public function guardarBPA4() {
         exit;
     }
 }
-public function listarBPA4() {
-    require_once "../config/database.php";
-    $fecha = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
-    
-    $database = new Database();
-    $conn = $database->getConnection();
-    $model = new InventarioModel($conn);
-    $stmt = $model->obtenerListadoBPA4PorFecha($fecha);
-    
-    $datos = [];
-    if ($stmt) {
-        $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+public function listarBPA4()
+{
+    require_once __DIR__ . '/../models/InventarioModel.php';
 
-    // Pasar la fecha de búsqueda a la vista
+    $database = new Database();
+    $conn = $database->getConnection();   // ✅ Conexión creada
+
+    $model = new InventarioModel($conn);  // ✅ Conexión pasada al modelo
+
+    $fecha = isset($_GET["fecha"]) ? $_GET["fecha"] : date("Y-m-d");
+
+    $datos = $model->obtenerListadoBPA4PorFecha($fecha);  // Ya tiene conexión, no da error
+
     $fechaBusqueda = $fecha;
-    
-    include "../views/jefeplanta/modulos-jefeplanta/inventario/lista4.php";
+
+    require_once "../views/jefeplanta/modulos-jefeplanta/inventario/lista4.php";
 }
+
 
     public function obtenerDatosBPA4() {
         global $conexion;

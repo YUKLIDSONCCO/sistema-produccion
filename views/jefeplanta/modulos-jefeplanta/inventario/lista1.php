@@ -197,7 +197,7 @@ $fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
 <!-- Buscador CORREGIDO (evita el error de enrutador) -->
   <form method="GET" class="search-bar" action="/sistema-produccion/public/index.php">
     <input type="hidden" name="controller" value="Inventario">
-    <input type="hidden" name="action" value="listarBPA4"> <!-- AJUSTA SI EL NOMBRE ES DISTINTO -->
+    <input type="hidden" name="action" value="listarBPA1"> <!-- AJUSTA SI EL NOMBRE ES DISTINTO -->
 
     <label for="fecha"><strong>Seleccionar fecha:</strong></label>
     <input type="date" id="fecha" name="fecha" value="<?php echo htmlspecialchars($fechaBusqueda); ?>" required>
