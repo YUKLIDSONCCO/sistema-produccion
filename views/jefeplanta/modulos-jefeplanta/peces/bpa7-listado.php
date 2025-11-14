@@ -24,10 +24,10 @@ $fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
           <p>Sistema de Producción - CORAQUA PERÚ</p>
         </div>
         <div class="acciones-superior">
-          <a href="index.php?controller=Peces&action=bpa7Formulario" class="btn-principal">
+          <a href="/sistema-produccion/public/index.php?controller=Peces&action=bpa7Formulario" class="btn-principal">
             ➕ Nuevo Registro
           </a>
-          <a href="index.php?controller=JefePlanta&action=moduloPeces" class="btn-secundario">
+          <a href="/sistema-produccion/public/index.php?controller=JefePlanta&action=moduloPeces" class="btn-secundario">
             ⬅️ Volver al Panel
           </a>
         </div>
@@ -54,7 +54,7 @@ $fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
         <!-- PASO 1 -->
         <div id="contenido1" class="wizard-content active">
           <p>📅 Selecciona una fecha para generar el <strong>reporte semanal</strong>:</p>
-          <form method="GET" action="index.php">
+          <form method="GET" action="/sistema-produccion/public/index.php">
             <input type="hidden" name="controller" value="Peces">
             <input type="hidden" name="action" value="exportBpa7ExcelSemana">
             <input type="date" name="fecha_semana" required class="input-fecha">
@@ -65,7 +65,7 @@ $fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
         <!-- PASO 2 -->
         <div id="contenido2" class="wizard-content">
           <p>🗓️ Selecciona el mes del <strong>reporte mensual</strong>:</p>
-          <form method="GET" action="index.php">
+          <form method="GET" action="/sistema-produccion/public/index.php">
             <input type="hidden" name="controller" value="Peces">
             <input type="hidden" name="action" value="exportBpa7ExcelMes">
             <input type="month" name="fecha_mes" required class="input-fecha">
@@ -76,7 +76,7 @@ $fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
         <!-- PASO 3 -->
         <div id="contenido3" class="wizard-content">
           <p>📈 Selecciona el año del <strong>reporte anual</strong>:</p>
-          <form method="GET" action="index.php">
+          <form method="GET" action="/sistema-produccion/public/index.php">
             <input type="hidden" name="controller" value="Peces">
             <input type="hidden" name="action" value="exportBpa7ExcelAnio">
             <input type="number" name="fecha_anio" min="2020" max="2100" placeholder="Ejemplo: 2025" required class="input-fecha">
@@ -91,14 +91,14 @@ $fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
           <h4>📋 Registros de Alimentación</h4>
 
           <!-- BUSCADOR POR FECHA (PHP - GET) -->
-          <form class="buscador-fecha" method="GET" action="index.php">
+          <form class="buscador-fecha" method="GET" action="/sistema-produccion/public/index.php">
             <input type="hidden" name="controller" value="Peces">
             <input type="hidden" name="action" value="bpa7Listado">
             <label for="fechaBusqueda">Seleccionar fecha:</label>
             <input type="date" id="fechaBusqueda" name="fechaBusqueda" value="<?= isset($_GET['fechaBusqueda']) ? htmlspecialchars($_GET['fechaBusqueda']) : '' ?>" required>
             <button type="submit" class="btn-buscar">🔍 Buscar</button>
             <?php if (isset($_GET['fechaBusqueda'])): ?>
-              <a href="index.php?controller=Peces&action=bpa7Listado" class="btn-limpiar" title="Limpiar filtro">✖️ Limpiar</a>
+              <a href="/sistema-produccion/public/index.php?controller=Peces&action=bpa7Listado" class="btn-limpiar" title="Limpiar filtro">✖️ Limpiar</a>
             <?php endif; ?>
           </form>
         </div>
@@ -107,7 +107,7 @@ $fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
           <?php if (isset($_GET['fechaBusqueda'])): ?>
             <div class="filtro-activo">
               📅 Mostrando registros del: <strong><?= htmlspecialchars($_GET['fechaBusqueda']) ?></strong>
-              <a href="index.php?controller=Peces&action=bpa7Listado" class="btn-limpiar-inline">Mostrar todos</a>
+              <a href="/sistema-produccion/public/index.php?controller=Peces&action=bpa7Listado" class="btn-limpiar-inline">Mostrar todos</a>
             </div>
           <?php endif; ?>
           <div class="table-responsive">
@@ -144,7 +144,7 @@ $fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
                       <td><?= htmlspecialchars($r['calibre']) ?></td>
                       <td><?= htmlspecialchars($r['observaciones'] ?? '') ?></td>
                       <td>
-                        <a href="index.php?controller=Peces&action=eliminarBpa7&id=<?= urlencode($r['id']) ?>"
+                        <a href="/sistema-produccion/public/index.php?controller=Peces&action=eliminarBpa7&id=<?= urlencode($r['id']) ?>"
                            class="btn-eliminar"
                            onclick="return confirm('¿Seguro que deseas eliminar este registro?');">
                            🗑️ Eliminar
@@ -161,8 +161,8 @@ $fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
         </div>
 
         <div class="card-footer text-end">
-          <a href="index.php?controller=Peces&action=bpa7" class="btn-ir-bpa">🍤 Ir al BPA7</a>
-          <a href="index.php?controller=JefePlanta&action=moduloPece" class="btn-volver">⬅️ Volver</a>
+          <a href="/sistema-produccion/public/index.php?controller=Peces&action=bpa7" class="btn-ir-bpa">🍤 Ir al BPA7</a>
+          <a href="/sistema-produccion/public/index.php?controller=JefePlanta&action=moduloPeces" class="btn-volver">⬅️ Volver</a>
         </div>
       </div>
 
