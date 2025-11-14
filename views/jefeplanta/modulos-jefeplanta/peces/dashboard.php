@@ -111,7 +111,6 @@ body {
         <li><a href="#" id="inicioBtn" class="active"><i class="fas fa-house-chimney"></i> Inicio</a></li>
         <li><a href="#" id="formatosBtn"><i class="fas fa-folder-open"></i> Formatos PECES</a></li>
         <li><a href="#" id="listadoBtn"><i class="fas fa-list-check"></i> Listado PECES</a></li>
-        <li><a href="#" id="reportesBtn"><i class="fas fa-chart-line"></i> Reportes PECES</a></li>
         <li><a href="index.php?controller=Login&action=cerrarSesion"><i class="fas fa-door-open"></i> Cerrar sesión</a></li>
       </ul>
     </nav>

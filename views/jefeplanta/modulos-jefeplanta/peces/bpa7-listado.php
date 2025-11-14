@@ -23,10 +23,6 @@ $fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
           <h2>🍽️ LISTADO DE ALIMENTACIÓN DIARIA - BPA7</h2>
           <p>Sistema de Producción - CORAQUA PERÚ</p>
         </div>
-        <div class="acciones-superior">
-          <a href="/sistema-produccion/public/index.php?controller=Peces&action=bpa7Formulario" class="btn-principal">
-            ➕ Nuevo Registro
-          </a>
           <a href="/sistema-produccion/public/index.php?controller=JefePlanta&action=moduloPeces" class="btn-secundario">
             ⬅️ Volver al Panel
           </a>
