@@ -108,7 +108,7 @@ body {
     <nav class="sidebar-nav">
       <ul>
         <li>
-            <a href="index.php?controller=Colaborador&action=peces">
+            <a href="index.php?controller=Panel&action=dashboard">
               <i class="fas fa-circle-arrow-left"></i> Volver al panel principal
             </a>
           </li>
@@ -266,4 +266,5 @@ body {
   <script src="/sistema-produccion/public/js/script_peces.js"></script>
 </body>
 </html>
+
 
