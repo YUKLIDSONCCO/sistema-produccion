@@ -402,5 +402,117 @@ public function listarBPA4()
 
         return $datos;
     }
+
+    // Exportador genérico a Excel (HTML table + BOM) para los BPA del inventario
+    public function exportBPAExcel()
+    {
+        require_once __DIR__ . '/../config/database.php';
+        require_once __DIR__ . '/../models/InventarioModel.php';
+
+        $bpa = isset($_GET['bpa']) ? (int)$_GET['bpa'] : 1;
+        $tipo = $_GET['tipo'] ?? null; // opcional, preferimos usar los campos concretos
+
+        // Calcular rango inicio/fin según tipo y parámetros recibidos
+        try {
+            if (isset($_GET['fecha_semana']) && !empty($_GET['fecha_semana'])) {
+                $fecha = $_GET['fecha_semana'];
+                $dt = new DateTime($fecha);
+                // Llevar al lunes de la semana
+                $dt->modify('monday this week');
+                $inicio = $dt->format('Y-m-d');
+                $fin = (new DateTime($inicio))->modify('+6 days')->format('Y-m-d');
+            } elseif (isset($_GET['fecha_mes']) && !empty($_GET['fecha_mes'])) {
+                // formato esperado: YYYY-MM
+                $mes = $_GET['fecha_mes'];
+                $inicio = $mes . '-01';
+                $fin = (new DateTime($inicio))->modify('last day of this month')->format('Y-m-d');
+            } elseif (isset($_GET['fecha_anio']) && !empty($_GET['fecha_anio'])) {
+                $anio = (int)$_GET['fecha_anio'];
+                $inicio = sprintf('%04d-01-01', $anio);
+                $fin = sprintf('%04d-12-31', $anio);
+            } else {
+                // Por defecto: hoy
+                $inicio = date('Y-m-d');
+                $fin = date('Y-m-d');
+            }
+
+            // Seleccionar tabla según BPA
+            switch ($bpa) {
+                case 1:
+                    $table = 'control_alimento_almacen';
+                    $titulo = 'Control de Alimento';
+                    break;
+                case 2:
+                    $table = 'control_sal_almacen';
+                    $titulo = 'Control de Sal';
+                    break;
+                case 3:
+                    $table = 'control_medicamento';
+                    $titulo = 'Control de Medicamento';
+                    break;
+                case 4:
+                    $table = 'control_dosificacion';
+                    $titulo = 'Control de Dosificación';
+                    break;
+                default:
+                    $table = 'control_alimento_almacen';
+                    $titulo = 'Control de Alimento';
+            }
+
+            $database = new Database();
+            $conn = $database->getConnection();
+
+            $sql = "SELECT * FROM {$table} WHERE DATE(fecha) BETWEEN :inicio AND :fin ORDER BY fecha ASC";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':inicio', $inicio);
+            $stmt->bindParam(':fin', $fin);
+            $stmt->execute();
+            $registros = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $filename = "inventario_bpa{$bpa}_{$inicio}_to_{$fin}.xls";
+            $this->emitirExcelDesdeRegistros($registros, $titulo, $filename);
+        } catch (Exception $e) {
+            header('Content-Type: text/plain; charset=UTF-8');
+            echo "Error al generar el reporte: " . $e->getMessage();
+            exit;
+        }
+    }
+
+    // Helper: emite un archivo Excel simple (HTML table) desde un array de registros
+    private function emitirExcelDesdeRegistros(array $registros, string $titulo, string $filename)
+    {
+        if (empty($registros)) {
+            header('Content-Type: text/plain; charset=UTF-8');
+            echo "No hay registros para exportar.";
+            exit;
+        }
+
+        // Encabezados para forzar descarga en formato Excel (HTML)
+        header('Content-Type: application/vnd.ms-excel; charset=UTF-8');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        // BOM UTF-8
+        echo "\xEF\xBB\xBF";
+
+        // Construir tabla HTML
+        echo "<table border=1><thead><tr>";
+        // Usar las claves del primer registro como encabezados
+        $keys = array_keys($registros[0]);
+        foreach ($keys as $k) {
+            echo '<th>' . htmlspecialchars(strtoupper($k)) . '</th>';
+        }
+        echo "</tr></thead><tbody>";
+
+        foreach ($registros as $row) {
+            echo "<tr>";
+            foreach ($keys as $k) {
+                $val = isset($row[$k]) ? $row[$k] : '';
+                echo '<td>' . htmlspecialchars($val) . '</td>';
+            }
+            echo "</tr>";
+        }
+
+        echo "</tbody></table>";
+        exit;
+    }
 }
 ?>

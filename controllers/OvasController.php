@@ -377,6 +377,183 @@ public function listarBPA3() {
         $stmt->execute([$fecha]);
         return $stmt;
     }
+    
+    /* =====================
+       Exportaciones Excel BPA 1..4
+       ===================== */
+    private function emitirExcelDesdeRegistros(array $registros, string $titulo, string $filename): void {
+        header('Content-Type: application/vnd.ms-excel; charset=UTF-8');
+        header('Content-Disposition: attachment; filename=' . $filename);
+        header('Pragma: no-cache');
+        header('Expires: 0');
+
+        echo "\xEF\xBB\xBF"; // BOM UTF-8
+        echo '<html><head><meta charset="UTF-8"><title>' . htmlspecialchars($titulo) . "</title></head><body>";
+        echo '<h3 style="font-family:Segoe UI,Arial,sans-serif">' . htmlspecialchars($titulo) . '</h3>';
+        echo '<table border="1" cellspacing="0" cellpadding="4">';
+
+        // Encabezados dinámicos — tomar keys de la primera fila si existe
+        echo '<thead style="background:#cfe2ff;font-weight:bold"><tr>';
+        if (!empty($registros) && is_array($registros[0])) {
+            foreach (array_keys($registros[0]) as $col) {
+                echo '<th>' . htmlspecialchars($col) . '</th>';
+            }
+        } else {
+            echo '<th>No hay datos</th>';
+        }
+        echo '</tr></thead><tbody>';
+
+        if (!empty($registros)) {
+            foreach ($registros as $r) {
+                echo '<tr>';
+                foreach ($r as $val) {
+                    echo '<td>' . htmlspecialchars((string)$val) . '</td>';
+                }
+                echo '</tr>';
+            }
+        } else {
+            echo '<tr><td>Sin registros en el periodo seleccionado</td></tr>';
+        }
+
+        echo '</tbody></table>';
+        echo '</body></html>';
+        exit;
+    }
+
+    // Helper para obtener registros entre fechas usando el modelo (asume métodos getXBetween añadidos o consulta directa)
+    private function obtenerRegistrosBetween(string $table, string $inicio, string $fin) {
+        // Intentaremos usar el modelo si tiene método get...Between, si no, hacemos consulta directa
+        try {
+            $method = 'get' . ucfirst($table) . 'Between';
+            if (method_exists($this->model, $method)) {
+                return $this->model->{$method}($inicio, $fin);
+            }
+        } catch (Exception $e) {
+            // continuar a consulta directa
+        }
+
+        // Consulta directa genérica (no recomendable para producción pero útil aquí)
+        $sql = sprintf("SELECT * FROM %s WHERE DATE(fecha_registro) BETWEEN ? AND ? ORDER BY fecha_registro DESC", $table);
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$inicio, $fin]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Exportadores para BPA1..BPA4 (semana/mes/año)
+    public function exportBpa1ExcelSemana() {
+        if (!isset($_GET['fecha_semana']) || empty($_GET['fecha_semana'])) {
+            header("Location: index.php?controller=Ovas&action=listarBPA1"); exit;
+        }
+        $fecha = $_GET['fecha_semana'];
+        try { $dt = new DateTimeImmutable($fecha); } catch (Exception $e) { header("Location: index.php?controller=Ovas&action=listarBPA1"); exit; }
+        $inicio = $dt->modify('monday this week')->format('Y-m-d');
+        $fin = $dt->modify('sunday this week')->format('Y-m-d');
+        $registros = $this->obtenerRegistrosBetween('control_ovas', $inicio, $fin);
+        $titulo = "Selección y Fertilización - Semana {$inicio} a {$fin}";
+        $filename = "Seleccion_Fertilizacion_Semanal_{$inicio}_{$fin}.xls";
+        $this->emitirExcelDesdeRegistros($registros, $titulo, $filename);
+    }
+
+    public function exportBpa1ExcelMes() {
+        if (!isset($_GET['fecha_mes']) || empty($_GET['fecha_mes'])) { header("Location: index.php?controller=Ovas&action=listarBPA1"); exit; }
+        $ym = preg_replace('/[^0-9\-]/', '', $_GET['fecha_mes']);
+        $start = DateTimeImmutable::createFromFormat('Y-m-d', $ym . '-01');
+        if (!$start) { header("Location: index.php?controller=Ovas&action=listarBPA1"); exit; }
+        $inicio = $start->format('Y-m-d');
+        $fin = $start->modify('last day of this month')->format('Y-m-d');
+        $registros = $this->obtenerRegistrosBetween('control_ovas', $inicio, $fin);
+        $titulo = "Selección y Fertilización - Mes {$start->format('Y-m')}";
+        $filename = "Seleccion_Fertilizacion_Mensual_{$start->format('Y-m')}.xls";
+        $this->emitirExcelDesdeRegistros($registros, $titulo, $filename);
+    }
+
+    public function exportBpa1ExcelAnio() {
+        if (!isset($_GET['fecha_anio']) || empty($_GET['fecha_anio'])) { header("Location: index.php?controller=Ovas&action=listarBPA1"); exit; }
+        $anio = (int)$_GET['fecha_anio']; if ($anio < 2000 || $anio > 2100) { header("Location: index.php?controller=Ovas&action=listarBPA1"); exit; }
+        $inicio = sprintf('%04d-01-01', $anio); $fin = sprintf('%04d-12-31', $anio);
+        $registros = $this->obtenerRegistrosBetween('control_ovas', $inicio, $fin);
+        $titulo = "Selección y Fertilización - Año {$anio}";
+        $filename = "Seleccion_Fertilizacion_Anual_{$anio}.xls";
+        $this->emitirExcelDesdeRegistros($registros, $titulo, $filename);
+    }
+
+    // BPA2
+    public function exportBpa2ExcelSemana() {
+        if (!isset($_GET['fecha_semana']) || empty($_GET['fecha_semana'])) { header("Location: index.php?controller=Ovas&action=listarBPA2"); exit; }
+        $fecha = $_GET['fecha_semana']; try { $dt = new DateTimeImmutable($fecha); } catch (Exception $e) { header("Location: index.php?controller=Ovas&action=listarBPA2"); exit; }
+        $inicio = $dt->modify('monday this week')->format('Y-m-d'); $fin = $dt->modify('sunday this week')->format('Y-m-d');
+        $registros = $this->obtenerRegistrosBetween('mortalidad_diaria_ovas', $inicio, $fin);
+        $titulo = "Mortalidad OVAS - Semana {$inicio} a {$fin}"; $filename = "Mortalidad_OVAS_Semanal_{$inicio}_{$fin}.xls";
+        $this->emitirExcelDesdeRegistros($registros, $titulo, $filename);
+    }
+    public function exportBpa2ExcelMes() {
+        if (!isset($_GET['fecha_mes']) || empty($_GET['fecha_mes'])) { header("Location: index.php?controller=Ovas&action=listarBPA2"); exit; }
+        $ym = preg_replace('/[^0-9\-]/', '', $_GET['fecha_mes']); $start = DateTimeImmutable::createFromFormat('Y-m-d', $ym . '-01'); if (!$start) { header("Location: index.php?controller=Ovas&action=listarBPA2"); exit; }
+        $inicio = $start->format('Y-m-d'); $fin = $start->modify('last day of this month')->format('Y-m-d');
+        $registros = $this->obtenerRegistrosBetween('mortalidad_diaria_ovas', $inicio, $fin);
+        $titulo = "Mortalidad OVAS - Mes {$start->format('Y-m')}"; $filename = "Mortalidad_OVAS_Mensual_{$start->format('Y-m')}.xls";
+        $this->emitirExcelDesdeRegistros($registros, $titulo, $filename);
+    }
+    public function exportBpa2ExcelAnio() {
+        if (!isset($_GET['fecha_anio']) || empty($_GET['fecha_anio'])) { header("Location: index.php?controller=Ovas&action=listarBPA2"); exit; }
+        $anio = (int)$_GET['fecha_anio']; if ($anio < 2000 || $anio > 2100) { header("Location: index.php?controller=Ovas&action=listarBPA2"); exit; }
+        $inicio = sprintf('%04d-01-01', $anio); $fin = sprintf('%04d-12-31', $anio);
+        $registros = $this->obtenerRegistrosBetween('mortalidad_diaria_ovas', $inicio, $fin);
+        $titulo = "Mortalidad OVAS - Año {$anio}"; $filename = "Mortalidad_OVAS_Anual_{$anio}.xls";
+        $this->emitirExcelDesdeRegistros($registros, $titulo, $filename);
+    }
+
+    // BPA3
+    public function exportBpa3ExcelSemana() {
+        if (!isset($_GET['fecha_semana']) || empty($_GET['fecha_semana'])) { header("Location: index.php?controller=Ovas&action=listarBPA3"); exit; }
+        $fecha = $_GET['fecha_semana']; try { $dt = new DateTimeImmutable($fecha); } catch (Exception $e) { header("Location: index.php?controller=Ovas&action=listarBPA3"); exit; }
+        $inicio = $dt->modify('monday this week')->format('Y-m-d'); $fin = $dt->modify('sunday this week')->format('Y-m-d');
+        $registros = $this->obtenerRegistrosBetween('mortalidad_diaria_larvas', $inicio, $fin);
+        $titulo = "Mortalidad Larvas - Semana {$inicio} a {$fin}"; $filename = "Mortalidad_Larvas_Semanal_{$inicio}_{$fin}.xls";
+        $this->emitirExcelDesdeRegistros($registros, $titulo, $filename);
+    }
+    public function exportBpa3ExcelMes() {
+        if (!isset($_GET['fecha_mes']) || empty($_GET['fecha_mes'])) { header("Location: index.php?controller=Ovas&action=listarBPA3"); exit; }
+        $ym = preg_replace('/[^0-9\-]/', '', $_GET['fecha_mes']); $start = DateTimeImmutable::createFromFormat('Y-m-d', $ym . '-01'); if (!$start) { header("Location: index.php?controller=Ovas&action=listarBPA3"); exit; }
+        $inicio = $start->format('Y-m-d'); $fin = $start->modify('last day of this month')->format('Y-m-d');
+        $registros = $this->obtenerRegistrosBetween('mortalidad_diaria_larvas', $inicio, $fin);
+        $titulo = "Mortalidad Larvas - Mes {$start->format('Y-m')}"; $filename = "Mortalidad_Larvas_Mensual_{$start->format('Y-m')}.xls";
+        $this->emitirExcelDesdeRegistros($registros, $titulo, $filename);
+    }
+    public function exportBpa3ExcelAnio() {
+        if (!isset($_GET['fecha_anio']) || empty($_GET['fecha_anio'])) { header("Location: index.php?controller=Ovas&action=listarBPA3"); exit; }
+        $anio = (int)$_GET['fecha_anio']; if ($anio < 2000 || $anio > 2100) { header("Location: index.php?controller=Ovas&action=listarBPA3"); exit; }
+        $inicio = sprintf('%04d-01-01', $anio); $fin = sprintf('%04d-12-31', $anio);
+        $registros = $this->obtenerRegistrosBetween('mortalidad_diaria_larvas', $inicio, $fin);
+        $titulo = "Mortalidad Larvas - Año {$anio}"; $filename = "Mortalidad_Larvas_Anual_{$anio}.xls";
+        $this->emitirExcelDesdeRegistros($registros, $titulo, $filename);
+    }
+
+    // BPA4
+    public function exportBpa4ExcelSemana() {
+        if (!isset($_GET['fecha_semana']) || empty($_GET['fecha_semana'])) { header("Location: index.php?controller=Ovas&action=listarBPA4"); exit; }
+        $fecha = $_GET['fecha_semana']; try { $dt = new DateTimeImmutable($fecha); } catch (Exception $e) { header("Location: index.php?controller=Ovas&action=listarBPA4"); exit; }
+        $inicio = $dt->modify('monday this week')->format('Y-m-d'); $fin = $dt->modify('sunday this week')->format('Y-m-d');
+        $registros = $this->obtenerRegistrosBetween('control_diario_parametros_ovas', $inicio, $fin);
+        $titulo = "Control Parámetros OVAS - Semana {$inicio} a {$fin}"; $filename = "Control_Parametros_OVAS_Semanal_{$inicio}_{$fin}.xls";
+        $this->emitirExcelDesdeRegistros($registros, $titulo, $filename);
+    }
+    public function exportBpa4ExcelMes() {
+        if (!isset($_GET['fecha_mes']) || empty($_GET['fecha_mes'])) { header("Location: index.php?controller=Ovas&action=listarBPA4"); exit; }
+        $ym = preg_replace('/[^0-9\-]/', '', $_GET['fecha_mes']); $start = DateTimeImmutable::createFromFormat('Y-m-d', $ym . '-01'); if (!$start) { header("Location: index.php?controller=Ovas&action=listarBPA4"); exit; }
+        $inicio = $start->format('Y-m-d'); $fin = $start->modify('last day of this month')->format('Y-m-d');
+        $registros = $this->obtenerRegistrosBetween('control_diario_parametros_ovas', $inicio, $fin);
+        $titulo = "Control Parámetros OVAS - Mes {$start->format('Y-m')}"; $filename = "Control_Parametros_OVAS_Mensual_{$start->format('Y-m')}.xls";
+        $this->emitirExcelDesdeRegistros($registros, $titulo, $filename);
+    }
+    public function exportBpa4ExcelAnio() {
+        if (!isset($_GET['fecha_anio']) || empty($_GET['fecha_anio'])) { header("Location: index.php?controller=Ovas&action=listarBPA4"); exit; }
+        $anio = (int)$_GET['fecha_anio']; if ($anio < 2000 || $anio > 2100) { header("Location: index.php?controller=Ovas&action=listarBPA4"); exit; }
+        $inicio = sprintf('%04d-01-01', $anio); $fin = sprintf('%04d-12-31', $anio);
+        $registros = $this->obtenerRegistrosBetween('control_diario_parametros_ovas', $inicio, $fin);
+        $titulo = "Control Parámetros OVAS - Año {$anio}"; $filename = "Control_Parametros_OVAS_Anual_{$anio}.xls";
+        $this->emitirExcelDesdeRegistros($registros, $titulo, $filename);
+    }
 
     /* =========================================
        BPA 4 - CONTROL DE PARÁMETROS

@@ -218,16 +218,31 @@ footer{text-align:center;margin-top:30px;color:var(--gris);font-size:0.9rem;}
   </div>
 
   <div id="contenido1" class="wizard-content">
-    📅 Descargar reporte semanal (Mortalidad Larvas) en Excel<br>
-    <button class="download-btn">Descargar</button>
+    <form method="GET" action="index.php" style="display:inline-block;">
+      <input type="hidden" name="controller" value="Ovas">
+      <input type="hidden" name="action" value="exportBpa3ExcelSemana">
+      <label>Semana (tome cualquier fecha de la semana):</label><br>
+      <input type="date" name="fecha_semana" required>
+      <button type="submit" class="download-btn">Descargar Semana</button>
+    </form>
   </div>
   <div id="contenido2" class="wizard-content" style="display:none;">
-    🗓️ Descargar reporte mensual en Excel<br>
-    <button class="download-btn">Descargar</button>
+    <form method="GET" action="index.php" style="display:inline-block;">
+      <input type="hidden" name="controller" value="Ovas">
+      <input type="hidden" name="action" value="exportBpa3ExcelMes">
+      <label>Mes:</label><br>
+      <input type="month" name="fecha_mes" required>
+      <button type="submit" class="download-btn">Descargar Mes</button>
+    </form>
   </div>
   <div id="contenido3" class="wizard-content" style="display:none;">
-    📊 Descargar reporte anual consolidado<br>
-    <button class="download-btn">Descargar</button>
+    <form method="GET" action="index.php" style="display:inline-block;">
+      <input type="hidden" name="controller" value="Ovas">
+      <input type="hidden" name="action" value="exportBpa3ExcelAnio">
+      <label>Año:</label><br>
+      <input type="number" name="fecha_anio" min="2000" max="2100" value="2025" required>
+      <button type="submit" class="download-btn">Descargar Año</button>
+    </form>
   </div>
 
   <!-- BUSCADOR -->

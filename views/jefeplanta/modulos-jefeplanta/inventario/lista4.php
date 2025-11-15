@@ -181,15 +181,36 @@ $fechaBusqueda = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
 
     <div id="contenido1" class="wizard-content active">
       <p>📅 Descargar reporte semanal en Excel</p>
-      <button class="download-btn" onclick="descargarExcel('semana')">Descargar Excel Semanal</button>
+      <form method="GET" action="/sistema-produccion/public/index.php" style="display:inline-block;">
+        <input type="hidden" name="controller" value="Inventario">
+        <input type="hidden" name="action" value="exportBPAExcel">
+        <input type="hidden" name="bpa" value="4">
+        <label for="fecha_semana_4">Fecha base:</label>
+        <input type="date" id="fecha_semana_4" name="fecha_semana" value="<?php echo date('Y-m-d'); ?>" required>
+        <button class="download-btn" type="submit">Descargar Excel Semanal</button>
+      </form>
     </div>
     <div id="contenido2" class="wizard-content">
       <p>🗓️ Descargar reporte mensual en Excel</p>
-      <button class="download-btn" onclick="descargarExcel('mes')">Descargar Excel Mensual</button>
+      <form method="GET" action="/sistema-produccion/public/index.php" style="display:inline-block;">
+        <input type="hidden" name="controller" value="Inventario">
+        <input type="hidden" name="action" value="exportBPAExcel">
+        <input type="hidden" name="bpa" value="4">
+        <label for="fecha_mes_4">Mes:</label>
+        <input type="month" id="fecha_mes_4" name="fecha_mes" value="<?php echo date('Y-m'); ?>" required>
+        <button class="download-btn" type="submit">Descargar Excel Mensual</button>
+      </form>
     </div>
     <div id="contenido3" class="wizard-content">
       <p>📊 Descargar reporte anual en Excel</p>
-      <button class="download-btn" onclick="descargarExcel('anio')">Descargar Excel Anual</button>
+      <form method="GET" action="/sistema-produccion/public/index.php" style="display:inline-block;">
+        <input type="hidden" name="controller" value="Inventario">
+        <input type="hidden" name="action" value="exportBPAExcel">
+        <input type="hidden" name="bpa" value="4">
+        <label for="fecha_anio_4">Año:</label>
+        <input type="number" id="fecha_anio_4" name="fecha_anio" value="<?php echo date('Y'); ?>" min="2000" max="2100" required>
+        <button class="download-btn" type="submit">Descargar Excel Anual</button>
+      </form>
     </div>
   </div>
 
@@ -253,9 +274,7 @@ function mostrarPaso(n){
     el.classList.toggle('active', i+1===n);
   });
 }
-function descargarExcel(tipo){
-  alert("📁 Descargando reporte en Excel: " + tipo);
-}
+// No-op removed — forms now submit directly to controller for download
 </script>
 </body>
 </html>
