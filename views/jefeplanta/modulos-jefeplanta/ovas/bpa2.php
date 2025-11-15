@@ -398,10 +398,14 @@
                         <label for="lote">LOTE</label>
                         <input type="text" id="lote" name="lote" placeholder="Código de lote" required>
                     </div>
-                    <div class="form-group">
-                        <label for="sede">SEDE</label>
-                        <input type="text" id="sede" name="sede" placeholder="Nombre de sede" required>
-                    </div>
+                    <div>
+          <label for="sede">Sede</label>
+          <select id="sede" name="sede" required>
+            <option value="" disabled selected>Seleccione una sede</option>
+            <option value="Chichillapi">Chichillapi</option>
+            <option value="Cambruni">Cambruni</option>
+          </select>
+        </div>
                     <div class="form-group">
                         <label for="cantidad_siembra">CANT. SIEMBRA</label>
                         <input type="number" id="cantidad_siembra" name="cantidad_siembra" placeholder="Cantidad" required>

@@ -391,9 +391,13 @@
                         <label for="mes">MES</label>
                         <input type="text" id="mes" name="mes" placeholder="Ejemplo: Enero" required>
                     </div>
-                    <div class="form-group">
-                        <label for="sede">SEDE</label>
-                        <input type="text" id="sede" name="sede" placeholder="Nombre de la sede" required>
+                    <div>
+                    <label for="sede">Sede</label>
+                    <select id="sede" name="sede" required>
+                        <option value="" disabled selected>Seleccione una sede</option>
+                        <option value="Chichillapi">Chichillapi</option>
+                        <option value="Cambruni">Cambruni</option>
+                    </select>
                     </div>
                     <div class="form-group">
                         <label for="responsable">RESPONSABLE</label>

@@ -242,9 +242,13 @@
         <input id="fecha" type="date" />
       </div>
       <div>
-        <label for="sede">Sede / Estanque</label>
-        <input id="sede" type="text" placeholder="Ej. Estanque 01">
-      </div>
+          <label for="sede">Sede</label>
+          <select id="sede" name="sede" required>
+            <option value="" disabled selected>Seleccione una sede</option>
+            <option value="Chichillapi">Chichillapi</option>
+            <option value="Cambruni">Cambruni</option>
+          </select>
+        </div>
       <div>
         <label for="especie">Especie</label>
         <input id="especie" type="text" placeholder="Ej. Trucha arcoíris">

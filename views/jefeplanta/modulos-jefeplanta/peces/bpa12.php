@@ -40,8 +40,13 @@
           </div>
           <div class="col-md-3">
             <label class="form-label fw-semibold text-dark">🏢 Sede</label>
-            <input type="text" name="sede" class="form-control shadow-sm" placeholder="Nombre de la sede" required>
+            <select name="sede" class="form-control shadow-sm" required>
+              <option value="" selected disabled>Seleccione una sede</option>
+              <option value="Chichillapi">Chichillapi</option>
+              <option value="Cambruni">Cambruni</option>
+            </select>
           </div>
+
           <div class="col-md-3">
             <label class="form-label fw-semibold text-dark">👤 Responsable</label>
             <input type="text" name="responsable_global" class="form-control shadow-sm" placeholder="Nombre del responsable" required>

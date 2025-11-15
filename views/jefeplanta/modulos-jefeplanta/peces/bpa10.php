@@ -199,8 +199,13 @@
 
         <div>
           <label for="sede">Sede</label>
-          <input id="sede" type="text" placeholder="Ejemplo: Planta Principal">
+          <select id="sede" name="sede" required>
+            <option value="" disabled selected>Seleccione una sede</option>
+            <option value="Chichillapi">Chichillapi</option>
+            <option value="Cambruni">Cambruni</option>
+          </select>
         </div>
+
 
         <div>
           <label for="fecha">Fecha</label>

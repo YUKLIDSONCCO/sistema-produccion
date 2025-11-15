@@ -241,7 +241,11 @@
         </div>
         <div>
           <label for="sede">Sede</label>
-          <input id="sede" type="text" placeholder="Ej. Planta Principal">
+          <select id="sede" name="sede" required>
+            <option value="" disabled selected>Seleccione una sede</option>
+            <option value="Chichillapi">Chichillapi</option>
+            <option value="Cambruni">Cambruni</option>
+          </select>
         </div>
         <div>
           <label for="turno">Turno / Observación</label>
